@@ -20,30 +20,45 @@ public final class R {
          (such as screen margins) for screens with more than 820dp of available width. This
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
+ Default screen margins, per the Android Design guidelines. 
+ Default screen margins, per the Android Design guidelines. 
          */
         public static final int activity_horizontal_margin=0x7f050000;
         public static final int activity_vertical_margin=0x7f050001;
+        public static final int found_menu_height=0x7f050002;
     }
     public static final class drawable {
         public static final int ad1=0x7f020000;
         public static final int ad2=0x7f020001;
-        public static final int dot_blur=0x7f020002;
-        public static final int dot_focus=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int icon_hot_title=0x7f020005;
-        public static final int menu1=0x7f020006;
-        public static final int menu1_1=0x7f020007;
-        public static final int menu2=0x7f020008;
-        public static final int menu2_1=0x7f020009;
-        public static final int menu3=0x7f02000a;
-        public static final int menu3_1=0x7f02000b;
-        public static final int menu4=0x7f02000c;
-        public static final int menu4_1=0x7f02000d;
-        public static final int menu5=0x7f02000e;
-        public static final int menu5_1=0x7f02000f;
+        public static final int btn_menu1=0x7f020002;
+        public static final int btn_menu1_1=0x7f020003;
+        public static final int btn_menu2=0x7f020004;
+        public static final int btn_menu2_1=0x7f020005;
+        public static final int btn_menu3=0x7f020006;
+        public static final int btn_menu3_1=0x7f020007;
+        public static final int dot_blur=0x7f020008;
+        public static final int dot_focus=0x7f020009;
+        public static final int ic_launcher=0x7f02000a;
+        public static final int icon_add=0x7f02000b;
+        public static final int icon_hot_title=0x7f02000c;
+        public static final int icon_search=0x7f02000d;
+        public static final int menu1=0x7f02000e;
+        public static final int menu1_1=0x7f02000f;
+        public static final int menu1_selector=0x7f020010;
+        public static final int menu2=0x7f020011;
+        public static final int menu2_1=0x7f020012;
+        public static final int menu2_selector=0x7f020013;
+        public static final int menu3=0x7f020014;
+        public static final int menu3_1=0x7f020015;
+        public static final int menu3_selector=0x7f020016;
+        public static final int menu4=0x7f020017;
+        public static final int menu4_1=0x7f020018;
+        public static final int menu5=0x7f020019;
+        public static final int menu5_1=0x7f02001a;
     }
     public static final class id {
-        public static final int dotLayout=0x7f07000a;
+        public static final int add_btn=0x7f070009;
+        public static final int dotLayout=0x7f07000d;
         public static final int img_found=0x7f070003;
         public static final int img_hot=0x7f070002;
         public static final int img_message=0x7f070004;
@@ -51,17 +66,20 @@ public final class R {
         public static final int img_more=0x7f070005;
         public static final int main_activity=0x7f070000;
         public static final int main_bottom=0x7f070001;
-        public static final int slide_show_view=0x7f070008;
+        public static final int search_btn=0x7f07000a;
+        public static final int slide_show_view=0x7f07000b;
         public static final int tabpager=0x7f070007;
-        public static final int v_dot1=0x7f07000b;
-        public static final int v_dot2=0x7f07000c;
-        public static final int viewPager=0x7f070009;
+        public static final int title=0x7f070008;
+        public static final int v_dot1=0x7f07000e;
+        public static final int v_dot2=0x7f07000f;
+        public static final int viewPager=0x7f07000c;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int frame_hot=0x7f030001;
-        public static final int layout_slideshow=0x7f030002;
-        public static final int test=0x7f030003;
+        public static final int frame_found=0x7f030001;
+        public static final int frame_hot=0x7f030002;
+        public static final int layout_slideshow=0x7f030003;
+        public static final int test=0x7f030004;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
