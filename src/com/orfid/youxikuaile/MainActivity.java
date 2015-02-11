@@ -46,9 +46,9 @@ public class MainActivity extends Activity {
         LayoutInflater mLi = LayoutInflater.from(this);
         View view1 = mLi.inflate(R.layout.frame_hot, null);
         View view2 = mLi.inflate(R.layout.frame_found, null);
-        View view3 = mLi.inflate(R.layout.test, null);
-        View view4 = mLi.inflate(R.layout.test, null);
-        View view5 = mLi.inflate(R.layout.test, null);
+        View view3 = mLi.inflate(R.layout.frame_message, null);
+        View view4 = mLi.inflate(R.layout.frame_more, null);
+        View view5 = mLi.inflate(R.layout.frame_mine, null);
         
 
         final ArrayList<View> views = new ArrayList<View>();

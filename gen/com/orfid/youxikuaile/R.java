@@ -40,21 +40,25 @@ public final class R {
         public static final int dot_focus=0x7f020009;
         public static final int ic_launcher=0x7f02000a;
         public static final int icon_add=0x7f02000b;
-        public static final int icon_hot_title=0x7f02000c;
-        public static final int icon_search=0x7f02000d;
-        public static final int menu1=0x7f02000e;
-        public static final int menu1_1=0x7f02000f;
-        public static final int menu1_selector=0x7f020010;
-        public static final int menu2=0x7f020011;
-        public static final int menu2_1=0x7f020012;
-        public static final int menu2_selector=0x7f020013;
-        public static final int menu3=0x7f020014;
-        public static final int menu3_1=0x7f020015;
-        public static final int menu3_selector=0x7f020016;
-        public static final int menu4=0x7f020017;
-        public static final int menu4_1=0x7f020018;
-        public static final int menu5=0x7f020019;
-        public static final int menu5_1=0x7f02001a;
+        public static final int icon_arrow_right_gray=0x7f02000c;
+        public static final int icon_hot_title=0x7f02000d;
+        public static final int icon_news1=0x7f02000e;
+        public static final int icon_news2=0x7f02000f;
+        public static final int icon_news3=0x7f020010;
+        public static final int icon_search=0x7f020011;
+        public static final int menu1=0x7f020012;
+        public static final int menu1_1=0x7f020013;
+        public static final int menu1_selector=0x7f020014;
+        public static final int menu2=0x7f020015;
+        public static final int menu2_1=0x7f020016;
+        public static final int menu2_selector=0x7f020017;
+        public static final int menu3=0x7f020018;
+        public static final int menu3_1=0x7f020019;
+        public static final int menu3_selector=0x7f02001a;
+        public static final int menu4=0x7f02001b;
+        public static final int menu4_1=0x7f02001c;
+        public static final int menu5=0x7f02001d;
+        public static final int menu5_1=0x7f02001e;
     }
     public static final class id {
         public static final int add_btn=0x7f070009;
@@ -78,8 +82,10 @@ public final class R {
         public static final int activity_main=0x7f030000;
         public static final int frame_found=0x7f030001;
         public static final int frame_hot=0x7f030002;
-        public static final int layout_slideshow=0x7f030003;
-        public static final int test=0x7f030004;
+        public static final int frame_message=0x7f030003;
+        public static final int frame_mine=0x7f030004;
+        public static final int frame_more=0x7f030005;
+        public static final int layout_slideshow=0x7f030006;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
