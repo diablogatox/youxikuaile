@@ -3,6 +3,7 @@ package com.orfid.youxikuaile;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -83,6 +84,8 @@ public class MainActivity extends Activity {
 		};
 		
 		mTabPager.setAdapter(mPagerAdapter);
+		
+		startActivity(new Intent(this, SigninActivity.class));
         
 	}
 
