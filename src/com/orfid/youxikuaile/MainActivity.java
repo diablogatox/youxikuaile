@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -92,7 +91,6 @@ public class MainActivity extends Activity {
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 		@Override
 		public void onPageSelected(int arg0) {
-			Log.d("page==========>", arg0+"");
 			switch (arg0) {
 			case 0:
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.menu1));
@@ -185,7 +183,6 @@ public class MainActivity extends Activity {
 		}
 		@Override
 		public void onClick(View v) {
-			Log.d("index===========>", index+"");
 			mTabPager.setCurrentItem(index);
 		}
 	};

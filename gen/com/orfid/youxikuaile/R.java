@@ -74,10 +74,11 @@ public final class R {
         public static final int menu4_1=0x7f02002b;
         public static final int menu5=0x7f02002c;
         public static final int menu5_1=0x7f02002d;
+        public static final int user_picture90x90=0x7f02002e;
     }
     public static final class id {
         public static final int add_btn=0x7f070009;
-        public static final int dotLayout=0x7f070016;
+        public static final int dotLayout=0x7f070017;
         public static final int et_login_password=0x7f070012;
         public static final int et_login_username=0x7f07000b;
         public static final int et_login_username1=0x7f07000f;
@@ -98,9 +99,10 @@ public final class R {
         public static final int tv_rgt_username=0x7f07000a;
         public static final int tv_rgt_username1=0x7f07000e;
         public static final int tv_rgt_username2=0x7f07000c;
-        public static final int v_dot1=0x7f070017;
-        public static final int v_dot2=0x7f070018;
-        public static final int viewPager=0x7f070015;
+        public static final int user_picture=0x7f070015;
+        public static final int v_dot1=0x7f070018;
+        public static final int v_dot2=0x7f070019;
+        public static final int viewPager=0x7f070016;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
