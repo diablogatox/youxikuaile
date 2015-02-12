@@ -33,16 +33,25 @@
 	       		android:layout_centerVertical="true"
 	       		android:layout_marginRight="12dp"
 	       		android:src="@drawable/icon_add"
-	       		android:background="@null" />    
+	       		android:background="@null" />
+			<EditText
+       		    android:id="@+id/et_search_input"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:background="@null"
+			    android:visibility="gone"
+			    android:layout_toLeftOf="@id/add_btn" />
 	        <ImageButton
 			    android:id="@+id/search_btn"
 			    android:layout_width="wrap_content" 
 	       		android:layout_height="wrap_content"
-	       		android:layout_toLeftOf="@id/add_btn"
+	       		android:layout_toLeftOf="@id/et_search_input"
 	       		android:layout_centerVertical="true"
 	       		android:layout_marginRight="8dp"
 	       		android:src="@drawable/icon_search"
+	       		android:onClick="doSearchAction"
 	       		android:background="@null" />  
+       		
 		</RelativeLayout>
 			
 	</FrameLayout>

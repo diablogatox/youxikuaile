@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -183,8 +184,12 @@ public class MainActivity extends Activity {
 		}
 		@Override
 		public void onClick(View v) {
-			mTabPager.setCurrentItem(index);
+			mTabPager.setCurrentItem(index, false);
 		}
 	};
+	
+	public void doSearchAction(View view) {
+		
+	}
 
 }

@@ -78,11 +78,14 @@ public final class R {
     }
     public static final class id {
         public static final int add_btn=0x7f070009;
-        public static final int dotLayout=0x7f070017;
+        public static final int btn_singup=0x7f070014;
+        public static final int dotLayout=0x7f07001a;
         public static final int et_login_password=0x7f070012;
         public static final int et_login_username=0x7f07000b;
         public static final int et_login_username1=0x7f07000f;
         public static final int et_login_username2=0x7f07000d;
+        public static final int et_search_input=0x7f070017;
+        public static final int forgot_pwd=0x7f070013;
         public static final int img_found=0x7f070003;
         public static final int img_hot=0x7f070002;
         public static final int img_message=0x7f070004;
@@ -91,18 +94,18 @@ public final class R {
         public static final int ll_signin_box=0x7f070010;
         public static final int main_activity=0x7f070000;
         public static final int main_bottom=0x7f070001;
-        public static final int search_btn=0x7f070013;
-        public static final int slide_show_view=0x7f070014;
+        public static final int search_btn=0x7f070015;
+        public static final int slide_show_view=0x7f070016;
         public static final int tabpager=0x7f070007;
         public static final int title=0x7f070008;
         public static final int tv_rgt_password=0x7f070011;
         public static final int tv_rgt_username=0x7f07000a;
         public static final int tv_rgt_username1=0x7f07000e;
         public static final int tv_rgt_username2=0x7f07000c;
-        public static final int user_picture=0x7f070015;
-        public static final int v_dot1=0x7f070018;
-        public static final int v_dot2=0x7f070019;
-        public static final int viewPager=0x7f070016;
+        public static final int user_picture=0x7f070018;
+        public static final int v_dot1=0x7f07001b;
+        public static final int v_dot2=0x7f07001c;
+        public static final int viewPager=0x7f070019;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
