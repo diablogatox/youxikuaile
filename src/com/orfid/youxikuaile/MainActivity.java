@@ -1,16 +1,15 @@
 package com.orfid.youxikuaile;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,16 +17,11 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-
-
-
-
 import android.widget.TextView;
 
 import com.orfid.youxikuaile.pojo.ActionItem;
@@ -46,7 +40,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
-	private ListView hotRecommendLv;
+	private ListView hotRecommendLv, followedPublicLv;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,13 +106,16 @@ public class MainActivity extends Activity implements OnClickListener {
 		mTabPager.setAdapter(mPagerAdapter);
 		
 		init();
-		setup();
+		setup(0);
         
 	}
 
 	public class MyOnPageChangeListener implements OnPageChangeListener {
 		@Override
 		public void onPageSelected(int arg0) {
+			
+			setup(arg0);
+			
 			switch (arg0) {
 			case 0:
 				mTab1.setImageDrawable(getResources().getDrawable(R.drawable.menu1));
@@ -227,13 +224,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		imm = (InputMethodManager)getSystemService(
 				Context.INPUT_METHOD_SERVICE);
-		view = views.get(currIndex);
+//		view = views.get(currIndex);
 		
 	}
 	
-	private void setup() {
+	private void setup(int index) {
 		
-		if (currIndex == 0) {
+		Log.d("currentIndex==========>", index+"");
+		
+		view = views.get(index);
+		
+		if (index == 0) {
 			
 			hotRecommendLv = (ListView) view.findViewById(R.id.hot_recommend);
 			titleBar = view.findViewById(R.id.title);
@@ -265,6 +266,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			});
 			
 			hotRecommendLv.setAdapter(new MyAdapter());
+			
+		} else if (index == 1) {
+			
+			followedPublicLv = (ListView) view.findViewById(R.id.followed_public);
+			followedPublicLv.setAdapter(new MyAdapter1());
+			
 		}
 		
 	}
@@ -346,6 +353,63 @@ public class MainActivity extends Activity implements OnClickListener {
 				viewHolder = new PictureViewHolder();
 				convertView = LayoutInflater.from(MainActivity.this).inflate(
 						R.layout.hot_recommend, parent, false);
+//				viewHolder.iv_friends_pic = (ImageView) convertView
+//						.findViewById(R.id.iv_friends_pic);
+//				viewHolder.tv_friends_name = (TextView) convertView
+//						.findViewById(R.id.tv_friends_name);
+//				viewHolder.tv_music_content = (TextView) convertView
+//						.findViewById(R.id.tv_music_content);
+//				viewHolder.tv_distance = (TextView) convertView
+//						.findViewById(R.id.tv_distance);
+//				viewHolder.btn_voice = (Button) convertView
+//						.findViewById(R.id.btn_voice);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (PictureViewHolder) convertView.getTag();
+			}
+
+//			viewHolder.tv_friends_name.setText("林俊杰");//名字
+//			viewHolder.tv_distance.setText(500 + "m"); //距离
+//			// 在下面进行判断，并显示或隐藏歌词和语音，实现相应的功能
+//			viewHolder.tv_music_content.setText("她静悄悄的来过，她慢慢带走沉默。只是最后的承诺，还是没有带走了"); // 歌词
+//			viewHolder.btn_voice.setVisibility(View.GONE);
+
+			return convertView;
+		}
+
+		public class PictureViewHolder {
+			ImageView iv_friends_pic;
+			TextView tv_friends_name;
+			TextView tv_music_content;
+		}
+
+	}
+	
+	
+	class MyAdapter1 extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			return 4;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			PictureViewHolder viewHolder = null;
+			if (convertView == null) {
+				viewHolder = new PictureViewHolder();
+				convertView = LayoutInflater.from(MainActivity.this).inflate(
+						R.layout.found_public, parent, false);
 //				viewHolder.iv_friends_pic = (ImageView) convertView
 //						.findViewById(R.id.iv_friends_pic);
 //				viewHolder.tv_friends_name = (TextView) convertView
