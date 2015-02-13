@@ -2,9 +2,11 @@ package com.orfid.youxikuaile;
 
 import java.util.ArrayList;
 
+import com.orfid.youxikuaile.pojo.ActionItem;
+import com.orfid.youxikuaile.widget.TitlePopup;
+
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -13,6 +15,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -30,6 +33,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private View view, titleBar, edittextBottomLine, searchOverlay;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
+	private TitlePopup titlePopup;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +98,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mTabPager.setAdapter(mPagerAdapter);
 		
 		init();
+		fillData();
 		setListener();
         
 	}
@@ -198,15 +203,22 @@ public class MainActivity extends Activity implements OnClickListener {
 	};
 	
 	public void toggleDropdownMenu(View view) {
-
+		titlePopup.show(view);
 	}
 	
 	private void init() {
+		
+		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 		imm = (InputMethodManager)getSystemService(
 			      Context.INPUT_METHOD_SERVICE);
 		view = views.get(currIndex);
 		
+	}
+	
+	private void fillData() {
+		titlePopup.addAction(new ActionItem(this, "发起群聊", R.drawable.icon_chat_more));
+		titlePopup.addAction(new ActionItem(this, "添加好友", R.drawable.icon_add_friend));
 	}
 	
 	private void setListener() {

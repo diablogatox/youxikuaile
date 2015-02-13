@@ -78,7 +78,9 @@ public final class R {
         public static final int menu4_1=0x7f02002e;
         public static final int menu5=0x7f02002f;
         public static final int menu5_1=0x7f020030;
-        public static final int user_picture90x90=0x7f020031;
+        public static final int mm_title_functionframe_line=0x7f020031;
+        public static final int title_function_bg=0x7f020032;
+        public static final int user_picture90x90=0x7f020033;
     }
     public static final class id {
         public static final int add_btn=0x7f070009;
@@ -107,6 +109,7 @@ public final class R {
         public static final int slide_show_view=0x7f070016;
         public static final int tabpager=0x7f070007;
         public static final int title=0x7f070008;
+        public static final int title_list=0x7f070022;
         public static final int tv_rgt_password=0x7f070011;
         public static final int tv_rgt_username=0x7f07000a;
         public static final int tv_rgt_username1=0x7f07000e;
@@ -127,6 +130,7 @@ public final class R {
         public static final int frame_mine=0x7f030007;
         public static final int frame_more=0x7f030008;
         public static final int layout_slideshow=0x7f030009;
+        public static final int title_popup=0x7f03000a;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
