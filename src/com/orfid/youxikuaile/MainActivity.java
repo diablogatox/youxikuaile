@@ -3,23 +3,33 @@ package com.orfid.youxikuaile;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener {
 
 	public static MainActivity instance = null;
 	private ViewPager mTabPager;
 	private ImageView mTab1, mTab2, mTab3, mTab4, mTab5;
 	private int currIndex = 0;
+	private EditText searchInput;
+	private ImageButton searchBtn, addBtn, backBtn;
+	private View view, titleBar, edittextBottomLine, searchOverlay;
+	private ArrayList<View> views = new ArrayList<View>();
+	private InputMethodManager imm;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +61,6 @@ public class MainActivity extends Activity {
         View view4 = mLi.inflate(R.layout.frame_more, null);
         View view5 = mLi.inflate(R.layout.frame_mine, null);
         
-
-        final ArrayList<View> views = new ArrayList<View>();
         views.add(view1);
         views.add(view2);
         views.add(view3);
@@ -85,7 +93,8 @@ public class MainActivity extends Activity {
 		
 		mTabPager.setAdapter(mPagerAdapter);
 		
-		startActivity(new Intent(this, SigninActivity.class));
+		init();
+		setListener();
         
 	}
 
@@ -188,7 +197,83 @@ public class MainActivity extends Activity {
 		}
 	};
 	
-	public void doSearchAction(View view) {
+	public void toggleDropdownMenu(View view) {
+
+	}
+	
+	private void init() {
+		
+		imm = (InputMethodManager)getSystemService(
+			      Context.INPUT_METHOD_SERVICE);
+		view = views.get(currIndex);
+		
+	}
+	
+	private void setListener() {
+		
+		if (currIndex == 0) {
+			
+			titleBar = view.findViewById(R.id.title);
+			edittextBottomLine = view.findViewById(R.id.et_bottom_line);
+			searchOverlay = view.findViewById(R.id.search_overlay);
+			searchBtn = (ImageButton) view.findViewById(R.id.ib_search);
+			addBtn = (ImageButton) view.findViewById(R.id.ib_add);
+			backBtn = (ImageButton) view.findViewById(R.id.btn_back);
+			searchInput = (EditText) view.findViewById(R.id.et_search_input);
+			
+			searchBtn.setOnClickListener(this);
+			backBtn.setOnClickListener(this);
+			searchOverlay.setOnClickListener(this);
+		}
+		
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.ib_search:
+			
+			v.setVisibility(View.GONE);
+			addBtn.setVisibility(View.GONE);
+			backBtn.setVisibility(View.VISIBLE);
+			searchInput.setVisibility(View.VISIBLE);
+			edittextBottomLine.setVisibility(View.VISIBLE);
+			searchOverlay.setVisibility(View.VISIBLE);
+			titleBar.setBackgroundResource(R.color.header_bar_bg_color);
+			
+			searchInput.requestFocus();
+			imm.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT);
+			
+			break;
+		case R.id.btn_back:
+			
+			v.setVisibility(View.GONE);
+			searchInput.setVisibility(View.GONE);
+			edittextBottomLine.setVisibility(View.GONE);
+			searchOverlay.setVisibility(View.GONE);
+			addBtn.setVisibility(View.VISIBLE);
+			searchBtn.setVisibility(View.VISIBLE);
+			titleBar.setBackgroundColor(Color.TRANSPARENT);
+			
+			searchInput.setText("");
+			imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
+			
+			break;
+		case R.id.search_overlay:
+			
+			v.setVisibility(View.GONE);
+			searchInput.setVisibility(View.GONE);
+			edittextBottomLine.setVisibility(View.GONE);
+			backBtn.setVisibility(View.GONE);
+			addBtn.setVisibility(View.VISIBLE);
+			searchBtn.setVisibility(View.VISIBLE);
+			titleBar.setBackgroundColor(Color.TRANSPARENT);
+			
+			searchInput.setText("");
+			imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
+			
+			break;
+		}
 		
 	}
 

@@ -1,79 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <FrameLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        
-        <com.orfid.youxikuaile.widget.SlideShowView
-	        android:id="@+id/slide_show_view"
-	        android:layout_width="match_parent"
-	        android:layout_height="180dp"
-	        android:layout_gravity="center_horizontal" />
-        
-	    <RelativeLayout 
-			android:layout_width="fill_parent"
-	  		android:layout_height="45dp"
-	  		android:id="@+id/title" 
-			android:background="@android:color/transparent"
-			android:gravity="center_vertical"  >   			
-			<TextView
-				android:layout_width="wrap_content" 
-		      	android:layout_height="wrap_content" 
-		      	android:layout_centerInParent="true"
-		      	android:textSize="20sp"		
-				android:textColor="#ffffff" /> 
-			<ImageButton
-			    android:id="@+id/add_btn"
-			    android:layout_width="wrap_content" 
-	       		android:layout_height="wrap_content"
-	       		android:layout_alignParentRight="true" 
-	       		android:layout_centerVertical="true"
-	       		android:layout_marginRight="12dp"
-	       		android:src="@drawable/icon_add"
-	       		android:background="@null" />
-			<EditText
-       		    android:id="@+id/et_search_input"
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:background="@null"
-			    android:visibility="gone"
-			    android:layout_toLeftOf="@id/add_btn" />
-	        <ImageButton
-			    android:id="@+id/search_btn"
-			    android:layout_width="wrap_content" 
-	       		android:layout_height="wrap_content"
-	       		android:layout_toLeftOf="@id/et_search_input"
-	       		android:layout_centerVertical="true"
-	       		android:layout_marginRight="8dp"
-	       		android:src="@drawable/icon_search"
-	       		android:onClick="doSearchAction"
-	       		android:background="@null" />  
-       		
-		</RelativeLayout>
-			
-	</FrameLayout>
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
-	    <FrameLayout
-	        android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" >
+	    
+	    <FrameLayout android:layout_width="match_parent"
 	        android:layout_height="wrap_content">
-	       	<TextView
-	       	    android:layout_width="wrap_content"
-	       	    android:layout_height="wrap_content"
-	       	    android:drawableLeft="@drawable/icon_hot_title"
-	       	    android:drawablePadding="6dp"
-	       	    android:paddingLeft="6dp"
-	       	    android:textSize="20sp"
-	       	    android:textStyle="bold"
-	       	    android:textColor="#000"
-	       	    android:text="热门推荐" />
-	    </FrameLayout>
-	</RelativeLayout>
-	
-</LinearLayout>
+	        
+	        <com.orfid.youxikuaile.widget.SlideShowView
+		        android:id="@+id/slide_show_view"
+		        android:layout_width="match_parent"
+		        android:layout_height="180dp"
+		        android:layout_gravity="center_horizontal" />
+	        
+		    <RelativeLayout
+				android:layout_width="fill_parent"
+		  		android:layout_height="45dp"
+		  		android:id="@+id/title" 
+		  		android:paddingBottom="4dp"
+				android:background="@android:color/transparent"
+				android:gravity="center_vertical"  >   			
+				<TextView
+					android:layout_width="wrap_content" 
+			      	android:layout_height="wrap_content" 
+			      	android:layout_centerInParent="true"
+			      	android:textSize="20sp"		
+					android:textColor="#ffffff" /> 
+					
+				<ImageButton
+			    android:id="@+id/btn_back"
+			    android:layout_width="wrap_content" 
+	       		android:layout_height="wrap_content"
+	       		android:layout_alignParentLeft="true" 
+	       		android:layout_centerVertical="true"
+	       		android:src="@drawable/icon_back"
+	       		android:visibility="gone"
+	       		android:background="@null" />
+				
+				<ImageButton
+				    android:id="@+id/ib_add"
+				    android:layout_width="wrap_content" 
+		       		android:layout_height="wrap_content"
+		       		android:layout_alignParentRight="true" 
+		       		android:layout_centerVertical="true"
+		       		android:layout_marginRight="12dp"
+		       		android:src="@drawable/icon_add"
+		       		android:onClick="toggleDropdownMenu"
+		       		android:background="@null" />
+				
+				<EditText
+	       		    android:id="@+id/et_search_input"
+				    android:layout_width="match_parent"
+				    android:layout_height="match_parent"
+				    android:paddingLeft="10dp"
+				    android:paddingTop="5dp"
+				    android:drawablePadding="5dp"
+				    android:layout_toRightOf="@id/btn_back"
+				    android:drawableLeft="@drawable/icon_search"
+				    android:drawableBottom="#000"
+				    android:visibility="gone"
+				    android:hint="ID号或昵称"
+				    android:textColor="#fff"
+				    android:textColorHint="#fff"
+				    android:background="@null"
+				    android:layout_toLeftOf="@id/ib_add" />
+				<View
+				    android:id="@+id/et_bottom_line"
+				    android:layout_width="match_parent"
+				    android:layout_height="1dp"
+				    android:layout_alignBottom="@id/et_search_input"
+				    android:layout_toRightOf="@id/btn_back"
+				    android:visibility="gone"
+				    android:background="#fff" />
+		        <ImageButton
+				    android:id="@+id/ib_search"
+				    android:layout_width="wrap_content" 
+		       		android:layout_height="wrap_content"
+		       		android:layout_toLeftOf="@id/et_search_input"
+		       		android:layout_centerVertical="true"
+		       		android:layout_marginRight="8dp"
+		       		android:src="@drawable/icon_search"
+		       		android:background="@null" />  
+	       		
+			</RelativeLayout>
+				
+		</FrameLayout>
+	    
+	    
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:padding="10dp">
+		    <FrameLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content">
+		       	<TextView
+		       	    android:layout_width="wrap_content"
+		       	    android:layout_height="wrap_content"
+		       	    android:drawableLeft="@drawable/icon_hot_title"
+		       	    android:drawablePadding="6dp"
+		       	    android:paddingLeft="6dp"
+		       	    android:textSize="20sp"
+		       	    android:textStyle="bold"
+		       	    android:textColor="#000"
+		       	    android:text="热门推荐" />
+		    </FrameLayout>
+		</RelativeLayout>
+		
+	</LinearLayout>
+	<LinearLayout
+	    android:id="@+id/search_overlay"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_marginTop="45dp"
+	    android:orientation="vertical"
+	    android:visibility="gone"
+	    android:background="#7f000000">
+	    
+	</LinearLayout>
+</FrameLayout>
