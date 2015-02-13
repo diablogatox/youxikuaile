@@ -15,7 +15,8 @@
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +29,8 @@
             android:name=".SignupActivity"></activity>
         <activity
             android:name=".RetrievePasswordActivity"></activity>
+        <activity
+            android:name=".AddNewFriendActivity"></activity>
     </application>
 
 </manifest>

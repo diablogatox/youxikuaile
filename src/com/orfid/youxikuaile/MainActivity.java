@@ -1,12 +1,11 @@
 package com.orfid.youxikuaile;
 
 import java.util.ArrayList;
-
-import com.orfid.youxikuaile.pojo.ActionItem;
-import com.orfid.youxikuaile.widget.TitlePopup;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -15,12 +14,25 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+
+
+
+import android.widget.TextView;
+
+import com.orfid.youxikuaile.pojo.ActionItem;
+import com.orfid.youxikuaile.widget.TitlePopup;
+import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -34,13 +46,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
+	private ListView hotRecommendLv;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		instance = this;
 		
 		mTabPager = (ViewPager) findViewById(R.id.tabpager);
@@ -98,8 +112,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mTabPager.setAdapter(mPagerAdapter);
 		
 		init();
-		fillData();
-		setListener();
+		setup();
         
 	}
 
@@ -209,22 +222,20 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void init() {
 		
 		titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		titlePopup.addAction(new ActionItem(this, "发起群聊", R.drawable.icon_chat_more));
+		titlePopup.addAction(new ActionItem(this, "添加好友", R.drawable.icon_add_friend));
 		
 		imm = (InputMethodManager)getSystemService(
-			      Context.INPUT_METHOD_SERVICE);
+				Context.INPUT_METHOD_SERVICE);
 		view = views.get(currIndex);
 		
 	}
 	
-	private void fillData() {
-		titlePopup.addAction(new ActionItem(this, "发起群聊", R.drawable.icon_chat_more));
-		titlePopup.addAction(new ActionItem(this, "添加好友", R.drawable.icon_add_friend));
-	}
-	
-	private void setListener() {
+	private void setup() {
 		
 		if (currIndex == 0) {
 			
+			hotRecommendLv = (ListView) view.findViewById(R.id.hot_recommend);
 			titleBar = view.findViewById(R.id.title);
 			edittextBottomLine = view.findViewById(R.id.et_bottom_line);
 			searchOverlay = view.findViewById(R.id.search_overlay);
@@ -236,6 +247,24 @@ public class MainActivity extends Activity implements OnClickListener {
 			searchBtn.setOnClickListener(this);
 			backBtn.setOnClickListener(this);
 			searchOverlay.setOnClickListener(this);
+			titlePopup.setItemOnClickListener(new OnItemOnClickListener() {
+
+				@Override
+				public void onItemClick(ActionItem item, int position) {
+					switch (position) {
+					case 0:
+						break;
+					case 1:
+						
+						startActivity(new Intent(MainActivity.this, AddNewFriendActivity.class));
+						
+						break;
+					}
+				}
+				
+			});
+			
+			hotRecommendLv.setAdapter(new MyAdapter());
 		}
 		
 	}
@@ -253,6 +282,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			searchOverlay.setVisibility(View.VISIBLE);
 			titleBar.setBackgroundResource(R.color.header_bar_bg_color);
 			
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 			searchInput.requestFocus();
 			imm.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT);
 			
@@ -265,8 +295,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			searchOverlay.setVisibility(View.GONE);
 			addBtn.setVisibility(View.VISIBLE);
 			searchBtn.setVisibility(View.VISIBLE);
-			titleBar.setBackgroundColor(Color.TRANSPARENT);
+			titleBar.setBackgroundDrawable(null);
 			
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 			searchInput.setText("");
 			imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
 			
@@ -279,14 +310,72 @@ public class MainActivity extends Activity implements OnClickListener {
 			backBtn.setVisibility(View.GONE);
 			addBtn.setVisibility(View.VISIBLE);
 			searchBtn.setVisibility(View.VISIBLE);
-			titleBar.setBackgroundColor(Color.TRANSPARENT);
+			titleBar.setBackgroundDrawable(null);
 			
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 			searchInput.setText("");
 			imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
 			
 			break;
 		}
 		
+	}
+	
+	
+	class MyAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			return 4;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			PictureViewHolder viewHolder = null;
+			if (convertView == null) {
+				viewHolder = new PictureViewHolder();
+				convertView = LayoutInflater.from(MainActivity.this).inflate(
+						R.layout.hot_recommend, parent, false);
+//				viewHolder.iv_friends_pic = (ImageView) convertView
+//						.findViewById(R.id.iv_friends_pic);
+//				viewHolder.tv_friends_name = (TextView) convertView
+//						.findViewById(R.id.tv_friends_name);
+//				viewHolder.tv_music_content = (TextView) convertView
+//						.findViewById(R.id.tv_music_content);
+//				viewHolder.tv_distance = (TextView) convertView
+//						.findViewById(R.id.tv_distance);
+//				viewHolder.btn_voice = (Button) convertView
+//						.findViewById(R.id.btn_voice);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (PictureViewHolder) convertView.getTag();
+			}
+
+//			viewHolder.tv_friends_name.setText("林俊杰");//名字
+//			viewHolder.tv_distance.setText(500 + "m"); //距离
+//			// 在下面进行判断，并显示或隐藏歌词和语音，实现相应的功能
+//			viewHolder.tv_music_content.setText("她静悄悄的来过，她慢慢带走沉默。只是最后的承诺，还是没有带走了"); // 歌词
+//			viewHolder.btn_voice.setVisibility(View.GONE);
+
+			return convertView;
+		}
+
+		public class PictureViewHolder {
+			ImageView iv_friends_pic;
+			TextView tv_friends_name;
+			TextView tv_music_content;
+		}
+
 	}
 
 }
