@@ -50,6 +50,7 @@
     	    android:background="#fff"
     	    android:orientation="horizontal">
     	    <ImageButton
+    	        android:id="@+id/nearby_players"
     	        android:layout_width="0dp"
     	        android:layout_height="wrap_content"
     	        android:layout_weight="1"
@@ -59,6 +60,7 @@
     	    <View android:layout_width="10dp"
     	        android:layout_height="wrap_content"/>
     	    <ImageButton
+    	        android:id="@+id/nearby_organizations"
     	        android:layout_width="0dp"
     	        android:layout_height="wrap_content"
     	        android:layout_weight="1"
@@ -67,6 +69,7 @@
     	    <View android:layout_width="10dp"
     	        android:layout_height="wrap_content"/>
     	    <ImageButton
+    	        android:id="@+id/nearby_sitters"
     	        android:layout_width="0dp"
     	        android:layout_height="wrap_content"
     	        android:layout_weight="1"
@@ -98,6 +101,7 @@
 		    android:id="@+id/followed_public"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
+		    android:cacheColorHint="@null"
 		    android:divider="@null" />
         
     </LinearLayout>

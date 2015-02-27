@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView mTab1, mTab2, mTab3, mTab4, mTab5;
 	private int currIndex = 0;
 	private EditText searchInput;
-	private ImageButton searchBtn, addBtn, backBtn;
+	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
@@ -269,7 +269,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 		} else if (index == 1) {
 			
+			nearbyPlayersBtn = (ImageButton) view.findViewById(R.id.nearby_players);
 			followedPublicLv = (ListView) view.findViewById(R.id.followed_public);
+			
+			nearbyPlayersBtn.setOnClickListener(this);
+			
 			followedPublicLv.setAdapter(new MyAdapter1());
 			
 		}
@@ -322,6 +326,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 			searchInput.setText("");
 			imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
+			
+			break;
+		case R.id.nearby_players:
+			
+			startActivity(new Intent(this, NearbyPlayersActivity.class));
 			
 			break;
 		}
