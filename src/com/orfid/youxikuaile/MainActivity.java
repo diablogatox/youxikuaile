@@ -270,9 +270,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		} else if (index == 1) {
 			
 			nearbyPlayersBtn = (ImageButton) view.findViewById(R.id.nearby_players);
+            nearbyOrganizationsBtn = (ImageButton) view.findViewById(R.id.nearby_organizations);
+            nearbySittersBtn = (ImageButton) view.findViewById(R.id.nearby_sitters);
 			followedPublicLv = (ListView) view.findViewById(R.id.followed_public);
 			
 			nearbyPlayersBtn.setOnClickListener(this);
+            nearbyOrganizationsBtn.setOnClickListener(this);
+            nearbySittersBtn.setOnClickListener(this);
 			
 			followedPublicLv.setAdapter(new MyAdapter1());
 			
@@ -333,6 +337,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivity(new Intent(this, NearbyPlayersActivity.class));
 			
 			break;
+        case R.id.nearby_organizations:
+
+            startActivity(new Intent(this, NearbyOrganizationsActivity.class));
+
+            break;
+        case R.id.nearby_sitters:
+
+            startActivity(new Intent(this, OnlineSittersActivity.class));
+
+            break;
 		}
 		
 	}

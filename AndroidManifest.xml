@@ -34,9 +34,9 @@
         <activity
             android:name=".NearbyPlayersActivity"></activity>
         <activity
-            android:name=".NearbyOrganizationActivity"></activity>
+            android:name=".NearbyOrganizationsActivity"></activity>
         <activity
-            android:name=".SittersActivity"></activity>
+            android:name=".OnlineSittersActivity"></activity>
     </application>
 
 </manifest>
