@@ -58,20 +58,22 @@
 			        android:textSize="18sp"
 			        />
 			    <EditText
-			        android:id="@+id/et_login_username" 
-			        android:layout_width="match_parent"
+			        android:id="@+id/et_signup_phone"
+			        android:layout_width="180dp"
 			        android:layout_height="wrap_content"
 			        android:layout_toRightOf="@+id/tv_rgt_username"
 			        android:layout_marginLeft="5dp"
 			        android:layout_centerVertical="true"
 			        android:textSize="15sp"
 			        android:hint="请输入手机号码"
+                    android:phoneNumber="true"
 			        android:background="@null"
 			        android:singleLine="true"
-			        android:maxLength="15"
+                    android:maxLength="15"
 			        android:textColorHint="#55000000"
 			        />
 			    <Button
+                    android:id="@+id/btn_get_captcha"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:background="@drawable/btn_verify1"
@@ -102,7 +104,7 @@
 			        android:textSize="18sp"
 			        />
 			    <EditText
-			        android:id="@+id/et_login_username2" 
+			        android:id="@+id/et_signup_captcha"
 			        android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_toRightOf="@+id/tv_rgt_username2"
@@ -138,7 +140,7 @@
 			        android:textSize="18sp"
 			        />
 			    <EditText
-			        android:id="@+id/et_login_username1" 
+			        android:id="@+id/et_signup_password"
 			        android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_toRightOf="@+id/tv_rgt_username1"
@@ -146,12 +148,48 @@
 			        android:layout_centerVertical="true"
 			        android:textSize="15sp"
 			        android:hint="请输入密码"
+                    android:password="true"
 			        android:background="@null"
 			        android:singleLine="true"
-			        android:maxLength="15"
 			        android:textColorHint="#55000000"
 			        />
 		    </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha="0.3"
+                android:background="@drawable/line_login"
+                />
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    >
+                <TextView
+                        android:id="@+id/tv_rgt_username3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="确认密码"
+                        android:layout_centerVertical="true"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        />
+                <EditText
+                        android:id="@+id/et_signup_password_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/tv_rgt_username3"
+                        android:layout_marginLeft="5dp"
+                        android:layout_centerVertical="true"
+                        android:textSize="15sp"
+                        android:hint="请输入密码"
+                        android:background="@null"
+                        android:singleLine="true"
+                        android:password="true"
+                        android:textColorHint="#55000000"
+                        />
+            </RelativeLayout>
         </LinearLayout>
         
         <LinearLayout
@@ -163,6 +201,7 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:button="@drawable/ckx_reg_selector" />
             <TextView
                 android:layout_width="wrap_content"
@@ -172,6 +211,7 @@
         </LinearLayout>
         
         <Button
+            android:id="@+id/btn_signup"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:textColor="#fff"

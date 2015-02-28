@@ -1,0 +1,10 @@
+package com.orfid.youxikuaile;
+
+/**
+ * Created by Administrator on 2015/2/28.
+ */
+public class Constants {
+    public static final int ACT_PHONT_VALIDATION = 0;
+    public static final int ACT_SIGNUP = 1;
+    public static final int ACT_MODIFY_PASSWORD = 2;
+}
