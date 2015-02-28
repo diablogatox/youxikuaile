@@ -1,6 +1,7 @@
 package com.orfid.youxikuaile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,6 +46,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        HashMap user = new HashMap();
+        user = db.getUserDetails();
+
+        if (user.size() == 0) {
+            Intent intent = new Intent(this, SigninActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+
 		setContentView(R.layout.activity_main);
 		
 //		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
