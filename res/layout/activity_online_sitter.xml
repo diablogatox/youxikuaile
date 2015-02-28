@@ -27,7 +27,7 @@
                 android:src="@drawable/icon_back"
                 android:background="@null" />
         <Button
-                android:id="@+id/add_btn"
+                android:id="@+id/btn_sitter_offline"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

@@ -3,63 +3,35 @@ package com.orfid.youxikuaile;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
-import com.orfid.youxikuaile.widget.HorizontalListView;
 
-/**
- * Created by Administrator on 2015/2/27.
- */
-public class OnlineSittersActivity extends Activity implements GestureDetector.OnGestureListener, View.OnClickListener {
+public class OfflineSittersActivity extends Activity implements View.OnClickListener {
 
-    HorizontalListView sitterGamesLv;
-    ImageButton backBtn;
-    Button sitterOfflineBtn;
+    private ListView offlineSittersLv;
+    private ImageButton backBtn;
+    private Button sitterOnlineBtn;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.activity_offline_sitter);
 
-        setContentView(R.layout.activity_online_sitter);
-
+        offlineSittersLv = (ListView) findViewById(R.id.lv_offline_sitters);
         backBtn = (ImageButton) findViewById(R.id.btn_back);
-        sitterOfflineBtn = (Button) findViewById(R.id.btn_sitter_offline);
-        sitterGamesLv = (HorizontalListView) findViewById(R.id.lv_sitter_games);
+        sitterOnlineBtn = (Button) findViewById(R.id.btn_sitter_online);
 
         backBtn.setOnClickListener(this);
-        sitterOfflineBtn.setOnClickListener(this);
+        sitterOnlineBtn.setOnClickListener(this);
 
-        sitterGamesLv.setAdapter(new MyAdapter());
-    }
+        offlineSittersLv.setAdapter(new MyAdapter());
+	}
 
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        return false;
+    public void goBack(View view) {
+        finish();
     }
 
     @Override
@@ -68,8 +40,9 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
             case R.id.btn_back:
                 finish();
                 break;
-            case R.id.btn_sitter_offline:
-                startActivity(new Intent(this, OfflineSittersActivity.class));
+            case R.id.btn_sitter_online:
+                startActivity(new Intent(this, OnlineSittersActivity.class));
+                break;
         }
     }
 
@@ -77,7 +50,7 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
 
         @Override
         public int getCount() {
-            return 14;
+            return 4;
         }
 
         @Override
@@ -95,8 +68,8 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
             PictureViewHolder viewHolder = null;
             if (convertView == null) {
                 viewHolder = new PictureViewHolder();
-                convertView = LayoutInflater.from(OnlineSittersActivity.this).inflate(
-                        R.layout.sitter_game, parent, false);
+                convertView = LayoutInflater.from(OfflineSittersActivity.this).inflate(
+                        R.layout.nearby_player, parent, false);
 //				viewHolder.iv_friends_pic = (ImageView) convertView
 //						.findViewById(R.id.iv_friends_pic);
 //				viewHolder.tv_friends_name = (TextView) convertView

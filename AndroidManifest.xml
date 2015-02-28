@@ -37,6 +37,8 @@
             android:name=".NearbyOrganizationsActivity"></activity>
         <activity
             android:name=".OnlineSittersActivity"></activity>
+        <activity
+            android:name=".OfflineSittersActivity"></activity>
     </application>
 
 </manifest>
