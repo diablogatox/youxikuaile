@@ -31,8 +31,6 @@
         <activity
             android:name=".SignupActivity"></activity>
         <activity
-            android:name=".RetrievePasswordActivity"></activity>
-        <activity
             android:name=".AddNewFriendActivity"></activity>
         <activity
             android:name=".NearbyPlayersActivity"></activity>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,10 +19,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 public class SignupActivity extends Activity {
 
     private EditText phoneEt, captchaEt, passwordEt, passwordConfirmEt;
+    private TextView titleTv;
     private Button captchaBtn, signupBtn;
+    private View termll;
+    private boolean forgetPassword = false;
     private CountDownTimer timer;
 
 	@Override
@@ -29,20 +35,35 @@ public class SignupActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_signup);
+        obtainExtra();
         init();
 	}
 
-	public void stepBack(View view) {
+    private void obtainExtra() {
+       forgetPassword = getIntent().getBooleanExtra("forgetPassword", false);
+    }
+
+    public void stepBack(View view) {
 		finish();
 	}
 
     private void init() {
+        titleTv = (TextView) findViewById(R.id.tv_title);
+        termll = findViewById(R.id.ll_terms);
         phoneEt = (EditText) findViewById(R.id.et_signup_phone);
         captchaEt = (EditText) findViewById(R.id.et_signup_captcha);
         passwordEt = (EditText) findViewById(R.id.et_signup_password);
         passwordConfirmEt = (EditText) findViewById(R.id.et_signup_password_confirm);
         captchaBtn = (Button) findViewById(R.id.btn_get_captcha);
         signupBtn = (Button) findViewById(R.id.btn_signup);
+
+        if (forgetPassword) {
+            titleTv.setText("找回密码");
+            termll.setVisibility(View.GONE);
+            signupBtn.setText("完成");
+            passwordEt.setHint("请输入新密码");
+            passwordConfirmEt.setHint("请输入新密码");
+        }
 
         captchaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +107,11 @@ public class SignupActivity extends Activity {
                     if (validateInput(passwordEt, passwordConfirmEt) == true) {// 两次密码输入是否匹配
                         // 注册
                         try {
-                            doSignupAction();
+                            if (forgetPassword) {
+//                                doRetrievePasswordAction();
+                            } else {
+                                doSignupAction();
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -168,6 +193,48 @@ public class SignupActivity extends Activity {
         params.put("scode", captchaEt.getText().toString().trim());
         final ProgressDialog dialog = new ProgressDialog(this);
         HttpRestClient.post("user/register", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+
+                    } else if (status == 0) {
+                        Toast.makeText(SignupActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStart() {
+                if (dialog.isShowing() == false) {
+                    dialog.setTitle("请稍等...");
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
+    private void doRetrievePasswordAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("mobile", phoneEt.getText().toString().trim());
+        params.put("newPassword", passwordEt.getText().toString().trim());
+        params.put("smscode", captchaEt.getText().toString().trim());
+//        params.put("token", user.get("token").toString());
+        final ProgressDialog dialog = new ProgressDialog(this);
+        HttpRestClient.post("user/findPassword", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("response=======>", response.toString());

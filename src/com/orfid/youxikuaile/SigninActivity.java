@@ -35,7 +35,9 @@ public class SigninActivity extends Activity {
 	}
 	
 	public void jumpRetrievePassword(View view) {
-		startActivity(new Intent(this, RetrievePasswordActivity.class));
+        Intent intent = new Intent(this, SignupActivity.class);
+        intent.putExtra("forgetPassword", true);
+		startActivity(intent);
 	}
 
     private void init() {
