@@ -42,6 +42,8 @@
             android:name=".OnlineSittersActivity"></activity>
         <activity
             android:name=".OfflineSittersActivity"></activity>
+        <activity
+            android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

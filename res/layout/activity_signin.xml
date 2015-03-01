@@ -47,7 +47,7 @@
 			        android:textSize="15sp"
 			        android:background="@null"
 			        android:singleLine="true"
-                    android:text="908287633@qq.com"
+                    android:text="15900529857"
 			        android:textColorHint="#55000000"
 			        />
 			    <View 
@@ -84,7 +84,7 @@
 			        android:inputType="textPassword"
 			        android:background="@null"
 			        android:singleLine="true"
-                    android:text="123456"
+                    android:text="hello123"
 			        android:textColorHint="#55000000"
 			        />
 		    </RelativeLayout>

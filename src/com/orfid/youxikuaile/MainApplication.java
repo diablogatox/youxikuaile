@@ -25,4 +25,6 @@ public class MainApplication extends Application {
     public static HashMap getUser() {
         return user;
     }
+
+    public static DatabaseHandler getDbHandler() { return db; }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,16 +19,16 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.orfid.youxikuaile.pojo.ActionItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -37,7 +38,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private int currIndex = 0;
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
-	private View view, titleBar, edittextBottomLine, searchOverlay;
+	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
@@ -47,11 +48,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        if (MainApplication.getInstance().getUser().size() == 0) {
+        if (MainApplication.getInstance().getDbHandler().getRawCount() == 0) {
             Intent intent = new Intent(this, SigninActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        } else {
+            // 自主登录用户更新token
+            try {
+                doSigninAction();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
 		setContentView(R.layout.activity_main);
@@ -119,7 +127,43 @@ public class MainActivity extends Activity implements OnClickListener {
         
 	}
 
-	public class MyOnPageChangeListener implements OnPageChangeListener {
+    private void doSigninAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("username", user.get("phone").toString());
+        params.put("password", user.get("password").toString());
+        HttpRestClient.post("user/login", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+
+                        JSONObject data = response.getJSONObject("data");
+                        String uid, token;
+                        uid = data.getString("uid");
+                        token = response.getString("token");
+                        dbHandler.updateUser(uid, token);
+                        Log.d("updated token=======>", token);
+
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(MainActivity.this, SigninActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public class MyOnPageChangeListener implements OnPageChangeListener {
 		@Override
 		public void onPageSelected(int arg0) {
 			
@@ -289,7 +333,19 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			followedPublicLv.setAdapter(new MyAdapter1());
 			
-		}
+		} else if (index == 2) {
+
+        } else if (index == 3) {
+
+        } else if (index == 4) {
+            settingBtnView = findViewById(R.id.btn_settings);
+            settingBtnView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                }
+            });
+        }
 		
 	}
 

@@ -83,6 +83,22 @@ public class SigninActivity extends Activity {
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
+                        DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+                        JSONObject data = response.getJSONObject("data");
+                        String name, uid, pwd, token, photo, phone;
+                        name = data.getString("username");
+                        pwd = password.getText().toString().trim();
+                        uid = data.getString("uid");
+                        token = response.getString("token");
+                        photo = data.getString("photo");
+                        phone = username.getText().toString().trim();
+                        dbHandler.addUser(name, uid, pwd, token, photo, phone);
+                        Log.d("db_rec_count======>", MainApplication.getInstance().getDbHandler().getRawCount() + "");
+
+                        Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
 
                     } else if (status == 0) {
                         Toast.makeText(SigninActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();

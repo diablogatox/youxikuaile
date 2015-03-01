@@ -51,14 +51,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addUser(String username, String uid, String password, String token, String photo, String phone) {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_LOGIN);
         ContentValues values = new ContentValues();
+        values.put(KEY_UID, uid);
         values.put(KEY_USERNAME, username);
         values.put(KEY_PASSWORD, password);
-        values.put(KEY_UID, uid);
         values.put(KEY_TOKEN, token);
-        values.put(KEY_PHOTO, photo);
         values.put(KEY_PHONE, phone);
+        values.put(KEY_PHOTO, photo);
         db.insert(TABLE_LOGIN, null, values);
+        db.close();
+    }
+
+    public void updateUser(String uid, String token) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TOKEN, token);
+        db.update(TABLE_LOGIN, values, KEY_UID + "=" + uid, null);
         db.close();
     }
 
@@ -69,12 +78,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
+            user.put("uid", cursor.getString(0));
             user.put("username", cursor.getString(1));
             user.put("password", cursor.getString(2));
-            user.put("uid", cursor.getString(3));
-            user.put("token", cursor.getString(4));
+            user.put("token", cursor.getString(3));
+            user.put("phone", cursor.getString(4));
             user.put("photo", cursor.getString(5));
-            user.put("phone", cursor.getString(6));
         }
         cursor.close();
         db.close();
