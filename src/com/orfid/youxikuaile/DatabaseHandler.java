@@ -63,10 +63,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void updateUser(String uid, String token) {
+    public void updateUser(String uid, String field, String value) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_TOKEN, token);
+        values.put(field, value);
         db.update(TABLE_LOGIN, values, KEY_UID + "=" + uid, null);
         db.close();
     }

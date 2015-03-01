@@ -145,7 +145,7 @@ public class MainActivity extends Activity implements OnClickListener {
                         String uid, token;
                         uid = data.getString("uid");
                         token = response.getString("token");
-                        dbHandler.updateUser(uid, token);
+                        dbHandler.updateUser(uid, Constants.KEY_TOKEN, token);
                         Log.d("updated token=======>", token);
 
                     } else if (status == 0) {

@@ -2,6 +2,7 @@ package com.orfid.youxikuaile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -108,7 +109,7 @@ public class SignupActivity extends Activity {
                         // 注册
                         try {
                             if (forgetPassword) {
-//                                doRetrievePasswordAction();
+                                doRetrievePasswordAction();
                             } else {
                                 doSignupAction();
                             }
@@ -226,13 +227,13 @@ public class SignupActivity extends Activity {
     }
 
     private void doRetrievePasswordAction() throws JSONException {
-        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
-        HashMap user = dbHandler.getUserDetails();
+//        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+//        final HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("mobile", phoneEt.getText().toString().trim());
-        params.put("newPassword", passwordEt.getText().toString().trim());
-        params.put("smscode", captchaEt.getText().toString().trim());
-//        params.put("token", user.get("token").toString());
+        params.put("password", passwordEt.getText().toString().trim());
+        params.put("password_confirm", passwordConfirmEt.getText().toString().trim());
+        params.put("scode", captchaEt.getText().toString().trim());;
         final ProgressDialog dialog = new ProgressDialog(this);
         HttpRestClient.post("user/findPassword", params, new JsonHttpResponseHandler() {
             @Override
@@ -241,6 +242,15 @@ public class SignupActivity extends Activity {
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
+//                        String uid, password;
+//                        uid = user.get("uid").toString();
+//                        password = passwordEt.getText().toString().trim();
+//                        dbHandler.updateUser(uid, Constants.KEY_PASSWORD,password);
+
+                        Intent intent = new Intent(SignupActivity.this, SigninActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
 
                     } else if (status == 0) {
                         Toast.makeText(SignupActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
