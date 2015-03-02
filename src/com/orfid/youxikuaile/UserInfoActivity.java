@@ -44,6 +44,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         backBtn.setOnClickListener(this);
         editAvatarRlView.setOnClickListener(this);
         editNicknameRlView.setOnClickListener(this);
+        editGenderRlView.setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +60,9 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.rl_edit_nickname:
                 startActivity(new Intent(this, NicknameActivity.class));
+                break;
+            case R.id.rl_edit_gender:
+                startActivity(new Intent(this, GenderActivity.class));
                 break;
         }
     }
