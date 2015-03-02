@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by Administrator on 2015/3/2.
@@ -19,7 +20,10 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
     private Button saveBtn;
     private View editAvatarRlView, editNicknameRlView, editGenderRlView, editAgeRlView,
         editAreaRlView, editCollegeRlView;
+    private TextView ageTv;
+
     private static final int PHOTO_PICKER = 0;
+    private static final int DATE_PICKER = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,13 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         editAgeRlView = findViewById(R.id.rl_edit_age);
         editAreaRlView = findViewById(R.id.rl_edit_area);
         editCollegeRlView = findViewById(R.id.rl_edit_college);
+        ageTv = (TextView) findViewById(R.id.tv_age);
 
         backBtn.setOnClickListener(this);
         editAvatarRlView.setOnClickListener(this);
         editNicknameRlView.setOnClickListener(this);
         editGenderRlView.setOnClickListener(this);
+        editAgeRlView.setOnClickListener(this);
     }
 
     @Override
@@ -54,8 +60,8 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.rl_edit_avatar:
-                Intent intent = new Intent(this, PhotoPickerActivity.class);
-                startActivityForResult(intent, PHOTO_PICKER);
+                Intent i1 = new Intent(this, PhotoPickerActivity.class);
+                startActivityForResult(i1, PHOTO_PICKER);
                 overridePendingTransition(0, 0);
                 break;
             case R.id.rl_edit_nickname:
@@ -63,6 +69,11 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.rl_edit_gender:
                 startActivity(new Intent(this, GenderActivity.class));
+                break;
+            case R.id.rl_edit_age:
+                Intent i2 = new Intent(this, WheelDatePickerActivity.class);
+                startActivityForResult(i2, DATE_PICKER);
+                overridePendingTransition(0, 0);
                 break;
         }
     }
@@ -74,6 +85,9 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
             case PHOTO_PICKER:
                 Bitmap photo = data.getExtras().getParcelable("data");
                 userPickture.setImageBitmap(photo);
+                break;
+            case DATE_PICKER:
+                ageTv.setText(data.getIntExtra("age", 0)+"");
                 break;
         }
     }

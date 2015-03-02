@@ -162,11 +162,11 @@
                             android:textSize="18sp"
                             android:text="年龄" />
                     <TextView
+		                    android:id="@+id/tv_age"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="27"
                             android:textSize="16sp"
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />

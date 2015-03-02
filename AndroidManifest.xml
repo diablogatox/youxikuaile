@@ -51,6 +51,9 @@
 	    <activity
 			android:name=".PhotoPickerActivity"
 			android:theme="@style/MyDialogStyleBottom"></activity>
+	    <activity
+		    android:name=".WheelDatePickerActivity"
+		    android:theme="@style/MyDialogStyleBottomNoFloating"></activity>
     </application>
 
 </manifest>
