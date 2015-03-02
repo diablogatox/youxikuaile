@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private int currIndex = 0;
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
-	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView;
+	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
@@ -339,10 +339,18 @@ public class MainActivity extends Activity implements OnClickListener {
 
         } else if (index == 4) {
             settingBtnView = findViewById(R.id.btn_settings);
+            userInfoTv = findViewById(R.id.tv_user_info);
+
             settingBtnView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                }
+            });
+            userInfoTv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, UserInfoActivity.class));
                 }
             });
         }

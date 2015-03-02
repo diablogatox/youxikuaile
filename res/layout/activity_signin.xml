@@ -84,7 +84,7 @@
 			        android:inputType="textPassword"
 			        android:background="@null"
 			        android:singleLine="true"
-                    android:text="hello123"
+                    android:text="123456"
 			        android:textColorHint="#55000000"
 			        />
 		    </RelativeLayout>

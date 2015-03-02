@@ -42,6 +42,11 @@
             android:name=".OfflineSittersActivity"></activity>
         <activity
             android:name=".SettingsActivity"></activity>
+        <activity
+			android:name=".UserInfoActivity"></activity>
+	    <activity
+			android:name=".PhotoPickerActivity"
+			android:theme="@style/MyDialogStyleBottom"></activity>
     </application>
 
 </manifest>
