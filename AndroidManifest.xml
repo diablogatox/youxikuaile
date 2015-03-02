@@ -45,6 +45,8 @@
         <activity
 			android:name=".UserInfoActivity"></activity>
 	    <activity
+			android:name=".NicknameActivity"></activity>
+	    <activity
 			android:name=".PhotoPickerActivity"
 			android:theme="@style/MyDialogStyleBottom"></activity>
     </application>
