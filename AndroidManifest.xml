@@ -49,6 +49,13 @@
 	    <activity
 			android:name=".GenderActivity"></activity>
 	    <activity
+			android:name=".NewFansActivity"></activity>
+	    <activity
+			android:name=".NewsFeedActivity"></activity>
+	    <activity
+			android:name=".NewsFeedPublishActivity"
+			android:windowSoftInputMode="adjustUnspecified|adjustResize"></activity>
+	    <activity
 			android:name=".PhotoPickerActivity"
 			android:theme="@style/MyDialogStyleBottom"></activity>
 	    <activity

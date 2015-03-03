@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private int currIndex = 0;
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
-	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv;
+	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, feedRlView, newFansRlView;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
@@ -333,11 +333,17 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			followedPublicLv.setAdapter(new MyAdapter1());
 			
-		} else if (index == 2) {
+		} else if (index == 2) { // 消息
+
+            feedRlView = findViewById(R.id.rl_feed);
+            newFansRlView = findViewById(R.id.rl_new_fans);
+
+            feedRlView.setOnClickListener(this);
+            newFansRlView.setOnClickListener(this);
 
         } else if (index == 3) {
 
-        } else if (index == 4) {
+        } else if (index == 4) { // 我的
             settingBtnView = findViewById(R.id.btn_settings);
             userInfoTv = findViewById(R.id.tv_user_info);
 
@@ -418,6 +424,15 @@ public class MainActivity extends Activity implements OnClickListener {
         case R.id.nearby_sitters:
 
             startActivity(new Intent(this, OnlineSittersActivity.class));
+
+            break;
+        case R.id.rl_feed:
+
+            startActivity(new Intent(this, NewsFeedActivity.class));
+            break;
+        case R.id.rl_new_fans:
+
+            startActivity(new Intent(this, NewFansActivity.class));
 
             break;
 		}

@@ -2,4 +2,8 @@
 <resources>
     <color name="bottom_navigator_bg_color">#333</color>
     <color name="header_bar_bg_color">#ffb400</color>
+	<color name="blue">#ff15ccbf</color>
+	<color name="red">#ffcc1940</color>
+	<color name="green">#ff29cc15</color>
+	<color name="orange">#ffcc5a19</color>
 </resources>
