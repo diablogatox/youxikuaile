@@ -71,6 +71,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateUser(String uid, String[] fields, String[] values) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        for (int i=0; i<fields.length; i++) cv.put(fields[i], values[i]);
+        db.update(TABLE_LOGIN, cv, KEY_UID + "=" + uid, null);
+        db.close();
+    }
+
     public HashMap getUserDetails() {
         HashMap user = new HashMap();
         String selectQuery = "SELECT * FROM " + TABLE_LOGIN;

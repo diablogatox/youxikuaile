@@ -19,12 +19,18 @@ public class GenderActivity extends Activity {
     private RelativeLayout rl_sexy_boy;
     private RelativeLayout rl_sexy_girl;
     boolean boo = true;
+    int gender = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userinfo_gender);
+        intent();
         init();
+    }
+
+    private void intent() {
+        gender = getIntent().getIntExtra("gender", 0);
     }
 
     private void init() {
@@ -35,7 +41,6 @@ public class GenderActivity extends Activity {
         rl_sexy_boy = (RelativeLayout) findViewById(R.id.rl_sexy_boy);
         rl_sexy_girl = (RelativeLayout) findViewById(R.id.rl_sexy_girl);
 
-        int gender = 1;
         if (gender == 1) {
             iv_sexy_choice1.setVisibility(View.VISIBLE);
         } else if (gender == 2) {
@@ -51,6 +56,7 @@ public class GenderActivity extends Activity {
                 if (!iv_sexy_choice1.isShown()) {
                     // save change
                     //new SaveUserInfoTask(SexyActivity.this, null, null, boo?"1":"2", null).execute();
+                    gender = 1;
                 }
                 iv_sexy_choice1.setVisibility(View.VISIBLE);
                 iv_sexy_choice2.setVisibility(View.GONE);
@@ -66,6 +72,7 @@ public class GenderActivity extends Activity {
                 if (!iv_sexy_choice2.isShown()) {
                     // save change
                     //new SaveUserInfoTask(SexyActivity.this, null, null, boo?"1":"2", null).execute();
+                    gender = 2;
                 }
                 iv_sexy_choice1.setVisibility(View.GONE);
                 iv_sexy_choice2.setVisibility(View.VISIBLE);
@@ -78,20 +85,18 @@ public class GenderActivity extends Activity {
             public void onClick(View arg0) {
 //				writeLoginData();
                 Intent intent = new Intent();
-                int selectedGender = 0;
-                if (iv_sexy_choice1.isShown()) {
-                    selectedGender = 1;
-                } else if (iv_sexy_choice2.isShown()) {
-                    selectedGender = 2;
-                }
-                intent.putExtra("selectedGender", selectedGender);
+                intent.putExtra("gender", gender);
                 setResult(RESULT_OK, intent);
                 finish();
             }
         });
     }
 
-    public void stepBack(View view) {
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("gender", gender);
+        setResult(RESULT_OK, intent);
         finish();
     }
 }

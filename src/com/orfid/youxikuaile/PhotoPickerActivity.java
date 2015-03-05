@@ -68,7 +68,7 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
                 Intent intent 	 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-                        "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+                        "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".png"));
 
                 intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
 

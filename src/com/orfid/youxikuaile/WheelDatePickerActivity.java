@@ -15,7 +15,9 @@ import com.orfid.youxikuaile.widget.wheelview.OnWheelScrollListener;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Administrator on 2015/3/2.
@@ -37,6 +39,7 @@ public class WheelDatePickerActivity extends Activity implements View.OnClickLis
 
     TextView cancelTv, okTv;
     int age = 0;
+    long timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,8 @@ public class WheelDatePickerActivity extends Activity implements View.OnClickLis
             curr_month = wv_month.getCurrentItem() + 1;
             curr_day = wv_day.getCurrentItem() + 1;
 //            birthday.setText(getConstellation(curr_month, curr_day));
+            Calendar calendar = new GregorianCalendar(curr_year, curr_month - 1, curr_day);
+            timestamp = calendar.getTimeInMillis() / 1000L;
         }
     };
 
@@ -196,7 +201,7 @@ public class WheelDatePickerActivity extends Activity implements View.OnClickLis
                 overridePendingTransition(0, 0);
                 break;
             case R.id.tv_ok:
-                setResult(RESULT_OK, new Intent().putExtra("age", age));
+                setResult(RESULT_OK, new Intent().putExtra("age", age).putExtra("timestamp", timestamp));
                 finish();
                 overridePendingTransition(0, 0);
                 break;

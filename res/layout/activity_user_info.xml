@@ -27,6 +27,7 @@
                 android:layout_marginRight="12dp"
                 android:textSize="20sp"
                 android:textColor="#ffffff"
+                android:enabled="false"
                 android:background="@drawable/header_right_save_selector"
                 android:text="保存" />
         <ImageButton
@@ -104,11 +105,11 @@
                             android:textSize="18sp"
                             android:text="昵称" />
                     <TextView
+		                    android:id="@+id/tv_nickname"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="周黑猫"
                             android:textSize="16sp"
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />
@@ -133,11 +134,11 @@
                             android:textSize="18sp"
                             android:text="性别" />
                     <TextView
+		                    android:id="@+id/tv_gender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:text="男"
                             android:textSize="16sp"
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />
