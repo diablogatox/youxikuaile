@@ -30,7 +30,6 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         editAreaRlView, editCollegeRlView;
     private TextView ageTv, nicknameTv, genderTv;
 
-    private boolean hasChanged = false;
     private int gender = 0;
     private long timestamp;
     private InputStream photoInputStream;

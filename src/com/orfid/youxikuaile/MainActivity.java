@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
+    private Handler handler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -319,6 +321,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			});
 			
 			hotRecommendLv.setAdapter(new MyAdapter());
+
+            handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
 			
 		} else if (index == 1) {
 			
@@ -332,6 +336,8 @@ public class MainActivity extends Activity implements OnClickListener {
             nearbySittersBtn.setOnClickListener(this);
 			
 			followedPublicLv.setAdapter(new MyAdapter1());
+
+            handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
 			
 		} else if (index == 2) { // 消息
 
@@ -341,7 +347,22 @@ public class MainActivity extends Activity implements OnClickListener {
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
 
+            handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                    try {
+//                        doFetchMessageCountAction();
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    Toast.makeText(MainActivity.this, "消息", Toast.LENGTH_SHORT).show();
+                }
+            }, 1000);
+
         } else if (index == 3) {
+
+            handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
 
         } else if (index == 4) { // 我的
             settingBtnView = findViewById(R.id.btn_settings);
@@ -359,6 +380,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     startActivity(new Intent(MainActivity.this, UserInfoActivity.class));
                 }
             });
+
+            handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
         }
 		
 	}
@@ -552,5 +575,35 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 
 	}
+
+    private void doFetchMessageCountAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("message/count", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+
+//                        JSONObject data = response.getJSONObject("data");
+//                        String uid, token;
+//                        uid = data.getString("uid");
+//                        token = response.getString("token");
+//                        dbHandler.updateUser(uid, Constants.KEY_TOKEN, token);
+//                        Log.d("updated token=======>", token);
+
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }

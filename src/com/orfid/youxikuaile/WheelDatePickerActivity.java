@@ -124,7 +124,7 @@ public class WheelDatePickerActivity extends Activity implements View.OnClickLis
             curr_day = wv_day.getCurrentItem() + 1;
 //            birthday.setText(getConstellation(curr_month, curr_day));
             Calendar calendar = new GregorianCalendar(curr_year, curr_month - 1, curr_day);
-            timestamp = calendar.getTimeInMillis() / 1000L;
+            timestamp = TimeUnit.MILLISECONDS.toSeconds(calendar.getTimeInMillis());
         }
     };
 
