@@ -143,6 +143,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
+            viewHolder.userAvatarIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(context, v.getId()+"", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 			objBean = items.get(position);
             if (objBean.getUser().getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getUser().getPhoto(), viewHolder.userAvatarIv);
             viewHolder.usernameTv.setText(objBean.getUser().getUsername());

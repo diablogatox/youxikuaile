@@ -55,6 +55,7 @@
 			android:name=".NewsFeedActivity"></activity>
 	    <activity
 			android:name=".NewsFeedPublishActivity"
+			android:screenOrientation="portrait"
 			android:windowSoftInputMode="adjustUnspecified|adjustResize"></activity>
 	    <activity
 			android:name=".PhotoPickerActivity"

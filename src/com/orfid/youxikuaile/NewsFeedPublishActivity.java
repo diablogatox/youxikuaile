@@ -3,23 +3,28 @@ package com.orfid.youxikuaile;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2015/3/3.
@@ -30,6 +35,12 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     private Button saveBtn;
     private EditText contentEt;
     private TextView mCount;
+    private GridView feedImgAttachmentGv;
+    private ImageView feedOptionsImgIv;
+    private MyAdapter adapter;
+    ArrayList imageItems = new ArrayList();
+
+    private static final int PHOTO_PICKER = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +54,16 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
         contentEt = (EditText) findViewById(R.id.et_content);
         mCount = (TextView) findViewById(R.id.newsfeedpublish_count);
         saveBtn = (Button) findViewById(R.id.btn_save);
+        feedImgAttachmentGv = (GridView) findViewById(R.id.gv_feed_attachment_img);
+        feedOptionsImgIv = (ImageView) findViewById(R.id.newsfeedpublish_img);
 
         backBtn.setOnClickListener(this);
+        feedOptionsImgIv.setOnClickListener(this);
+
+        adapter = new MyAdapter(this, R.layout.gridview_item,
+                imageItems);
+        feedImgAttachmentGv.setAdapter(adapter);
+
         contentEt.addTextChangedListener(new TextWatcher() {
             private CharSequence temp;
             private int selectionStart;
@@ -84,7 +103,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 } else {
                     try {
                         doFeedPublishAction();
-                        setResult(RESULT_OK, null);
+                        setResult(RESULT_OK, null);// TODO
                         finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -92,6 +111,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 }
             }
         });
+
     }
 
     @Override
@@ -104,7 +124,25 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                     finish();
                 }
                 break;
+            case R.id.newsfeedpublish_img:
+                Intent i1 = new Intent(this, PhotoPickerActivity.class);
+                startActivityForResult(i1, PHOTO_PICKER);
+                overridePendingTransition(0, 0);
+                break;
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) return;
+        switch (requestCode) {
+            case PHOTO_PICKER:
+                // add to gridview
+                Bitmap photo = data.getExtras().getParcelable("data");
+                imageItems.add(new FeedAttachmentImgItem(photo));
+                adapter.notifyDataSetChanged();
+
+                break;
         }
     }
 
@@ -183,6 +221,52 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
             }
 
         });
+    }
+
+    public class MyAdapter extends ArrayAdapter {
+        private Context context;
+        private int layoutResourceId;
+        private ArrayList data = new ArrayList();
+
+        public MyAdapter(Context context, int layoutResourceId, ArrayList data) {
+            super(context, layoutResourceId, data);
+            this.layoutResourceId = layoutResourceId;
+            this.context = context;
+            this.data = data;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            ViewHolder holder = null;
+
+            if (row == null) {
+                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                row = inflater.inflate(layoutResourceId, parent, false);
+                holder = new ViewHolder();
+                holder.image = (ImageView) row.findViewById(R.id.iv_attachment);
+                holder.delete = (ImageView) row.findViewById(R.id.iv_delete);
+                row.setTag(holder);
+            } else {
+                holder = (ViewHolder) row.getTag();
+            }
+
+            final FeedAttachmentImgItem item = (FeedAttachmentImgItem) data.get(position);
+            holder.image.setImageBitmap(item.getImage());
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imageItems.remove(item);
+                    adapter.notifyDataSetChanged();
+                }
+            });
+            return row;
+        }
+
+        class ViewHolder {
+            ImageView image;
+            ImageView delete;
+        }
     }
 
 }
