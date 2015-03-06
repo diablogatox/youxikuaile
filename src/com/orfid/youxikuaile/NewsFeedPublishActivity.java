@@ -17,6 +17,7 @@ import android.widget.*;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
+import com.orfid.youxikuaile.widget.StaggeredGridView;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +36,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     private Button saveBtn;
     private EditText contentEt;
     private TextView mCount;
-    private GridView feedImgAttachmentGv;
+    private StaggeredGridView feedImgAttachmentGv;
     private ImageView feedOptionsImgIv;
     private MyAdapter adapter;
     ArrayList imageItems = new ArrayList();
@@ -54,7 +55,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
         contentEt = (EditText) findViewById(R.id.et_content);
         mCount = (TextView) findViewById(R.id.newsfeedpublish_count);
         saveBtn = (Button) findViewById(R.id.btn_save);
-        feedImgAttachmentGv = (GridView) findViewById(R.id.gv_feed_attachment_img);
+        feedImgAttachmentGv = (StaggeredGridView) findViewById(R.id.gv_feed_attachment_img);
         feedOptionsImgIv = (ImageView) findViewById(R.id.newsfeedpublish_img);
 
         backBtn.setOnClickListener(this);
