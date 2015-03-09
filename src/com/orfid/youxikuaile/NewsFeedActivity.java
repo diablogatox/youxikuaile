@@ -34,7 +34,6 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
     private ImageButton backBtn, composeAddBtn;
     private ListView newsFeedLv;
     private View headerView;
-    private TextView titleTv;
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
     private MyAdapter adapter;
 
@@ -56,7 +55,6 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         composeAddBtn = (ImageButton) findViewById(R.id.btn_compose_add);
         headerView = getLayoutInflater().inflate(R.layout.unread_message, null);
         newsFeedLv = (ListView) findViewById(R.id.lv_news_feed);
-        titleTv = (TextView) findViewById(R.id.tv_title);
 
         backBtn.setOnClickListener(this);
         composeAddBtn.setOnClickListener(this);
