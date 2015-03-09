@@ -12,19 +12,28 @@
             android:background="#ffb400"
             android:gravity="center_vertical"  >
         <TextView
+            	android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textSize="20sp"
                 android:text="我的资料"
                 android:textColor="#ffffff" />
+        <ProgressBar
+			    android:id="@+id/progress_bar"
+			    android:layout_width="wrap_content" android:layout_height="wrap_content"
+			    android:layout_toRightOf="@id/tv_title"
+			    android:layout_centerVertical="true"
+			    android:paddingLeft="5dp"
+			    android:visibility="gone"
+			    style="@android:style/Widget.ProgressBar.Small"/>
         <Button
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="8dp"
                 android:textSize="20sp"
                 android:textColor="#ffffff"
                 android:enabled="false"

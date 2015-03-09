@@ -1,8 +1,18 @@
 package com.orfid.youxikuaile;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import android.app.ProgressDialog;
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,20 +22,22 @@ import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
 import com.orfid.youxikuaile.widget.StaggeredGridView;
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2015/3/3.
@@ -40,6 +52,9 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     private ImageView feedOptionsImgIv;
     private MyAdapter adapter;
     ArrayList imageItems = new ArrayList();
+    List<InputStream> fileList = new ArrayList<InputStream>();
+    List<Integer> fileIds = new ArrayList<Integer>();
+    ProgressDialog pDialog;
 
     private static final int PHOTO_PICKER = 0;
 
@@ -104,8 +119,8 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 } else {
                     try {
                         doFeedPublishAction();
-                        setResult(RESULT_OK, null);// TODO
-                        finish();
+//                        setResult(RESULT_OK, null);// TODO
+//                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -140,6 +155,8 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
             case PHOTO_PICKER:
                 // add to gridview
                 Bitmap photo = data.getExtras().getParcelable("data");
+                InputStream photoInputStream = Util.bitmap2InputStream(photo, 100);
+                fileList.add(photoInputStream);
                 imageItems.add(new FeedAttachmentImgItem(photo));
                 adapter.notifyDataSetChanged();
 
@@ -180,6 +197,59 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     }
 
     private void doFeedPublishAction() throws JSONException {
+    
+    	if (fileList.size() > 0) { // 有照片时先上传
+    		Log.d("fileList size > 0 ====> ", "true");
+    		final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+    		HashMap user = dbHandler.getUserDetails();
+    		RequestParams params = new RequestParams();
+    		params.put("token", user.get("token").toString());
+            for (int i=0; i< fileList.size(); i++) {
+                params.put("files["+i+"]", fileList.get(i), "image_"+System.currentTimeMillis()+".png");
+            }
+            pDialog = new ProgressDialog(this);
+    		HttpRestClient.post("media/upload", params, new JsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+				      Log.d("response=======>", response.toString());
+				      try {
+				    	  int status = response.getInt("status");
+				    	  if (status == 1) { // success
+                              JSONObject data = response.getJSONObject("data");
+                              JSONArray fileArr = data.getJSONArray("files");
+                              if (fileArr.length() > 0) {
+                                  for (int i=0; i<fileArr.length(); i++) {
+                                      JSONObject file = fileArr.getJSONObject(i);
+                                      fileIds.add(file.getInt("id"));
+                                  }
+                              }
+                              // 发布动态
+                              doRealPublishAction();
+				    	  } else if (status == 0) {
+				    		  Toast.makeText(NewsFeedPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+				    	  }
+			          } catch (JSONException e) {
+			              e.printStackTrace();
+			          }
+				}
+
+                @Override
+                public void onStart() {
+                    if (pDialog.isShowing() == false) {
+                        pDialog.setTitle("请稍等...");
+                        pDialog.show();
+                    }
+                }
+
+            });
+      
+	    } else {
+            // 发布动态
+            doRealPublishAction();
+	    }
+    }
+
+    private void doRealPublishAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
@@ -187,8 +257,8 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
         params.put("pid", 0);
         params.put("type", 0);
         params.put("text", contentEt.getText().toString().trim());
-        final NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this);
+        params.put("files", fileIds);
+
         HttpRestClient.post("feed/publish", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -215,9 +285,27 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
 
                     } else if (status == 0) {
                         Toast.makeText(NewsFeedPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                        if (pDialog != null) {
+                            pDialog.dismiss();
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStart() {
+                if (pDialog.isShowing() == false) {
+                    pDialog.setTitle("请稍等...");
+                    pDialog.show();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (pDialog != null) {
+                    pDialog.dismiss();
                 }
             }
 

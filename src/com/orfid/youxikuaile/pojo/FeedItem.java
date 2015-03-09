@@ -1,5 +1,7 @@
 package com.orfid.youxikuaile.pojo;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2015/3/5.
  */
@@ -13,6 +15,29 @@ public class FeedItem {
     private int praiseCount;
     private String publishTime;
     private int type;
+    private List<FeedAttachmentImgItem> imgItems;
+
+    public List<FeedAttachmentImgItem> getImgItems() {
+        return imgItems;
+    }
+
+    public void setImgItems(List<FeedAttachmentImgItem> imgItems) {
+        this.imgItems = imgItems;
+    }
+
+    public FeedItem() {
+    }
+
+    public FeedItem(long feedId, UserItem user, String contentText, int commentCount, int forwardCount, int praiseCount, String publishTime, int type) {
+        this.feedId = feedId;
+        this.user = user;
+        this.contentText = contentText;
+        this.commentCount = commentCount;
+        this.forwardCount = forwardCount;
+        this.praiseCount = praiseCount;
+        this.publishTime = publishTime;
+        this.type = type;
+    }
 
     public UserItem getUser() {
         return user;

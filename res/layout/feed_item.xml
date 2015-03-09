@@ -56,6 +56,21 @@
 					android:visibility="gone"
 					android:src="@drawable/ad1" />
 			</LinearLayout>
+			<RelativeLayout
+				android:id="@+id/rl_gv_wrapper"
+				android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+				android:visibility="gone">
+				<com.orfid.youxikuaile.widget.MyGridView
+						android:id="@+id/gv_images"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:horizontalSpacing="2dp"
+						android:listSelector="@null"
+						android:numColumns="3"
+						android:stretchMode="columnWidth"
+						android:verticalSpacing="2dp" />
+			</RelativeLayout>
 		</LinearLayout>
 	</RelativeLayout>
 	<View

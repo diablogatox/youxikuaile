@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
     private View editAvatarRlView, editNicknameRlView, editGenderRlView, editAgeRlView,
         editAreaRlView, editCollegeRlView;
     private TextView ageTv, nicknameTv, genderTv;
+    private ProgressBar pBar;
 
     private int gender = 0;
     private long timestamp;
@@ -66,6 +69,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         ageTv = (TextView) findViewById(R.id.tv_age);
         nicknameTv = (TextView) findViewById(R.id.tv_nickname);
         genderTv = (TextView) findViewById(R.id.tv_gender);
+        pBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         backBtn.setOnClickListener(this);
         editAvatarRlView.setOnClickListener(this);
@@ -160,7 +164,6 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
         params.put("uid", user.get("uid").toString());
-        final ProgressDialog dialog = new ProgressDialog(this);
         HttpRestClient.post("user/GetInfo", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -171,8 +174,8 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                         JSONObject data = response.getJSONObject("data");
                         String photoUrl = data.getString("photo");
                         if (photoUrl != null && !photoUrl.equals("")) {
-                            String url = Constants.BASE_URL + photoUrl;
-                            ImageLoader.getInstance().displayImage(url, userPickture);
+//                            String url = Constants.BASE_URL + photoUrl;
+                            ImageLoader.getInstance().displayImage(photoUrl, userPickture);
                         }
                         nicknameTv.setText(data.getString("username"));
                         timestamp = Long.parseLong(data.getString("birthday"));
@@ -190,19 +193,14 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
             }
 
             @Override
-            public void onStart() {
-                if (dialog.isShowing() == false) {
-                    dialog.setTitle("请稍等...");
-                    dialog.show();
-                }
-            }
+			public void onFinish() {
+				pBar.setVisibility(View.GONE);
+			}
 
-            @Override
-            public void onFinish() {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            }
+			@Override
+			public void onStart() {
+				pBar.setVisibility(View.VISIBLE);
+			}
         });
     }
 
