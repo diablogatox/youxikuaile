@@ -122,7 +122,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         params.put("username", nicknameTv.getText().toString().trim());
         params.put("birthday", timestamp);
         params.put("sex", gender);
-        if (photoInputStream != null) params.put("file", photoInputStream, "crop.png");
+        if (photoInputStream != null) params.put("file", photoInputStream, "image_"+System.currentTimeMillis()+".png");
         final ProgressDialog dialog = new ProgressDialog(this);
         HttpRestClient.post("user/SaveInfo", params, new JsonHttpResponseHandler() {
             @Override

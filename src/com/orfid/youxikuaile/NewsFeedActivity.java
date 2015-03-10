@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -224,8 +225,10 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 			objBean = items.get(position);
             if (objBean.getUser().getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getUser().getPhoto(), viewHolder.userAvatarIv);
             viewHolder.usernameTv.setText(objBean.getUser().getUsername());
-            viewHolder.publishTimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getPublishTime())*1000));
-            viewHolder.contentTextTv.setText(objBean.getContentText());
+            viewHolder.publishTimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getPublishTime()) * 1000));
+            SpannableStringBuilder sb = Util.handlerFaceInContent(context, viewHolder.contentTextTv,
+                    objBean.getContentText());
+            viewHolder.contentTextTv.setText(sb);
             if (objBean.getImgItems() != null && objBean.getImgItems().size() > 0) {
                 viewHolder.rlGvWrapper.setVisibility(View.VISIBLE);
                 initImgAttachment(viewHolder.imagesGv, objBean.getImgItems());
