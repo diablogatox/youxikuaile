@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import com.orfid.youxikuaile.pojo.FeedItem;
+import com.orfid.youxikuaile.pojo.UserItem;
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,8 +54,9 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     private ImageView feedOptionsImgIv;
     private MyAdapter adapter;
     ArrayList imageItems = new ArrayList();
-    List<InputStream> fileList = new ArrayList<InputStream>();
+//    List<InputStream> fileList = new ArrayList<InputStream>();
     List<Integer> fileIds = new ArrayList<Integer>();
+    List<FeedAttachmentImgItem> fileItems = new ArrayList<FeedAttachmentImgItem>();
     ProgressDialog pDialog;
 
     private static final int PHOTO_PICKER = 0;
@@ -156,10 +159,11 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 // add to gridview
                 Bitmap photo = data.getExtras().getParcelable("data");
                 InputStream photoInputStream = Util.bitmap2InputStream(photo, 100);
-                fileList.add(photoInputStream);
+//                fileList.add(photoInputStream);
                 imageItems.add(new FeedAttachmentImgItem(photo));
                 adapter.notifyDataSetChanged();
-
+                // upload this photo
+                doUploadImageAction(photoInputStream);
                 break;
         }
     }
@@ -196,60 +200,60 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
         builder .create().show();
     }
 
+//    private void doFeedPublishAction() throws JSONException {
+//
+//    	if (fileList.size() > 0) { // 有照片时先上传
+//    		Log.d("fileList size > 0 ====> ", "true");
+//    		final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+//    		HashMap user = dbHandler.getUserDetails();
+//    		RequestParams params = new RequestParams();
+//    		params.put("token", user.get("token").toString());
+//            for (int i=0; i< fileList.size(); i++) {
+//                params.put("files["+i+"]", fileList.get(i), "image_"+System.currentTimeMillis()+".png");
+//            }
+//            pDialog = new ProgressDialog(this);
+//    		HttpRestClient.post("media/upload", params, new JsonHttpResponseHandler() {
+//				@Override
+//				public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+//				      Log.d("response=======>", response.toString());
+//				      try {
+//				    	  int status = response.getInt("status");
+//				    	  if (status == 1) { // success
+//                              JSONObject data = response.getJSONObject("data");
+//                              JSONArray fileArr = data.getJSONArray("files");
+//                              if (fileArr.length() > 0) {
+//                                  for (int i=0; i<fileArr.length(); i++) {
+//                                      JSONObject file = fileArr.getJSONObject(i);
+//                                      fileIds.add(file.getInt("id"));
+//                                  }
+//                              }
+//                              // 发布动态
+//                              doRealPublishAction();
+//				    	  } else if (status == 0) {
+//				    		  Toast.makeText(NewsFeedPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+//				    	  }
+//			          } catch (JSONException e) {
+//			              e.printStackTrace();
+//			          }
+//				}
+//
+//                @Override
+//                public void onStart() {
+//                    if (pDialog.isShowing() == false) {
+//                        pDialog.setTitle("请稍等...");
+//                        pDialog.show();
+//                    }
+//                }
+//
+//            });
+//
+//	    } else {
+//            // 发布动态
+//            doRealPublishAction();
+//	    }
+//    }
+
     private void doFeedPublishAction() throws JSONException {
-    
-    	if (fileList.size() > 0) { // 有照片时先上传
-    		Log.d("fileList size > 0 ====> ", "true");
-    		final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
-    		HashMap user = dbHandler.getUserDetails();
-    		RequestParams params = new RequestParams();
-    		params.put("token", user.get("token").toString());
-            for (int i=0; i< fileList.size(); i++) {
-                params.put("files["+i+"]", fileList.get(i), "image_"+System.currentTimeMillis()+".png");
-            }
-            pDialog = new ProgressDialog(this);
-    		HttpRestClient.post("media/upload", params, new JsonHttpResponseHandler() {
-				@Override
-				public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-				      Log.d("response=======>", response.toString());
-				      try {
-				    	  int status = response.getInt("status");
-				    	  if (status == 1) { // success
-                              JSONObject data = response.getJSONObject("data");
-                              JSONArray fileArr = data.getJSONArray("files");
-                              if (fileArr.length() > 0) {
-                                  for (int i=0; i<fileArr.length(); i++) {
-                                      JSONObject file = fileArr.getJSONObject(i);
-                                      fileIds.add(file.getInt("id"));
-                                  }
-                              }
-                              // 发布动态
-                              doRealPublishAction();
-				    	  } else if (status == 0) {
-				    		  Toast.makeText(NewsFeedPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
-				    	  }
-			          } catch (JSONException e) {
-			              e.printStackTrace();
-			          }
-				}
-
-                @Override
-                public void onStart() {
-                    if (pDialog.isShowing() == false) {
-                        pDialog.setTitle("请稍等...");
-                        pDialog.show();
-                    }
-                }
-
-            });
-      
-	    } else {
-            // 发布动态
-            doRealPublishAction();
-	    }
-    }
-
-    private void doRealPublishAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
@@ -258,7 +262,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
         params.put("type", 0);
         params.put("text", contentEt.getText().toString().trim());
         params.put("files", fileIds);
-
+        pDialog = new ProgressDialog(this);
         HttpRestClient.post("feed/publish", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -266,23 +270,21 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-//                        DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
-//                        JSONObject data = response.getJSONObject("data");
-//                        String name, uid, pwd, token, photo, phone;
-//                        name = data.getString("username");
-//                        pwd = password.getText().toString().trim();
-//                        uid = data.getString("uid");
-//                        token = response.getString("token");
-//                        photo = data.getString("photo");
-//                        phone = username.getText().toString().trim();
-//                        dbHandler.addUser(name, uid, pwd, token, photo, phone);
-//                        Log.d("db_rec_count======>", MainApplication.getInstance().getDbHandler().getRawCount() + "");
-//
-//                        Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        startActivity(intent);
-//                        finish();
-
+                        JSONObject data = response.getJSONObject("data");
+                        JSONObject user = data.getJSONObject("user");
+                        JSONArray files = data.getJSONArray("files");
+                        if (files.length() > 0) {
+                            for (int i=0; i<files.length(); i++) {
+                                JSONObject jFile = files.getJSONObject(i);
+                                fileItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+                            }
+                        }
+                        de.greenrobot.event.EventBus.getDefault().postSticky(new FeedItem(data.getInt("feedid"),
+                                new UserItem(user.getString("uid"), null, null, user.getString("username"), user.getString("photo"), null),
+                                data.getString("text"), data.getInt("commentcount"), data.getInt("forwardcount"),
+                                data.getInt("praisecount"), data.getString("publishtime"), data.getInt("type"), fileItems));
+                        setResult(RESULT_OK);
+                        finish();
                     } else if (status == 0) {
                         Toast.makeText(NewsFeedPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                         if (pDialog != null) {
@@ -309,6 +311,37 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 }
             }
 
+        });
+    }
+
+    private void doUploadImageAction(InputStream photoInputStream) {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("files[]", photoInputStream, "image_"+System.currentTimeMillis()+".png");
+        HttpRestClient.post("media/upload", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                        JSONObject data = response.getJSONObject("data");
+                        JSONArray fileArr = data.getJSONArray("files");
+                        if (fileArr.length() > 0) {
+                            for (int i=0; i<fileArr.length(); i++) {
+                                JSONObject file = fileArr.getJSONObject(i);
+                                fileIds.add(file.getInt("id"));
+                            }
+                        }
+                    } else if (status == 0) {
+                        Toast.makeText(NewsFeedPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 

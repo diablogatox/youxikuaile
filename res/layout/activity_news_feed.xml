@@ -46,21 +46,54 @@
 
 	</RelativeLayout>
 
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/swipe_container"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent">
-	    <ListView
-	        android:id="@+id/lv_news_feed"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="12dp"
-	        android:divider="#f3f4f9"
-	        android:cacheColorHint="@android:color/transparent"
-	        android:dividerHeight="10dp"
-	        android:fadingEdge="none"
-	        android:fastScrollEnabled="true"
-	        android:scrollbars="none"/>
-	</android.support.v4.widget.SwipeRefreshLayout>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		<android.support.v4.widget.SwipeRefreshLayout
+			android:id="@+id/swipe_container"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent">
+		    <ListView
+		        android:id="@+id/lv_news_feed"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="12dp"
+		        android:divider="#f3f4f9"
+		        android:cacheColorHint="@android:color/transparent"
+		        android:dividerHeight="10dp"
+		        android:fadingEdge="none"
+		        android:fastScrollEnabled="true"
+		        android:scrollbars="none"/>
+		</android.support.v4.widget.SwipeRefreshLayout>
+
+		<TextView
+			android:id="@+id/tv_loading"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:visibility="gone"
+			android:text="加载中..." />
+
+		<LinearLayout
+				android:id="@+id/ll_empty_view"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:layout_centerInParent="true"
+				android:visibility="gone"
+				android:gravity="center">
+			<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingBottom="10dp"
+					android:text="还没有动态" />
+			<Button
+					android:id="@+id/btn_publish"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="点击发布" />
+		</LinearLayout>
+
+	</RelativeLayout>
 
 </LinearLayout>

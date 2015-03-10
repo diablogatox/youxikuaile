@@ -28,7 +28,7 @@ public class FeedItem {
     public FeedItem() {
     }
 
-    public FeedItem(long feedId, UserItem user, String contentText, int commentCount, int forwardCount, int praiseCount, String publishTime, int type) {
+    public FeedItem(long feedId, UserItem user, String contentText, int commentCount, int forwardCount, int praiseCount, String publishTime, int type, List<FeedAttachmentImgItem> imgItems) {
         this.feedId = feedId;
         this.user = user;
         this.contentText = contentText;
@@ -37,6 +37,7 @@ public class FeedItem {
         this.praiseCount = praiseCount;
         this.publishTime = publishTime;
         this.type = type;
+        this.imgItems = imgItems;
     }
 
     public UserItem getUser() {

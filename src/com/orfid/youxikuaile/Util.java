@@ -7,7 +7,10 @@ import android.util.Log;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,5 +101,19 @@ public class Util {
     public static int Dp2Px(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    public static String covertTimestampToDate(long timeStamp){
+
+        String dateStr = null;
+        try{
+            DateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm");
+            Date netDate = (new Date(timeStamp));
+            dateStr = sdf.format(netDate);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return dateStr;
     }
 }

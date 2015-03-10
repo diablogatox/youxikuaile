@@ -24,6 +24,7 @@ import com.orfid.youxikuaile.pojo.FeedItem;
 
 import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.MyGridView;
+import de.greenrobot.event.EventBus;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,14 +39,17 @@ import java.util.List;
  */
 public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
+    private static final int COMPOSE_FEED = 0;
     private SwipeRefreshLayout swipeContainer;
     private ImageButton backBtn, composeAddBtn;
     private ListView newsFeedLv;
-    private View headerView;
+    private View headerView, emptyViewLl;
     private ProgressBar pBar;
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
     private MyAdapter adapter;
     private GridViewAdapter gvAdapter;
+    private TextView loadingTv;
+    private Button publishBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_news_feed);
         init();
         try {
-            doFetchFeedListAction();
+            doFetchFeedListAction(false);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -66,9 +70,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         headerView = getLayoutInflater().inflate(R.layout.unread_message, null);
         newsFeedLv = (ListView) findViewById(R.id.lv_news_feed);
         pBar = (ProgressBar) findViewById(R.id.progress_bar);
+        loadingTv = (TextView) findViewById(R.id.tv_loading);
+        emptyViewLl = findViewById(R.id.ll_empty_view);
+        publishBtn = (Button) findViewById(R.id.btn_publish);
 
         backBtn.setOnClickListener(this);
         composeAddBtn.setOnClickListener(this);
+        publishBtn.setOnClickListener(this);
 
 //        newsFeedLv.addHeaderView(headerView);
 //        newsFeedLv.removeHeaderView(headerView);
@@ -85,6 +93,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                                 Toast.makeText(NewsFeedActivity.this, "feedid====>"+id, Toast.LENGTH_SHORT).show();
                                 feedItems.remove(position);
                                 adapter.notifyDataSetChanged();
+                                if (feedItems.size() <=0 ) emptyViewLl.setVisibility(View.VISIBLE);
                                 try {
                                     doRemoveFeedAction(id);
                                 } catch (JSONException e) {
@@ -101,12 +110,17 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeContainer.setRefreshing(false);
-                    }
-                }, 3000);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        swipeContainer.setRefreshing(false);
+//                    }
+//                }, 3000);
+                try {
+                    doFetchFeedListAction(true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -123,9 +137,24 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.btn_compose_add:
-                startActivity(new Intent(this, NewsFeedPublishActivity.class));
+            case R.id.btn_publish:
+                startActivityForResult(new Intent(this, NewsFeedPublishActivity.class), COMPOSE_FEED);
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) return;
+        switch (requestCode) {
+            case COMPOSE_FEED:
+                FeedItem feedItem = (FeedItem) EventBus.getDefault().removeStickyEvent(FeedItem.class);
+                feedItems.add(0, feedItem);
+                adapter.notifyDataSetChanged();
+                emptyViewLl.setVisibility(View.GONE);
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     class MyAdapter extends ArrayAdapter<FeedItem> {
@@ -195,9 +224,9 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 			objBean = items.get(position);
             if (objBean.getUser().getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getUser().getPhoto(), viewHolder.userAvatarIv);
             viewHolder.usernameTv.setText(objBean.getUser().getUsername());
-            viewHolder.publishTimeTv.setText(objBean.getPublishTime());
+            viewHolder.publishTimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getPublishTime())*1000));
             viewHolder.contentTextTv.setText(objBean.getContentText());
-            if (objBean.getImgItems().size() > 0) {
+            if (objBean.getImgItems() != null && objBean.getImgItems().size() > 0) {
                 viewHolder.rlGvWrapper.setVisibility(View.VISIBLE);
                 initImgAttachment(viewHolder.imagesGv, objBean.getImgItems());
             }
@@ -295,7 +324,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
     }
 
-    private void doFetchFeedListAction() throws JSONException {
+    private void doFetchFeedListAction(final boolean isRefreshing) throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
@@ -310,8 +339,12 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                     if (status == 1) { // success
                         NewsFeedItemsParser parser = new NewsFeedItemsParser();
                         feedItems = parser.parse(response.getJSONObject("data"));
+                        Log.d("feedItems count=====>", feedItems.size()+"");
                         adapter = new MyAdapter(NewsFeedActivity.this, R.layout.feed_item, feedItems);
                         newsFeedLv.setAdapter(adapter);
+                        if (feedItems.size() <= 0) {
+                            emptyViewLl.setVisibility(View.VISIBLE);
+                        }
 //                        adapter.notifyDataSetChanged();
                     } else if (status == 0) {
                         Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
@@ -323,12 +356,20 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
 			@Override
 			public void onFinish() {
-				pBar.setVisibility(View.GONE);
+                if (!isRefreshing) {
+                    pBar.setVisibility(View.GONE);
+                    loadingTv.setVisibility(View.GONE);
+                } else {
+                    swipeContainer.setRefreshing(false);
+                }
 			}
 
 			@Override
 			public void onStart() {
-				pBar.setVisibility(View.VISIBLE);
+                if (!isRefreshing) {
+                    pBar.setVisibility(View.VISIBLE);
+                    loadingTv.setVisibility(View.VISIBLE);
+                }
 			}
         });
     }
