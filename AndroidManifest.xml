@@ -64,6 +64,7 @@
 		    android:name=".WheelDatePickerActivity"
 		    android:theme="@style/MyDialogStyleBottomNoFloating"></activity>
 	    <activity android:name=".SelectSpecificActivity"/>
+	    <activity android:name=".FriendHomeActivity"/>
     </application>
 
 </manifest>

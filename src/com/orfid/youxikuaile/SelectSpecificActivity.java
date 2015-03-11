@@ -1,32 +1,39 @@
 package com.orfid.youxikuaile;
 
+import java.util.HashMap;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
 
 /**
  * Created by Administrator on 2015/3/10.
  */
 public class SelectSpecificActivity extends Activity implements View.OnClickListener {
 
-    private String uid;
+	private static final int FRIEND_HOME = 0;
+    private String uid, username, photo;
     private ImageButton backBtn;
     private View rl_select_specific2;
     private ProgressBar mPbar;
     private TextView mLoadingTv, nameTv;
     private ImageView photoIv;
+    private boolean isFollowed;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,8 +78,11 @@ public class SelectSpecificActivity extends Activity implements View.OnClickList
                         if (!response.getString("data").equals("[]") && response.getJSONArray("data").length() > 0) {
                             rl_select_specific2.setVisibility(View.VISIBLE);
                             JSONObject jUser = (JSONObject) response.getJSONArray("data").get(0);
-                            nameTv.setText(jUser.getString("username"));
-                            ImageLoader.getInstance().displayImage(jUser.getString("photo"), photoIv);
+                            username = jUser.getString("username");
+                            photo = jUser.getString("photo");
+                            isFollowed = jUser.getBoolean("isfollow");
+                            if (username != null && !username.equals("null")) nameTv.setText(username);
+                            if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
 
                         } else {
                             mLoadingTv.setText("没有相关的用户");
@@ -107,10 +117,26 @@ public class SelectSpecificActivity extends Activity implements View.OnClickList
                 finish();
                 break;
             case R.id.rl_select_specific2:
-//                Intent intent = new Intent(this, UserHomeActivity.class);
-//                intent.putExtra("uid", uid);
-//                startActivity(intent);
+                Intent intent = new Intent(this, FriendHomeActivity.class);
+                intent.putExtra("uid", uid);
+                intent.putExtra("username", username);
+                intent.putExtra("photo", photo);
+                intent.putExtra("isFollowed", isFollowed);
+                startActivityForResult(intent, FRIEND_HOME);
                 break;
         }
     }
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case FRIEND_HOME:
+			isFollowed = data.getBooleanExtra("isFollowed", false);
+			break;
+
+		default:
+			break;
+		}
+	}
 }
