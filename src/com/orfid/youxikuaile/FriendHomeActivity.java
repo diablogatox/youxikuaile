@@ -196,8 +196,9 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
                     e.printStackTrace();
                 }
             }
-            
-            @Override
+
+
+			@Override
 			public void onFinish() {
             	followActionHintTv.setText("取消关注");
             	followActionHintIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.iv_unfollow_selector));

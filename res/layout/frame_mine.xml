@@ -11,6 +11,7 @@
 		android:background="#ffb400"
 		android:gravity="center_vertical"  >   			
 		<TextView
+		    android:id="@+id/name_tv"
 			android:layout_width="wrap_content" 
 	      	android:layout_height="wrap_content" 
 	      	android:layout_centerInParent="true"
@@ -68,6 +69,7 @@
                             android:textSize="16sp"
                             android:text="ID" />
                         <TextView
+                            android:id="@+id/uid_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -118,6 +120,7 @@
             	android:background="#f3f4f9">
                 
                 <RelativeLayout
+                    android:id="@+id/my_follow_list_rl_view"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_marginBottom="2dp"
@@ -143,6 +146,7 @@
 		                android:src="@drawable/icon_arrow_right_gray" />
 		        </RelativeLayout>
 		        <RelativeLayout
+		            android:id="@+id/fans_list_rl"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_marginBottom="10dp"

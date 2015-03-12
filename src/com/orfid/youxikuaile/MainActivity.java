@@ -24,9 +24,11 @@ import android.widget.*;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.pojo.ActionItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
+
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,14 +38,17 @@ public class MainActivity extends Activity implements OnClickListener {
 	public static MainActivity instance = null;
 	private ViewPager mTabPager;
 	private ImageView mTab1, mTab2, mTab3, mTab4, mTab5;
+	private ImageView userPicture;
 	private int currIndex = 0;
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
-	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, feedRlView, newFansRlView;
+	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
+		feedRlView, newFansRlView, myFollowListRlView, fansListRl;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
+	private TextView nameTv, uidTv;
     private Handler handler = new Handler();
 
 	@Override
@@ -351,11 +356,11 @@ public class MainActivity extends Activity implements OnClickListener {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-//                    try {
-//                        doFetchMessageCountAction();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        doFetchMessageCountAction();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 //                    Toast.makeText(MainActivity.this, "消息", Toast.LENGTH_SHORT).show();
                 }
             }, 1000);
@@ -367,7 +372,21 @@ public class MainActivity extends Activity implements OnClickListener {
         } else if (index == 4) { // 我的
             settingBtnView = findViewById(R.id.btn_settings);
             userInfoTv = findViewById(R.id.tv_user_info);
-
+            myFollowListRlView = findViewById(R.id.my_follow_list_rl_view);
+            fansListRl = findViewById(R.id.fans_list_rl);
+            userPicture = (ImageView) findViewById(R.id.user_picture);
+            nameTv = (TextView) findViewById(R.id.name_tv);
+            uidTv = (TextView) findViewById(R.id.uid_tv);
+            
+            final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+            final HashMap user = dbHandler.getUserDetails();
+            String photo = user.get("photo").toString();
+            String username = user.get("username").toString();
+            String uid = user.get("uid").toString();
+            if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(user.get("photo").toString(), userPicture);
+            if (username != null) nameTv.setText(username);
+            uidTv.setText(uid);
+            
             settingBtnView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -379,6 +398,22 @@ public class MainActivity extends Activity implements OnClickListener {
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this, UserInfoActivity.class));
                 }
+            });
+            myFollowListRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, FollowListActivity.class));
+				}
+            	
+            });
+            fansListRl.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, FansListActivity.class));
+				}
+            	
             });
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作

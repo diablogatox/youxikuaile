@@ -150,9 +150,17 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         switch (requestCode) {
             case COMPOSE_FEED:
                 FeedItem feedItem = (FeedItem) EventBus.getDefault().removeStickyEvent(FeedItem.class);
-                feedItems.add(0, feedItem);
-                adapter.notifyDataSetChanged();
-                emptyViewLl.setVisibility(View.GONE);
+//                feedItems.add(0, feedItem);
+//                adapter.notifyDataSetChanged();
+//                emptyViewLl.setVisibility(View.GONE);
+                if (feedItem != null) {
+                	try {
+						doFetchFeedListAction(true);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);

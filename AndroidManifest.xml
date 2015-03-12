@@ -65,6 +65,8 @@
 		    android:theme="@style/MyDialogStyleBottomNoFloating"></activity>
 	    <activity android:name=".SelectSpecificActivity"/>
 	    <activity android:name=".FriendHomeActivity"/>
+	    <activity android:name=".FollowListActivity"></activity>
+	    <activity android:name=".FansListActivity"></activity>
     </application>
 
 </manifest>
