@@ -529,6 +529,7 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivity(new Intent(this, NewsFeedActivity.class));
             newFeedMsgCountBtn.setText("");
         	newFeedMsgCountBtn.setVisibility(View.GONE);
+        	msgCountdata.set(1, "0");
         	
             break;
         case R.id.rl_new_fans:
