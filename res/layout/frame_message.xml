@@ -97,12 +97,27 @@
 	                android:textColor="#000"
 	                android:textSize="18sp"
 	                android:text="新粉丝" />
+	            
 	            <ImageView
+	                android:id="@+id/jump_arrow_iv"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_alignParentRight="true"
 	                android:layout_centerVertical="true"
 	                android:src="@drawable/icon_arrow_right_gray" />
+	            
+	            <Button
+	                android:id="@+id/newfans_count_btn"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_toLeftOf="@id/jump_arrow_iv"
+	                android:layout_centerVertical="true"
+	                android:layout_marginRight="10dp"
+	                android:background="@drawable/icon_news_red"
+	                android:padding="3dp"
+	                android:textColor="@color/white"
+	                android:visibility="gone"
+	                android:clickable="false" />
 	        </RelativeLayout>
 	        
 	    </LinearLayout>

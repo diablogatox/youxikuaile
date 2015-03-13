@@ -52,7 +52,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     private EditText contentEt;
     private TextView mCount;
     private StaggeredGridView feedImgAttachmentGv;
-    private ImageView feedOptionsImgIv, publishFaceIv;
+    private ImageView feedOptionsImgIv, publishFaceIv, publishAtIv;
     private View faceWrapperView;
     private LinearLayout mDotsLayout;
     private ViewPager faceViewPager;
@@ -68,6 +68,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
     ProgressDialog pDialog;
 
     private static final int PHOTO_PICKER = 0;
+    private static final int PUBLISH_AT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +89,13 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
         faceWrapperView = findViewById(R.id.rl_expression);
         faceViewPager = (ViewPager) findViewById(R.id.face_viewpager);
         mDotsLayout = (LinearLayout) findViewById(R.id.face_dots_container);
+        publishAtIv = (ImageView) findViewById(R.id.newsfeedpublish_at);
 
         backBtn.setOnClickListener(this);
         feedOptionsImgIv.setOnClickListener(this);
         publishFaceIv.setOnClickListener(this);
         contentEt.setOnClickListener(this);
+        publishAtIv.setOnClickListener(this);
 
         adapter = new MyAdapter(this, R.layout.gridview_item,
                 imageItems);
@@ -335,6 +338,10 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 publishFaceIv.setImageResource(R.drawable.white3);
                 faceWrapperView.setVisibility(View.GONE);
                 break;
+            case R.id.newsfeedpublish_at:
+            	Intent intent = new Intent(NewsFeedPublishActivity.this, SelectFriendsActivity.class);
+            	startActivityForResult(intent, PUBLISH_AT);
+            	break;
         }
     }
 
@@ -352,9 +359,33 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                 // upload this photo
                 doUploadImageAction(photoInputStream);
                 break;
+            case PUBLISH_AT:
+            	String selectedFriends = data.getStringExtra("selected_friends");
+            	try {
+            		JSONArray jArray = new JSONArray(selectedFriends);
+            		String at = " ";
+            		for (int i=0; i<jArray.length(); i++) {
+            			JSONObject jObj = jArray.getJSONObject(i);
+            			at += "@" + jObj.getString("name") + " ";
+            		}
+            		
+            		Log.d("at========>", at);
+            		insertText(contentEt, at);
+            	} catch (Exception e) {
+            		e.printStackTrace();
+            	}
         }
     }
 
+    /**获取EditText光标所在的位置*/
+    private int getEditTextCursorIndex(EditText mEditText){
+     return mEditText.getSelectionStart();
+    }
+    /**向EditText指定光标位置插入字符串*/
+    private void insertText(EditText mEditText, String mText){
+     mEditText.getText().insert(getEditTextCursorIndex(mEditText), mText); 
+    }
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

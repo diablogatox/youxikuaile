@@ -156,6 +156,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 if (feedItem != null) {
                 	try {
 						doFetchFeedListAction(true);
+						emptyViewLl.setVisibility(View.GONE);
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

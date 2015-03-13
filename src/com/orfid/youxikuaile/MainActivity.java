@@ -2,9 +2,14 @@ package com.orfid.youxikuaile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +25,14 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -28,10 +40,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.pojo.ActionItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -49,6 +57,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
 	private TextView nameTv, uidTv;
+	private Button newFansCountBtn, totalMsgCountBtn;
+	private List<String> msgCountdata = new ArrayList<String>();
     private Handler handler = new Handler();
 
 	@Override
@@ -83,6 +93,8 @@ public class MainActivity extends Activity implements OnClickListener {
         mTab3 = (ImageView) findViewById(R.id.img_message);
         mTab4 = (ImageView) findViewById(R.id.img_more);
         mTab5 = (ImageView) findViewById(R.id.img_mine);
+        
+        totalMsgCountBtn = (Button) findViewById(R.id.totalmsg_count_btn);
         
         mTab1.setOnClickListener(new MyOnClickListener(0));
         mTab2.setOnClickListener(new MyOnClickListener(1));
@@ -131,6 +143,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		init();
 		setup(0);
+		
+		try {
+			doFetchMessageCountAction();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
         
 	}
 
@@ -348,22 +366,39 @@ public class MainActivity extends Activity implements OnClickListener {
 
             feedRlView = findViewById(R.id.rl_feed);
             newFansRlView = findViewById(R.id.rl_new_fans);
+            newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        doFetchMessageCountAction();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-//                    Toast.makeText(MainActivity.this, "消息", Toast.LENGTH_SHORT).show();
-                }
-            }, 1000);
+            
+            totalMsgCountBtn.setText("");
+            totalMsgCountBtn.setVisibility(View.GONE);
+     
+			String feedUnreadMsgCount = msgCountdata.get(1).toString();
+			String newFansUnreadMsgCount = msgCountdata.get(2).toString();
+            String unreadMsgCount = msgCountdata.get(3).toString();
+            
+            
+            
+            if (!newFansUnreadMsgCount.equals("0")) {
+            	newFansCountBtn.setText(newFansUnreadMsgCount);
+            	newFansCountBtn.setVisibility(View.VISIBLE);
+            }
+			
+            
+            
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        doFetchMessageCountAction();
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }, 1000);
 
         } else if (index == 3) {
 
@@ -489,8 +524,11 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivity(new Intent(this, NewsFeedActivity.class));
             break;
         case R.id.rl_new_fans:
-
+        	
             startActivity(new Intent(this, NewFansActivity.class));
+            newFansCountBtn.setText("");
+        	newFansCountBtn.setVisibility(View.GONE);
+        	msgCountdata.set(2, "0");
 
             break;
 		}
@@ -623,13 +661,34 @@ public class MainActivity extends Activity implements OnClickListener {
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-
-//                        JSONObject data = response.getJSONObject("data");
+                    	
+                    	JSONArray jArray = response.getJSONArray("data");
+                    	if (jArray != null) {
+                    		for (int i=0; i<jArray.length(); i++) {
+                    			msgCountdata.add(jArray.get(i).toString());
+                    		}
+                    	}
+                    	
+                        String totalUnreadMsgCount = msgCountdata.get(0).toString();
+//                        String feedUnreadMsgCount = msgCountdata.get(1).toString();
+//                        String newFansUnreadMsgCount = msgCountdata.get(2).toString();
+//                        String unreadMsgCount = msgCountdata.get(3).toString();
+                        
+                        if (!totalUnreadMsgCount.equals("0")) {
+                        	totalMsgCountBtn.setText(totalUnreadMsgCount);
+                        	totalMsgCountBtn.setVisibility(View.VISIBLE);
+                        }
+                        
+//                        if (!newFansUnreadMsgCount.equals("0")) {
+//                        	newFansCountBtn.setText(newFansUnreadMsgCount);
+//                        	newFansCountBtn.setVisibility(View.VISIBLE);
+//                        }
 //                        String uid, token;
 //                        uid = data.getString("uid");
 //                        token = response.getString("token");
 //                        dbHandler.updateUser(uid, Constants.KEY_TOKEN, token);
 //                        Log.d("updated token=======>", token);
+                    	
 
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();

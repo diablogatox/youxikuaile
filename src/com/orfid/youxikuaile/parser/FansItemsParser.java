@@ -13,13 +13,25 @@ import com.orfid.youxikuaile.pojo.UserItem;
  * Created by Administrator on 2015/3/5.
  */
 public class FansItemsParser {
+	
+	private boolean isNewFansNotify = false;
+	
+	public FansItemsParser() {};
+	
+	public FansItemsParser(boolean isNewFansNotify) {
+		this.isNewFansNotify = isNewFansNotify;
+	}
 
     public List<UserItem> parse(JSONObject jObject) {
 
         JSONArray jFollowItems = null;
         try {
             /** Retrieves all the elements */
-            jFollowItems = jObject.getJSONArray("items");
+        	if (isNewFansNotify == true) {
+        		jFollowItems = jObject.getJSONArray("data");
+        	} else {
+        		jFollowItems = jObject.getJSONArray("items");
+        	}
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -53,13 +65,27 @@ public class FansItemsParser {
         String uid = null, photo = null, username = null;
         boolean isFollow = false;
         
-        try {
-	        uid = jFollowItem.getString("uid");
-	        photo = jFollowItem.getString("photo");
-	        username = jFollowItem.getString("username");
-	        isFollow = jFollowItem.getBoolean("isFollow");
-        } catch (Exception e) {
-        	e.printStackTrace();
+        if (isNewFansNotify == true) {
+        	try {
+				JSONObject jUserObj = jFollowItem.getJSONObject("user");
+				uid = jUserObj.getString("uid");
+		        photo = jUserObj.getString("photo");
+		        username = jUserObj.getString("username");
+		        isFollow = jUserObj.getBoolean("isFollow");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        } else {
+	        try {
+		        uid = jFollowItem.getString("uid");
+		        photo = jFollowItem.getString("photo");
+		        username = jFollowItem.getString("username");
+		        isFollow = jFollowItem.getBoolean("isFollow");
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        }
         }
         
         followItem.setUid(uid);
