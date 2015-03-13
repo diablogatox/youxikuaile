@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
 	private TextView nameTv, uidTv;
-	private Button newFansCountBtn, totalMsgCountBtn;
+	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
 	private List<String> msgCountdata = new ArrayList<String>();
     private Handler handler = new Handler();
 
@@ -367,6 +367,7 @@ public class MainActivity extends Activity implements OnClickListener {
             feedRlView = findViewById(R.id.rl_feed);
             newFansRlView = findViewById(R.id.rl_new_fans);
             newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
+            newFeedMsgCountBtn = (Button) findViewById(R.id.newfeed_count_btn);
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
@@ -385,6 +386,10 @@ public class MainActivity extends Activity implements OnClickListener {
             if (!newFansUnreadMsgCount.equals("0")) {
             	newFansCountBtn.setText(newFansUnreadMsgCount);
             	newFansCountBtn.setVisibility(View.VISIBLE);
+            }
+            if (!feedUnreadMsgCount.equals("0")) {
+            	newFeedMsgCountBtn.setText(feedUnreadMsgCount);
+            	newFeedMsgCountBtn.setVisibility(View.VISIBLE);
             }
 			
             
@@ -522,6 +527,9 @@ public class MainActivity extends Activity implements OnClickListener {
         case R.id.rl_feed:
 
             startActivity(new Intent(this, NewsFeedActivity.class));
+            newFeedMsgCountBtn.setText("");
+        	newFeedMsgCountBtn.setVisibility(View.GONE);
+        	
             break;
         case R.id.rl_new_fans:
         	
