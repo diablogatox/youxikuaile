@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,18 +47,19 @@ public class MainActivity extends Activity implements OnClickListener {
 	public static MainActivity instance = null;
 	private ViewPager mTabPager;
 	private ImageView mTab1, mTab2, mTab3, mTab4, mTab5;
-	private ImageView userPicture;
+	private ImageView userPicture, mPhotoIv;
 	private int currIndex = 0;
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
-		feedRlView, newFansRlView, myFollowListRlView, fansListRl;
+		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
 	private TextView nameTv, uidTv;
 	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
+	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
     private Handler handler = new Handler();
 
@@ -368,6 +370,9 @@ public class MainActivity extends Activity implements OnClickListener {
             newFansRlView = findViewById(R.id.rl_new_fans);
             newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
             newFeedMsgCountBtn = (Button) findViewById(R.id.newfeed_count_btn);
+            mPbar = (ProgressBar) findViewById(R.id.progress_bar);
+            latestFeedFl = findViewById(R.id.latest_feed_fl);
+            mPhotoIv = (ImageView) findViewById(R.id.user_photo_iv);
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
@@ -377,23 +382,30 @@ public class MainActivity extends Activity implements OnClickListener {
             totalMsgCountBtn.setText("");
             totalMsgCountBtn.setVisibility(View.GONE);
      
-			String feedUnreadMsgCount = msgCountdata.get(1).toString();
-			String newFansUnreadMsgCount = msgCountdata.get(2).toString();
-            String unreadMsgCount = msgCountdata.get(3).toString();
-            
-            
-            
-            if (!newFansUnreadMsgCount.equals("0")) {
-            	newFansCountBtn.setText(newFansUnreadMsgCount);
-            	newFansCountBtn.setVisibility(View.VISIBLE);
+            String feedUnreadMsgCount = null, newFansUnreadMsgCount = null, unreadMsgCount;
+
+            if (msgCountdata != null && msgCountdata.size() > 0) {
+				feedUnreadMsgCount = msgCountdata.get(1).toString();
+				newFansUnreadMsgCount = msgCountdata.get(2).toString();
+	            unreadMsgCount = msgCountdata.get(3).toString();
+	            
+	            if (!newFansUnreadMsgCount.equals("0")) {
+	            	newFansCountBtn.setText(newFansUnreadMsgCount);
+	            	newFansCountBtn.setVisibility(View.VISIBLE);
+	            }
+	            if (!feedUnreadMsgCount.equals("0")) {
+	            	newFeedMsgCountBtn.setText(feedUnreadMsgCount);
+	            	newFeedMsgCountBtn.setVisibility(View.VISIBLE);
+	            }
             }
-            if (!feedUnreadMsgCount.equals("0")) {
-            	newFeedMsgCountBtn.setText(feedUnreadMsgCount);
-            	newFeedMsgCountBtn.setVisibility(View.VISIBLE);
-            }
-			
             
-            
+            //if (flagBoolMessage != true) {
+	            try {
+					doFetchLatestFeedAction();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+            //}
 //            handler.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
@@ -529,7 +541,8 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivity(new Intent(this, NewsFeedActivity.class));
             newFeedMsgCountBtn.setText("");
         	newFeedMsgCountBtn.setVisibility(View.GONE);
-        	msgCountdata.set(1, "0");
+        	latestFeedFl.setVisibility(View.GONE);
+        	if (msgCountdata != null && msgCountdata.size() > 0) msgCountdata.set(1, "0");
         	
             break;
         case R.id.rl_new_fans:
@@ -537,7 +550,7 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivity(new Intent(this, NewFansActivity.class));
             newFansCountBtn.setText("");
         	newFansCountBtn.setVisibility(View.GONE);
-        	msgCountdata.set(2, "0");
+        	if (msgCountdata != null && msgCountdata.size() > 0) msgCountdata.set(2, "0");
 
             break;
 		}
@@ -706,6 +719,49 @@ public class MainActivity extends Activity implements OnClickListener {
                     e.printStackTrace();
                 }
             }
+        });
+    }
+    
+    boolean flagBoolMessage = false;
+    
+    private void doFetchLatestFeedAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("feed/newest", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	JSONObject data = response.getJSONObject("data");
+                    	if (!data.isNull("feedid")) {
+                    		if (!data.isNull("photo")) {
+                    			String photo = data.getString("photo");
+                    			ImageLoader.getInstance().displayImage(photo, mPhotoIv);
+                    			latestFeedFl.setVisibility(View.VISIBLE);
+                    		}
+                    	}
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            @Override
+			public void onFinish() {
+				mPbar.setVisibility(View.GONE);
+				flagBoolMessage = true;
+			}
+
+			@Override
+			public void onStart() {
+				mPbar.setVisibility(View.VISIBLE);
+			}
         });
     }
 
