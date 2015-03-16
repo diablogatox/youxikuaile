@@ -83,32 +83,38 @@
 		android:orientation="horizontal"
 		android:padding="8dp">
 		<RelativeLayout
+		    android:id="@+id/forward_rl_vew"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1">
 			<TextView
+			    android:id="@+id/forward_num_tv"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_centerInParent="true"
 				android:drawableLeft="@drawable/feed_forward_gray"
-				android:textColor="#cecece"
-				android:text=""/>
+				android:drawablePadding="10dp"
+				android:textSize="15sp"
+				android:textColor="#666666" />
 		</RelativeLayout>
 		<View
 			android:layout_width="1dp"
 			android:layout_height="match_parent"
 			android:background="#ffe7e7e7" />
 		<RelativeLayout
+		    	android:id="@+id/reply_rl_view"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_weight="1">
 			<TextView
+			    	android:id="@+id/reply_num_tv"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_centerInParent="true"
 					android:drawableLeft="@drawable/feed_comment_gray"
-					android:textColor="#cecece"
-					android:text=""/>
+					android:drawablePadding="10dp"
+					android:textSize="15sp"
+					android:textColor="#666666" />
 		</RelativeLayout>
 		<View
 			android:layout_width="1dp"
@@ -123,7 +129,9 @@
 					android:layout_height="wrap_content"
 					android:layout_centerInParent="true"
 					android:drawableLeft="@drawable/feed_praise_gray"
-					android:textColor="#cecece"
+					android:drawablePadding="10dp"
+					android:textSize="15sp"
+					android:textColor="#666666"
 					android:text=""/>
 		</RelativeLayout>
 	</LinearLayout>

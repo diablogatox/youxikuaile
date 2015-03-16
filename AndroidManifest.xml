@@ -52,7 +52,8 @@
 	    <activity
 			android:name=".NewFansActivity"></activity>
 	    <activity
-			android:name=".NewsFeedActivity"></activity>
+			android:name=".NewsFeedActivity"
+			android:windowSoftInputMode="adjustResize|stateHidden"></activity>
 	    <activity
 			android:name=".NewsFeedPublishActivity"
 			android:screenOrientation="portrait"
@@ -68,6 +69,10 @@
 	    <activity android:name=".FollowListActivity"></activity>
 	    <activity android:name=".FansListActivity"></activity>
 	    <activity android:name=".SelectFriendsActivity"></activity>
+	    <activity
+	        android:name=".NewsFeedForwardActivity"
+	        android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustUnspecified|adjustResize"></activity>
     </application>
 
 </manifest>

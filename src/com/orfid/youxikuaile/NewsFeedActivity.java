@@ -1,19 +1,20 @@
 package com.orfid.youxikuaile;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,14 +23,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.parser.NewsFeedItemsParser;
 import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
 import com.orfid.youxikuaile.pojo.FeedItem;
-
-import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.MyGridView;
+
 import de.greenrobot.event.EventBus;
+
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,16 +41,23 @@ import java.util.List;
 public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
     private static final int COMPOSE_FEED = 0;
+    private static final int FORWARD_ACTION = 1;
     private SwipeRefreshLayout swipeContainer;
     private ImageButton backBtn, composeAddBtn;
     private ListView newsFeedLv;
-    private View headerView, emptyViewLl;
+    private View headerView, emptyViewLl, editboxLlView;
     private ProgressBar pBar;
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
     private MyAdapter adapter;
     private GridViewAdapter gvAdapter;
     private TextView loadingTv;
     private Button publishBtn;
+    private EditText commentEt;
+    private ImageView mImageView;
+    private boolean isButtonSent = false;
+    private long feedId;
+    private int pos;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,37 +81,89 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         loadingTv = (TextView) findViewById(R.id.tv_loading);
         emptyViewLl = findViewById(R.id.ll_empty_view);
         publishBtn = (Button) findViewById(R.id.btn_publish);
+        commentEt = (EditText) findViewById(R.id.newsfeedpublish_et);
+        editboxLlView = findViewById(R.id.editbox_ll_view);
+        mImageView = (ImageView) findViewById(R.id.newsfeedpublish_img);
 
         backBtn.setOnClickListener(this);
         composeAddBtn.setOnClickListener(this);
         publishBtn.setOnClickListener(this);
+        mImageView.setOnClickListener(this);
 
 //        newsFeedLv.addHeaderView(headerView);
 //        newsFeedLv.removeHeaderView(headerView);
         newsFeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-                new AlertDialog.Builder(NewsFeedActivity.this)
-                        .setTitle("提示")
-                        .setMessage("确定删除吗?")
-                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(NewsFeedActivity.this, "position====>"+position, Toast.LENGTH_SHORT).show();
-                                Toast.makeText(NewsFeedActivity.this, "feedid====>"+id, Toast.LENGTH_SHORT).show();
-                                feedItems.remove(position);
-                                adapter.notifyDataSetChanged();
-                                if (feedItems.size() <=0 ) emptyViewLl.setVisibility(View.VISIBLE);
-                                try {
-                                    doRemoveFeedAction(id);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        })
-                        .setNegativeButton("否", null)
-                        .show();
+//                new AlertDialog.Builder(NewsFeedActivity.this)
+//                        .setTitle("提示")
+//                        .setMessage("确定删除吗?")
+//                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Toast.makeText(NewsFeedActivity.this, "position====>"+position, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(NewsFeedActivity.this, "feedid====>"+id, Toast.LENGTH_SHORT).show();
+//                                feedItems.remove(position);
+//                                adapter.notifyDataSetChanged();
+//                                if (feedItems.size() <=0 ) emptyViewLl.setVisibility(View.VISIBLE);
+//                                try {
+//                                    doRemoveFeedAction(id);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        })
+//                        .setNegativeButton("否", null)
+//                        .show();
             }
+        });
+//        newsFeedLv.setOnScrollListener(new OnScrollListener() {
+//
+//			@Override
+//			public void onScrollStateChanged(AbsListView view, int scrollState) {
+//				editboxLlView.setVisibility(View.GONE);
+//				InputMethodManager imm = (InputMethodManager) getSystemService(
+//					      Context.INPUT_METHOD_SERVICE);
+//					imm.hideSoftInputFromWindow(commentEt.getWindowToken(), 0);
+//			}
+//
+//			@Override
+//			public void onScroll(AbsListView view, int firstVisibleItem,
+//					int visibleItemCount, int totalItemCount) {
+//				
+//			}
+//        	
+//        });
+        
+        commentEt.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (s.length() > 0) {
+					// change button plus to send
+					mImageView.setImageResource(R.drawable.btn_sent);
+					isButtonSent = true;
+				} else {
+					// change button plus back
+					mImageView.setImageResource(R.drawable.white3);
+					isButtonSent = false;
+				}
+			}
+        	
         });
 
         swipeContainer.setColorSchemeResources(R.color.blue, R.color.red, R.color.green, R.color.orange);
@@ -141,6 +200,33 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             case R.id.btn_publish:
                 startActivityForResult(new Intent(this, NewsFeedPublishActivity.class), COMPOSE_FEED);
                 break;
+            case R.id.newsfeedpublish_img:
+            	if (isButtonSent) {
+    				if (!commentEt.getText().toString().trim().equals("")) {
+    					//发送消息
+    					try {
+							doSendFeedReplyAction();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+    					
+    					FeedItem item = adapter.getItem(pos);
+    					item.setCommentCount(item.getCommentCount()+1);
+    					adapter.notifyDataSetChanged();
+    					
+    					editboxLlView.setVisibility(View.GONE);
+    					InputMethodManager imm = (InputMethodManager) getSystemService(
+    						      Context.INPUT_METHOD_SERVICE);
+    						imm.hideSoftInputFromWindow(commentEt.getWindowToken(), 0);
+
+    				} else {
+    					Toast.makeText(NewsFeedActivity.this, "请先输入内容", Toast.LENGTH_SHORT).show();
+    				}
+    			} else {
+
+    			}
+            	break;
         }
     }
 
@@ -163,6 +249,24 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 					}
                 }
                 break;
+            case FORWARD_ACTION:
+            	
+//            	int position = data.getIntExtra("position", 0);
+//            	Log.d("returned position======>", position+"");
+//            	FeedItem item = adapter.getItem(position);
+//            	int count = item.getCommentCount();
+//            	item.setCommentCount(count++);
+//            	adapter.notifyDataSetChanged();
+            	
+            	try {
+					doFetchFeedListAction(true);
+					emptyViewLl.setVisibility(View.GONE);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            	break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -199,9 +303,10 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         }
 
         HashMap<Integer,View> lmap = new HashMap<Integer,View>();
-
+        int height;
+        
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder = null;
             if (lmap.get(position)==null) {
                 viewHolder = new ViewHolder();
@@ -217,6 +322,10 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                         .findViewById(R.id.tv_content_text);
                 viewHolder.imagesGv = (MyGridView) convertView.findViewById(R.id.gv_images);
                 viewHolder.rlGvWrapper = convertView.findViewById(R.id.rl_gv_wrapper);
+                viewHolder.forwardRlView = convertView.findViewById(R.id.forward_rl_vew);
+                viewHolder.replyRlView = convertView.findViewById(R.id.reply_rl_view);
+                viewHolder.forwardNumTv = (TextView) convertView.findViewById(R.id.forward_num_tv);
+                viewHolder.replyNumTv = (TextView) convertView.findViewById(R.id.reply_num_tv);
                 lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -224,11 +333,43 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
+            height = convertView.getHeight();
+            
             viewHolder.userAvatarIv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, v.getId()+"", Toast.LENGTH_SHORT).show();
                 }
+            });
+            viewHolder.forwardRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					long feedId = getItem(position).getFeedId();
+					String content = getItem(position).getContentText();
+					Intent intent = new Intent(NewsFeedActivity.this, NewsFeedForwardActivity.class);
+					intent.putExtra("position", position);
+					intent.putExtra("feedId", feedId);
+					intent.putExtra("content", content);
+					startActivityForResult(intent, FORWARD_ACTION);
+				}
+            	
+            });
+            viewHolder.replyRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Log.d("current feedId =========>", getItem(position).getFeedId()+"");
+					feedId = getItem(position).getFeedId();
+					pos = position;
+					editboxLlView.setVisibility(View.VISIBLE);
+					commentEt.setFocusable(true);
+					commentEt.setFocusableInTouchMode(true);
+					commentEt.requestFocus();
+	            	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.showSoftInput(commentEt, InputMethodManager.SHOW_IMPLICIT);
+				}
+            	
             });
 
 			objBean = items.get(position);
@@ -241,6 +382,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             if (objBean.getImgItems() != null && objBean.getImgItems().size() > 0) {
                 viewHolder.rlGvWrapper.setVisibility(View.VISIBLE);
                 initImgAttachment(viewHolder.imagesGv, objBean.getImgItems());
+            }
+//            Log.d("forward count============>", objBean.getForwardCount()+"");
+            if (objBean.getForwardCount() > 0) {
+            	viewHolder.forwardNumTv.setText(objBean.getForwardCount()+"");
+            }
+            if (objBean.getCommentCount() > 0) {
+            	viewHolder.replyNumTv.setText(objBean.getCommentCount()+"");
             }
 
             return convertView;
@@ -277,7 +425,8 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             TextView publishTimeTv;
             TextView contentTextTv;
             MyGridView imagesGv;
-            View rlGvWrapper;
+            View rlGvWrapper, forwardRlView, replyRlView;
+            TextView forwardNumTv, replyNumTv;
         }
 
     }
@@ -407,6 +556,34 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                     e.printStackTrace();
                 }
             }
+        });
+    }
+    
+    private void doSendFeedReplyAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("pid", feedId);
+        params.put("type", 2);
+        params.put("text", commentEt.getText().toString().trim());
+//        params.put("files", fileIds);
+        HttpRestClient.post("feed/publish", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                       
+                    } else if (status == 0) {
+                        Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
         });
     }
 }
