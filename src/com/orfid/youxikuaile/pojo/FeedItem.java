@@ -15,6 +15,7 @@ public class FeedItem {
     private int praiseCount;
     private String publishTime;
     private int type;
+    private boolean isPraised;
     private List<FeedAttachmentImgItem> imgItems;
 
     public List<FeedAttachmentImgItem> getImgItems() {
@@ -103,4 +104,12 @@ public class FeedItem {
     public void setType(int type) {
         this.type = type;
     }
+
+	public boolean isPraised() {
+		return isPraised;
+	}
+
+	public void setPraised(boolean isPraised) {
+		this.isPraised = isPraised;
+	}
 }

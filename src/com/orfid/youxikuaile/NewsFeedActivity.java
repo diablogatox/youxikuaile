@@ -115,6 +115,17 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 //                        })
 //                        .setNegativeButton("否", null)
 //                        .show();
+            	FeedItem item = adapter.getItem(position);
+            	Intent intent = new Intent(NewsFeedActivity.this, NewsFeedDetailActivity.class);
+            	intent.putExtra("feedId", id);
+            	intent.putExtra("photo", item.getUser().getPhoto());
+            	intent.putExtra("name", item.getUser().getUsername());
+            	intent.putExtra("time", item.getPublishTime());
+            	intent.putExtra("content", item.getContentText());
+            	intent.putExtra("forwardNum", item.getForwardCount());
+            	intent.putExtra("commentNum", item.getCommentCount());
+            	intent.putExtra("praiseNum", item.getPraiseCount());
+            	startActivity(intent);
             }
         });
 //        newsFeedLv.setOnScrollListener(new OnScrollListener() {
@@ -303,7 +314,6 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         }
 
         HashMap<Integer,View> lmap = new HashMap<Integer,View>();
-        int height;
         
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
@@ -326,14 +336,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 viewHolder.replyRlView = convertView.findViewById(R.id.reply_rl_view);
                 viewHolder.forwardNumTv = (TextView) convertView.findViewById(R.id.forward_num_tv);
                 viewHolder.replyNumTv = (TextView) convertView.findViewById(R.id.reply_num_tv);
+                viewHolder.praiseRlView = convertView.findViewById(R.id.praise_rl_view);
                 lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
                 convertView = lmap.get(position);
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
-            height = convertView.getHeight();
             
             viewHolder.userAvatarIv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -368,6 +377,27 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 					commentEt.requestFocus();
 	            	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.showSoftInput(commentEt, InputMethodManager.SHOW_IMPLICIT);
+				}
+            	
+            });
+            viewHolder.praiseRlView.setOnClickListener(new OnClickListener() {
+            	
+            	int newVal = 0;
+            	
+				@Override
+				public void onClick(View v) {
+					feedId = getItem(position).getFeedId();
+//					pos = position;
+					TextView tv = (TextView) v.findViewById(R.id.praise_tv);
+					String oldVal = tv.getText().toString();
+					tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.feed_praise_red, 0, 0, 0);
+					if (oldVal != null && !oldVal.equals("")) {
+						newVal = Integer.parseInt(oldVal) + 1;
+						
+					} else {
+						newVal++;
+					}
+					tv.setText(newVal+"");
 				}
             	
             });
@@ -425,7 +455,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             TextView publishTimeTv;
             TextView contentTextTv;
             MyGridView imagesGv;
-            View rlGvWrapper, forwardRlView, replyRlView;
+            View rlGvWrapper, forwardRlView, replyRlView, praiseRlView;
             TextView forwardNumTv, replyNumTv;
         }
 

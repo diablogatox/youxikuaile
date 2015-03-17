@@ -9,4 +9,5 @@
 	<color name="white">#fff</color>
 	<color name="black">#000</color>
 	<color name="grey">#cecece</color>
+	<color name="background_tab_pressed">#6633B5E5</color>
 </resources>

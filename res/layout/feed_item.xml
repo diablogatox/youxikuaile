@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:descendantFocusability="blocksDescendants"
-			  android:background="#fff">
+			  android:background="@drawable/bg_item">
 	<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -121,18 +121,19 @@
 			android:layout_height="match_parent"
 			android:background="#ffe7e7e7" />
 		<RelativeLayout
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1">
+		    android:id="@+id/praise_rl_view"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1">
 			<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_centerInParent="true"
-					android:drawableLeft="@drawable/feed_praise_gray"
-					android:drawablePadding="10dp"
-					android:textSize="15sp"
-					android:textColor="#666666"
-					android:text=""/>
+			    android:id="@+id/praise_tv"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true"
+				android:drawableLeft="@drawable/feed_praise_gray"
+				android:drawablePadding="10dp"
+				android:textSize="15sp"
+				android:textColor="#666666" />
 		</RelativeLayout>
 	</LinearLayout>
 </LinearLayout>
