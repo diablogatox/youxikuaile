@@ -1,7 +1,9 @@
 package com.orfid.youxikuaile;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -127,6 +130,44 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             	intent.putExtra("praiseNum", item.getPraiseCount());
             	startActivity(intent);
             }
+        });
+        
+        newsFeedLv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+        	final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+            HashMap user = dbHandler.getUserDetails();
+            
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					final int position, final long id) {
+              new AlertDialog.Builder(NewsFeedActivity.this)
+              .setTitle("提示")
+              .setMessage("确定删除吗?")
+              .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                	  if (adapter.getItem(position).getUser().getUid().equals(user.get("uid").toString())) {
+//	                      Toast.makeText(NewsFeedActivity.this, "position====>"+position, Toast.LENGTH_SHORT).show();
+//	                      Toast.makeText(NewsFeedActivity.this, "feedid====>"+id, Toast.LENGTH_SHORT).show();
+	                      feedItems.remove(position);
+	                      adapter.notifyDataSetChanged();
+	                      if (feedItems.size() <=0 ) emptyViewLl.setVisibility(View.VISIBLE);
+	                      try {
+	                          doRemoveFeedAction(id);
+	                      } catch (JSONException e) {
+	                          e.printStackTrace();
+	                      }
+                	  } else {
+                		  Toast.makeText(NewsFeedActivity.this, "无法删除其他人的微博", Toast.LENGTH_SHORT).show();
+                	  }
+                  }
+              })
+              .setNegativeButton("否", null)
+              .show();
+              
+              return true;
+			}
+        	
         });
 //        newsFeedLv.setOnScrollListener(new OnScrollListener() {
 //
@@ -337,12 +378,15 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 viewHolder.forwardNumTv = (TextView) convertView.findViewById(R.id.forward_num_tv);
                 viewHolder.replyNumTv = (TextView) convertView.findViewById(R.id.reply_num_tv);
                 viewHolder.praiseRlView = convertView.findViewById(R.id.praise_rl_view);
+                viewHolder.praiseNumTv = (TextView) convertView.findViewById(R.id.praise_tv);
                 lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
                 convertView = lmap.get(position);
                 viewHolder = (ViewHolder) convertView.getTag();
             }
+            
+            objBean = getItem(position);
             
             viewHolder.userAvatarIv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -354,8 +398,8 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
 				@Override
 				public void onClick(View v) {
-					long feedId = getItem(position).getFeedId();
-					String content = getItem(position).getContentText();
+					long feedId = objBean.getFeedId();
+					String content = objBean.getContentText();
 					Intent intent = new Intent(NewsFeedActivity.this, NewsFeedForwardActivity.class);
 					intent.putExtra("position", position);
 					intent.putExtra("feedId", feedId);
@@ -368,8 +412,8 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
 				@Override
 				public void onClick(View v) {
-					Log.d("current feedId =========>", getItem(position).getFeedId()+"");
-					feedId = getItem(position).getFeedId();
+					Log.d("current feedId =========>", objBean.getFeedId()+"");
+					feedId = objBean.getFeedId();
 					pos = position;
 					editboxLlView.setVisibility(View.VISIBLE);
 					commentEt.setFocusable(true);
@@ -382,27 +426,30 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             });
             viewHolder.praiseRlView.setOnClickListener(new OnClickListener() {
             	
-            	int newVal = 0;
-            	
 				@Override
 				public void onClick(View v) {
-					feedId = getItem(position).getFeedId();
-//					pos = position;
-					TextView tv = (TextView) v.findViewById(R.id.praise_tv);
-					String oldVal = tv.getText().toString();
-					tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.feed_praise_red, 0, 0, 0);
-					if (oldVal != null && !oldVal.equals("")) {
-						newVal = Integer.parseInt(oldVal) + 1;
+					if (objBean.isPraised() == false) {
+						feedId = objBean.getFeedId();
+	//					pos = position;
+						int newval = objBean.getPraiseCount()+1;
+						objBean.setPraiseCount(newval);
+						objBean.setPraised(true);
+						adapter.notifyDataSetChanged();
 						
+						try {
+							doPraiseFeedAction();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					} else {
-						newVal++;
+						Toast.makeText(NewsFeedActivity.this, "已经赞过了", Toast.LENGTH_SHORT).show();
 					}
-					tv.setText(newVal+"");
 				}
             	
             });
 
-			objBean = items.get(position);
+			
             if (objBean.getUser().getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getUser().getPhoto(), viewHolder.userAvatarIv);
             viewHolder.usernameTv.setText(objBean.getUser().getUsername());
             viewHolder.publishTimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getPublishTime()) * 1000));
@@ -419,6 +466,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             }
             if (objBean.getCommentCount() > 0) {
             	viewHolder.replyNumTv.setText(objBean.getCommentCount()+"");
+            }
+            if (objBean.isPraised() == true) {
+            	//已赞
+            	viewHolder.praiseNumTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.feed_praise_red, 0, 0, 0);
+            	viewHolder.praiseNumTv.setText(objBean.getPraiseCount()+"");
+            } else if (objBean.getPraiseCount() > 0) {
+            	viewHolder.praiseNumTv.setText(objBean.getPraiseCount()+"");
             }
 
             return convertView;
@@ -456,7 +510,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             TextView contentTextTv;
             MyGridView imagesGv;
             View rlGvWrapper, forwardRlView, replyRlView, praiseRlView;
-            TextView forwardNumTv, replyNumTv;
+            TextView forwardNumTv, replyNumTv, praiseNumTv;
         }
 
     }
@@ -606,6 +660,31 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                     int status = response.getInt("status");
                     if (status == 1) { // success
                        
+                    } else if (status == 0) {
+                        Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
+    
+    private void doPraiseFeedAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", feedId);
+        HttpRestClient.post("feed/praise", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     } else if (status == 0) {
                         Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

@@ -54,6 +54,7 @@ public class NewsFeedItemsParser {
         FeedItem feedItem = new FeedItem();
         long feedId = 0;
         int commentCount = 0, forwardCount = 0, praiseCount = 0, type = 0;
+        boolean isPraised = false;
         String contentText = null, publishTime = null;
         UserItem user = null;
         List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
@@ -65,6 +66,7 @@ public class NewsFeedItemsParser {
             praiseCount = Integer.parseInt(jFeedItem.getString("praisecount"));
             publishTime = jFeedItem.getString("publishtime");
             type = Integer.parseInt(jFeedItem.getString("type"));
+            isPraised = jFeedItem.getBoolean("is_praised");
             if (!jFeedItem.isNull("files") && !jFeedItem.getString("files").equals("[]")) {
                 JSONArray jImgItemsArr = jFeedItem.getJSONArray("files");
                 for (int i=0; i<jImgItemsArr.length(); i++) {
@@ -93,6 +95,12 @@ public class NewsFeedItemsParser {
         feedItem.setUser(user);
         feedItem.setCommentCount(commentCount);
         feedItem.setImgItems(imgItems);
+        feedItem.setPraised(isPraised);
+        
+        Log.d("praise num====>", praiseCount+"");
+        Log.d("is praised====>", isPraised?"yes":"no");
+        
+        
 
         return feedItem;
     }
