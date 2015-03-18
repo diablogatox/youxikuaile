@@ -25,6 +25,9 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +41,9 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.parser.FollowItemsParser;
 import com.orfid.youxikuaile.pojo.ActionItem;
+import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
 
@@ -57,11 +62,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
-	private TextView nameTv, uidTv;
+	private TextView nameTv, uidTv, emptyTv;
 	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
 	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
     private Handler handler = new Handler();
+    private MyAdapter1 myAdapter1;
+    private List<UserItem> userItems = new ArrayList<UserItem>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -355,14 +362,46 @@ public class MainActivity extends Activity implements OnClickListener {
             nearbyOrganizationsBtn = (ImageButton) view.findViewById(R.id.nearby_organizations);
             nearbySittersBtn = (ImageButton) view.findViewById(R.id.nearby_sitters);
 			followedPublicLv = (ListView) view.findViewById(R.id.followed_public);
+			mPbar = (ProgressBar) findViewById(R.id.progress_bar);
+			emptyTv = (TextView) view.findViewById(R.id.empty_tv);
 			
 			nearbyPlayersBtn.setOnClickListener(this);
             nearbyOrganizationsBtn.setOnClickListener(this);
             nearbySittersBtn.setOnClickListener(this);
+            
+            followedPublicLv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Log.d("uid=====>", id+"");
+//					Intent intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+//	                intent.putExtra("uid", id+"");
+//	                intent.putExtra("username", myAdapter1.getItem(position).getUsername());
+//	                intent.putExtra("photo", myAdapter1.getItem(position).getPhoto());
+//	                intent.putExtra("isFollowed", true);
+//	                intent.putExtra("isPublic", true);
+//					startActivity(intent);
+				}
+            	
+            });
 			
-			followedPublicLv.setAdapter(new MyAdapter1());
+//			followedPublicLv.setAdapter(new MyAdapter1());
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
+            
+            handler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						doFetchPublicFollowListAction();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+            	
+            }, 500);
 			
 		} else if (index == 2) { // 消息
 
@@ -399,23 +438,17 @@ public class MainActivity extends Activity implements OnClickListener {
 	            }
             }
             
-            //if (flagBoolMessage != true) {
-	            try {
-					doFetchLatestFeedAction();
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-            //}
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        doFetchMessageCountAction();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }, 1000);
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+		            try {
+						doFetchLatestFeedAction();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+                }
+            }, 500);
 
         } else if (index == 3) {
 
@@ -615,60 +648,68 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 	
 	
-	class MyAdapter1 extends BaseAdapter {
+	private class MyAdapter1 extends ArrayAdapter<UserItem> {
+		
+		private List<UserItem> items;
+		private UserItem objBean;
+		private Context context;
+		private int resource;
+
+		public MyAdapter1(Context context, int resource, List<UserItem> items) {
+			super(context, resource, items);
+			this.items = items;
+			this.context = context;
+			this.resource = resource;
+		}
 
 		@Override
 		public int getCount() {
-			return 4;
+			return items == null ? 0: items.size();
 		}
 
 		@Override
-		public Object getItem(int position) {
-			return null;
+		public UserItem getItem(int position) {
+			return items.get(position);
 		}
-
+		
+		
 		@Override
 		public long getItemId(int position) {
-			return position;
+			return Long.parseLong(items.get(position).getUid());
 		}
+
+
+
+		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			PictureViewHolder viewHolder = null;
-			if (convertView == null) {
-				viewHolder = new PictureViewHolder();
-				convertView = LayoutInflater.from(MainActivity.this).inflate(
-						R.layout.found_public, parent, false);
-//				viewHolder.iv_friends_pic = (ImageView) convertView
-//						.findViewById(R.id.iv_friends_pic);
-//				viewHolder.tv_friends_name = (TextView) convertView
-//						.findViewById(R.id.tv_friends_name);
-//				viewHolder.tv_music_content = (TextView) convertView
-//						.findViewById(R.id.tv_music_content);
-//				viewHolder.tv_distance = (TextView) convertView
-//						.findViewById(R.id.tv_distance);
-//				viewHolder.btn_voice = (Button) convertView
-//						.findViewById(R.id.btn_voice);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (PictureViewHolder) convertView.getTag();
-			}
-
-//			viewHolder.tv_friends_name.setText("林俊杰");//名字
-//			viewHolder.tv_distance.setText(500 + "m"); //距离
-//			// 在下面进行判断，并显示或隐藏歌词和语音，实现相应的功能
-//			viewHolder.tv_music_content.setText("她静悄悄的来过，她慢慢带走沉默。只是最后的承诺，还是没有带走了"); // 歌词
-//			viewHolder.btn_voice.setVisibility(View.GONE);
-
-			return convertView;
+			ViewHolder viewHolder = null;
+            if (lmap.get(position)==null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(
+                        resource, parent, false);
+                viewHolder.userPhotoIv = (ImageView) convertView.findViewById(R.id.public_photo_iv);
+                viewHolder.userNameTv = (TextView) convertView.findViewById(R.id.public_name_tv);
+                lmap.put(position, convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                convertView = lmap.get(position);
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            
+            objBean = items.get(position);
+            if (objBean.getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
+            if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
+            
+            return convertView;
 		}
-
-		public class PictureViewHolder {
-			ImageView iv_friends_pic;
-			TextView tv_friends_name;
-			TextView tv_music_content;
+		
+		public class ViewHolder {
+			ImageView userPhotoIv;
+			TextView userNameTv;
 		}
-
+		
 	}
 
     private void doFetchMessageCountAction() throws JSONException {
@@ -722,8 +763,6 @@ public class MainActivity extends Activity implements OnClickListener {
         });
     }
     
-    boolean flagBoolMessage = false;
-    
     private void doFetchLatestFeedAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
@@ -755,12 +794,61 @@ public class MainActivity extends Activity implements OnClickListener {
             @Override
 			public void onFinish() {
 				mPbar.setVisibility(View.GONE);
-				flagBoolMessage = true;
 			}
 
 			@Override
 			public void onStart() {
 				mPbar.setVisibility(View.VISIBLE);
+			}
+        });
+    }
+    
+    private void doFetchPublicFollowListAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("public", 1);
+        HttpRestClient.post("follow", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	FollowItemsParser parser = new FollowItemsParser();
+                        userItems = parser.parse(response.getJSONObject("data"));
+                        Log.d("userItems count=====>", userItems.size()+"");
+                        myAdapter1 = new MyAdapter1(MainActivity.this, R.layout.found_public, userItems);
+                        followedPublicLv.setAdapter(myAdapter1);
+                        if (emptyTv.isShown() && userItems.size() > 0) {
+                        	emptyTv.setVisibility(View.GONE);
+                        }
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            @Override
+			public void onFinish() {
+				if (mPbar.isShown() == true) mPbar.setVisibility(View.GONE);
+				if (userItems.size() <= 0) {
+                	emptyTv.setText("没有关注公共账号");
+                	emptyTv.setVisibility(View.VISIBLE);
+                } else {
+                	emptyTv.setVisibility(View.GONE);
+                }
+			}
+
+			@Override
+			public void onStart() {
+				if (mPbar.isShown() == false) mPbar.setVisibility(View.VISIBLE);
+				if (followedPublicLv.getChildCount() <= 0) {
+					emptyTv.setVisibility(View.VISIBLE);
+				}
 			}
         });
     }

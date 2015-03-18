@@ -12,12 +12,21 @@
 		android:background="#ffb400"
 		android:gravity="center_vertical"  >   			
 		<TextView
+		    android:id="@+id/tv_title"
 			android:layout_width="wrap_content" 
 	      	android:layout_height="wrap_content" 
 	      	android:layout_centerInParent="true"
 	      	android:textSize="20sp"
 	      	android:text="游戏快乐"	
-			android:textColor="#ffffff" /> 
+			android:textColor="#ffffff" />
+		<ProgressBar
+		    android:id="@+id/progress_bar"
+		    android:layout_width="wrap_content" android:layout_height="wrap_content"
+		    android:layout_toRightOf="@id/tv_title"
+		    android:layout_centerVertical="true"
+		    android:paddingLeft="5dp"
+		    android:visibility="gone"
+		    style="@android:style/Widget.ProgressBar.Small"/> 
 		<ImageButton
 		    android:id="@+id/add_btn"
 		    android:layout_width="wrap_content" 
@@ -82,28 +91,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:paddingTop="20dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:background="#fff"
         android:orientation="vertical">
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#000"
             android:text="关注公共账号" />
         
-        <ListView 
-		    android:id="@+id/followed_public"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:cacheColorHint="@null"
-		    android:divider="@null" />
-        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+	        <ListView
+		        android:id="@+id/followed_public"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="12dp"
+		        android:divider="@android:color/transparent"
+		        android:cacheColorHint="@android:color/transparent"
+		        android:dividerHeight="0dp"
+		        android:fadingEdge="none"
+		        android:fastScrollEnabled="true" />
+	        <TextView
+	            android:id="@+id/empty_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:visibility="gone"
+	            android:layout_centerInParent="true"
+	            android:text="加载中..." />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

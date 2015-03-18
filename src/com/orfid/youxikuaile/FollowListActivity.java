@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.orfid.youxikuaile.NewsFeedActivity.MyAdapter.ViewHolder;
 import com.orfid.youxikuaile.parser.FollowItemsParser;
 import com.orfid.youxikuaile.pojo.UserItem;
 
@@ -85,6 +84,7 @@ public class FollowListActivity extends Activity implements OnClickListener {
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
+        params.put("public", 0);
 //        params.put("page", page);
         HttpRestClient.post("follow", params, new JsonHttpResponseHandler() {
             @Override

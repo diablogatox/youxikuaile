@@ -67,7 +67,7 @@ public class SelectSpecificActivity extends Activity implements View.OnClickList
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
-        params.put("uid", uid);
+        params.put("id", uid);
         HttpRestClient.post("user/find", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -78,12 +78,12 @@ public class SelectSpecificActivity extends Activity implements View.OnClickList
                         if (!response.getString("data").equals("[]") && response.getJSONArray("data").length() > 0) {
                             rl_select_specific2.setVisibility(View.VISIBLE);
                             JSONObject jUser = (JSONObject) response.getJSONArray("data").get(0);
+                            uid = jUser.getString("uid");
                             username = jUser.getString("username");
                             photo = jUser.getString("photo");
                             isFollowed = jUser.getBoolean("isfollow");
                             if (username != null && !username.equals("null")) nameTv.setText(username);
                             if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
-
                         } else {
                             mLoadingTv.setText("没有相关的用户");
                             mLoadingTv.setVisibility(View.VISIBLE);

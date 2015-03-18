@@ -56,6 +56,8 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
         isFollowed = intent.getBooleanExtra("isFollowed", false);
         String username = intent.getStringExtra("username");
         String photo = intent.getStringExtra("photo");
+        
+        Log.d("uid>>>>>>+++++++", uid);
 
         mPbar = (ProgressBar) findViewById(R.id.progress_bar);
         userPhoto = (ImageView) findViewById(R.id.user_picture);

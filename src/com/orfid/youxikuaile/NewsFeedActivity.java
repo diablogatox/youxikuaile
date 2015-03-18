@@ -439,7 +439,6 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 						try {
 							doPraiseFeedAction();
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					} else {
