@@ -75,6 +75,8 @@
 			android:windowSoftInputMode="adjustUnspecified|adjustResize"></activity>
 	    <activity
 	        android:name=".NewsFeedDetailActivity"></activity>
+	    <activity
+	        android:name=".RecommendDetailActivity"></activity>
     </application>
 
 </manifest>

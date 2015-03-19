@@ -42,7 +42,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.parser.FollowItemsParser;
+import com.orfid.youxikuaile.parser.RecommendItemsParser;
 import com.orfid.youxikuaile.pojo.ActionItem;
+import com.orfid.youxikuaile.pojo.RecommendItem;
 import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
@@ -62,13 +64,15 @@ public class MainActivity extends Activity implements OnClickListener {
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv;
-	private TextView nameTv, uidTv, emptyTv;
+	private TextView nameTv, uidTv, emptyTv, hotEmptyTv;
 	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
 	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
     private Handler handler = new Handler();
     private MyAdapter1 myAdapter1;
+    private MyAdapter myAdapter;
     private List<UserItem> userItems = new ArrayList<UserItem>();
+    private List<RecommendItem> recommendItems = new ArrayList<RecommendItem>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -153,11 +157,19 @@ public class MainActivity extends Activity implements OnClickListener {
 		init();
 		setup(0);
 		
-		try {
-			doFetchMessageCountAction();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		
+		if (MainApplication.getInstance().getDbHandler().getRawCount() == 0) {
+            Intent intent = new Intent(this, SigninActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        } else {
+        	try {
+    			doFetchMessageCountAction();
+    		} catch (JSONException e) {
+    			e.printStackTrace();
+    		}
+        }
         
 	}
 
@@ -331,6 +343,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			addBtn = (ImageButton) view.findViewById(R.id.ib_add);
 			backBtn = (ImageButton) view.findViewById(R.id.btn_back);
 			searchInput = (EditText) view.findViewById(R.id.et_search_input);
+			hotEmptyTv = (TextView) view.findViewById(R.id.hot_empty_view);
 			
 			searchBtn.setOnClickListener(this);
 			backBtn.setOnClickListener(this);
@@ -352,9 +365,35 @@ public class MainActivity extends Activity implements OnClickListener {
 				
 			});
 			
-			hotRecommendLv.setAdapter(new MyAdapter());
+			hotRecommendLv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					RecommendItem item = myAdapter.getItem(position);
+					Intent intent = new Intent(MainActivity.this, RecommendDetailActivity.class);
+					intent.putExtra("title", item.getTitle());
+					intent.putExtra("content", item.getContent());
+					startActivity(intent);
+				}
+				
+			});
+//			hotRecommendLv.setAdapter(new MyAdapter());
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
+            
+            handler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					try {
+						doFetchHotRecommendListAction();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+            	
+            }, 500);
 			
 		} else if (index == 1) {
 			
@@ -591,60 +630,71 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 	
 	
-	class MyAdapter extends BaseAdapter {
+	private class MyAdapter extends ArrayAdapter<RecommendItem> {
+		
+		private List<RecommendItem> items;
+		private RecommendItem objBean;
+		private Context context;
+		private int resource;
+
+		public MyAdapter(Context context, int resource, List<RecommendItem> items) {
+			super(context, resource, items);
+			this.items = items;
+			this.context = context;
+			this.resource = resource;
+		}
 
 		@Override
 		public int getCount() {
-			return 4;
+			return items == null ? 0: items.size();
 		}
 
 		@Override
-		public Object getItem(int position) {
-			return null;
+		public RecommendItem getItem(int position) {
+			return items.get(position);
 		}
-
+		
+		
 		@Override
 		public long getItemId(int position) {
-			return position;
+			return Long.parseLong(items.get(position).getId());
 		}
+
+
+
+		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			PictureViewHolder viewHolder = null;
-			if (convertView == null) {
-				viewHolder = new PictureViewHolder();
-				convertView = LayoutInflater.from(MainActivity.this).inflate(
-						R.layout.hot_recommend, parent, false);
-//				viewHolder.iv_friends_pic = (ImageView) convertView
-//						.findViewById(R.id.iv_friends_pic);
-//				viewHolder.tv_friends_name = (TextView) convertView
-//						.findViewById(R.id.tv_friends_name);
-//				viewHolder.tv_music_content = (TextView) convertView
-//						.findViewById(R.id.tv_music_content);
-//				viewHolder.tv_distance = (TextView) convertView
-//						.findViewById(R.id.tv_distance);
-//				viewHolder.btn_voice = (Button) convertView
-//						.findViewById(R.id.btn_voice);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (PictureViewHolder) convertView.getTag();
-			}
-
-//			viewHolder.tv_friends_name.setText("林俊杰");//名字
-//			viewHolder.tv_distance.setText(500 + "m"); //距离
-//			// 在下面进行判断，并显示或隐藏歌词和语音，实现相应的功能
-//			viewHolder.tv_music_content.setText("她静悄悄的来过，她慢慢带走沉默。只是最后的承诺，还是没有带走了"); // 歌词
-//			viewHolder.btn_voice.setVisibility(View.GONE);
-
-			return convertView;
+			ViewHolder viewHolder = null;
+            if (lmap.get(position)==null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(
+                        resource, parent, false);
+                viewHolder.imgIv = (ImageView) convertView.findViewById(R.id.img_iv);
+                viewHolder.titleTv = (TextView) convertView.findViewById(R.id.title_tv);
+                viewHolder.contentTv = (TextView) convertView.findViewById(R.id.content_tv);
+                lmap.put(position, convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                convertView = lmap.get(position);
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            
+            objBean = items.get(position);
+            if (objBean.getImg() != null) ImageLoader.getInstance().displayImage(objBean.getImg(), viewHolder.imgIv);
+            if (objBean.getTitle() != null) viewHolder.titleTv.setText(objBean.getTitle());
+            if (objBean.getContent() != null) viewHolder.contentTv.setText(objBean.getContent());
+            
+            return convertView;
 		}
-
-		public class PictureViewHolder {
-			ImageView iv_friends_pic;
-			TextView tv_friends_name;
-			TextView tv_music_content;
+		
+		public class ViewHolder {
+			ImageView imgIv;
+			TextView titleTv;
+			TextView contentTv;
 		}
-
+		
 	}
 	
 	
@@ -848,6 +898,53 @@ public class MainActivity extends Activity implements OnClickListener {
 				if (mPbar.isShown() == false) mPbar.setVisibility(View.VISIBLE);
 				if (followedPublicLv.getChildCount() <= 0) {
 					emptyTv.setVisibility(View.VISIBLE);
+				}
+			}
+        });
+    }
+    
+    private void doFetchHotRecommendListAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("info", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	RecommendItemsParser parser = new RecommendItemsParser();
+                        recommendItems = parser.parse(response.getJSONObject("data"));
+                        Log.d("recommendItems count=====>", recommendItems.size()+"");
+                        myAdapter = new MyAdapter(MainActivity.this, R.layout.hot_recommend, recommendItems);
+                        hotRecommendLv.setAdapter(myAdapter);
+                        if (hotEmptyTv.isShown() && recommendItems.size() > 0) {
+                        	hotEmptyTv.setVisibility(View.GONE);
+                        }
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            @Override
+			public void onFinish() {
+				if (recommendItems.size() <= 0) {
+                	hotEmptyTv.setText("没有热门推荐");
+                	hotEmptyTv.setVisibility(View.VISIBLE);
+                } else {
+                	hotEmptyTv.setVisibility(View.GONE);
+                }
+			}
+
+			@Override
+			public void onStart() {
+				if (hotRecommendLv.getChildCount() <= 0) {
+					hotEmptyTv.setVisibility(View.VISIBLE);
 				}
 			}
         });

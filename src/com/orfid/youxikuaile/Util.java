@@ -1,14 +1,5 @@
 package com.orfid.youxikuaile;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
-import android.util.Log;
-import android.widget.TextView;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,6 +11,19 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
+import android.widget.TextView;
 
 public class Util {
 
@@ -158,5 +162,17 @@ public class Util {
             }
         }
         return sb;
+    }
+    
+    public static String changeImgWidth(String htmlContent){
+        Document doc_Dis = Jsoup.parse(htmlContent);
+        Elements ele_Img = doc_Dis.getElementsByTag("img");
+        if (ele_Img.size() != 0){
+            for (Element e_Img : ele_Img) {
+                e_Img.attr("style", "width:100%");
+            }
+        }
+        String newHtmlContent=doc_Dis.toString();
+        return newHtmlContent;
     }
 }
