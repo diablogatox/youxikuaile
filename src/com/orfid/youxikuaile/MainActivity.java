@@ -28,7 +28,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -59,7 +58,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
-		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl;
+		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl, mineGamesRlView;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
@@ -158,18 +157,18 @@ public class MainActivity extends Activity implements OnClickListener {
 		setup(0);
 		
 		
-		if (MainApplication.getInstance().getDbHandler().getRawCount() == 0) {
-            Intent intent = new Intent(this, SigninActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        } else {
-        	try {
-    			doFetchMessageCountAction();
-    		} catch (JSONException e) {
-    			e.printStackTrace();
-    		}
-        }
+//		if (MainApplication.getInstance().getDbHandler().getRawCount() == 0) {
+//            Intent intent = new Intent(this, SigninActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            finish();
+//        } else {
+//        	try {
+//    			doFetchMessageCountAction();
+//    		} catch (JSONException e) {
+//    			e.printStackTrace();
+//    		}
+//        }
         
 	}
 
@@ -193,6 +192,10 @@ public class MainActivity extends Activity implements OnClickListener {
                         token = response.getString("token");
                         dbHandler.updateUser(uid, Constants.KEY_TOKEN, token);
                         Log.d("updated token=======>", token);
+                        
+                        // 获取消息数目
+                		doFetchMessageCountAction();
+
 
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
@@ -414,13 +417,12 @@ public class MainActivity extends Activity implements OnClickListener {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					Log.d("uid=====>", id+"");
-//					Intent intent = new Intent(MainActivity.this, PublicHomeActivity.class);
-//	                intent.putExtra("uid", id+"");
-//	                intent.putExtra("username", myAdapter1.getItem(position).getUsername());
-//	                intent.putExtra("photo", myAdapter1.getItem(position).getPhoto());
-//	                intent.putExtra("isFollowed", true);
-//	                intent.putExtra("isPublic", true);
-//					startActivity(intent);
+					Intent intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+	                intent.putExtra("uid", id+"");
+	                intent.putExtra("username", myAdapter1.getItem(position).getUsername());
+	                intent.putExtra("photo", myAdapter1.getItem(position).getPhoto());
+	                intent.putExtra("isFollowed", true);
+					startActivity(intent);
 				}
             	
             });
@@ -501,6 +503,7 @@ public class MainActivity extends Activity implements OnClickListener {
             userPicture = (ImageView) findViewById(R.id.user_picture);
             nameTv = (TextView) findViewById(R.id.name_tv);
             uidTv = (TextView) findViewById(R.id.uid_tv);
+            mineGamesRlView = findViewById(R.id.mine_games_rl_view);
             
             final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
             final HashMap user = dbHandler.getUserDetails();
@@ -536,6 +539,14 @@ public class MainActivity extends Activity implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 					startActivity(new Intent(MainActivity.this, FansListActivity.class));
+				}
+            	
+            });
+            mineGamesRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, MyGamesActivity.class));
 				}
             	
             });
@@ -749,7 +760,7 @@ public class MainActivity extends Activity implements OnClickListener {
             }
             
             objBean = items.get(position);
-            if (objBean.getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
+            if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
             if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
             
             return convertView;

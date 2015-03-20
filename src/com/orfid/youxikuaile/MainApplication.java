@@ -2,10 +2,8 @@ package com.orfid.youxikuaile;
 
 import android.app.Application;
 import android.content.Context;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import java.util.HashMap;
 

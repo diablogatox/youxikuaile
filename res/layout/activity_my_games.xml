@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#f3f4f9"
+	android:orientation="vertical">
+	
+	<!-- 头部开始 -->
+    <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="45dp"
+	    android:background="#ffb400"
+	    android:gravity="center_vertical">
+        <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:textSize="20sp"
+	        android:text="@string/my_games"
+	        android:textColor="#ffffff" />
+        <Button
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:layout_marginEnd="12dp"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:background="@drawable/header_right_add_btn_selector" />
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_back"
+            android:contentDescription="@null"
+            android:background="@null" />
+    </RelativeLayout>
+    <!-- 头部结束 -->
+    
+    <!-- 内容 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+	        <View
+	            android:layout_width="match_parent"
+	            android:layout_height="10dp"
+	            android:background="#f3f4f9" />
+	        <ListView 
+			    android:id="@+id/my_games_lv"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:divider="#f3f4f9"
+			    android:cacheColorHint="@android:color/transparent"
+			    android:dividerHeight="10dp" />
+		</LinearLayout>
+		<TextView
+		    android:id="@+id/loading_hint_tv"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerInParent="true"
+		    android:visibility="gone"
+		    android:text="@string/loading" />
+		<LinearLayout
+		    android:id="@+id/empty_hint_ll_view"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerInParent="true"
+		    android:visibility="gone"
+		    android:orientation="vertical">
+		    <TextView
+			    android:id="@+id/empty_hint_tv"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/no_games_yet" />
+		    <Button
+		        android:id="@+id/empty_hint_btn"
+		        android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/add_games_now" />
+		</LinearLayout>
+	</RelativeLayout>
+		
+</LinearLayout>

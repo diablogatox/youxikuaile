@@ -27,7 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class SelectSpecificActivity extends Activity implements View.OnClickListener {
 
 	private static final int FRIEND_HOME = 0;
-    private String uid, username, photo;
+    private String uid, username, photo, type;
     private ImageButton backBtn;
     private View rl_select_specific2;
     private ProgressBar mPbar;
@@ -82,6 +82,7 @@ public class SelectSpecificActivity extends Activity implements View.OnClickList
                             username = jUser.getString("username");
                             photo = jUser.getString("photo");
                             isFollowed = jUser.getBoolean("isfollow");
+                            type = jUser.getString("type");
                             if (username != null && !username.equals("null")) nameTv.setText(username);
                             if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
                         } else {
@@ -117,11 +118,17 @@ public class SelectSpecificActivity extends Activity implements View.OnClickList
                 finish();
                 break;
             case R.id.rl_select_specific2:
-                Intent intent = new Intent(this, FriendHomeActivity.class);
+            	Intent intent;
+            	if (type.equals("0")) {
+            		intent = new Intent(this, FriendHomeActivity.class);
+            	} else {
+            		intent = new Intent(this, PublicHomeActivity.class);
+            	}
                 intent.putExtra("uid", uid);
                 intent.putExtra("username", username);
                 intent.putExtra("photo", photo);
                 intent.putExtra("isFollowed", isFollowed);
+                
                 startActivityForResult(intent, FRIEND_HOME);
                 break;
         }

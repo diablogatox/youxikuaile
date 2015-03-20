@@ -9,11 +9,11 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
         android:name=".MainApplication"
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -27,56 +27,70 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SigninActivity" >
+        </activity>
+        <activity android:name=".SignupActivity" >
+        </activity>
+        <activity android:name=".AddNewFriendActivity" >
+        </activity>
+        <activity android:name=".NearbyPlayersActivity" >
+        </activity>
+        <activity android:name=".NearbyOrganizationsActivity" >
+        </activity>
+        <activity android:name=".OnlineSittersActivity" >
+        </activity>
+        <activity android:name=".OfflineSittersActivity" >
+        </activity>
+        <activity android:name=".SettingsActivity" >
+        </activity>
+        <activity android:name=".UserInfoActivity" >
+        </activity>
+        <activity android:name=".NicknameActivity" >
+        </activity>
+        <activity android:name=".GenderActivity" >
+        </activity>
+        <activity android:name=".NewFansActivity" >
+        </activity>
         <activity
-            android:name=".SigninActivity"></activity>
+            android:name=".NewsFeedActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
         <activity
-            android:name=".SignupActivity"></activity>
+            android:name=".NewsFeedPublishActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|adjustResize" >
+        </activity>
         <activity
-            android:name=".AddNewFriendActivity"></activity>
+            android:name=".PhotoPickerActivity"
+            android:theme="@style/MyDialogStyleBottom" >
+        </activity>
         <activity
-            android:name=".NearbyPlayersActivity"></activity>
+            android:name=".WheelDatePickerActivity"
+            android:theme="@style/MyDialogStyleBottomNoFloating" >
+        </activity>
+        <activity android:name=".SelectSpecificActivity" />
+        <activity android:name=".FriendHomeActivity" />
+        <activity android:name=".FollowListActivity" >
+        </activity>
+        <activity android:name=".FansListActivity" >
+        </activity>
+        <activity android:name=".SelectFriendsActivity" >
+        </activity>
         <activity
-            android:name=".NearbyOrganizationsActivity"></activity>
+            android:name=".NewsFeedForwardActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|adjustResize" >
+        </activity>
+        <activity android:name=".NewsFeedDetailActivity" >
+        </activity>
+        <activity android:name=".RecommendDetailActivity" >
+        </activity>
+        <activity android:name=".PublicHomeActivity" >
+        </activity>
         <activity
-            android:name=".OnlineSittersActivity"></activity>
-        <activity
-            android:name=".OfflineSittersActivity"></activity>
-        <activity
-            android:name=".SettingsActivity"></activity>
-        <activity
-			android:name=".UserInfoActivity"></activity>
-	    <activity
-			android:name=".NicknameActivity"></activity>
-	    <activity
-			android:name=".GenderActivity"></activity>
-	    <activity
-			android:name=".NewFansActivity"></activity>
-	    <activity
-			android:name=".NewsFeedActivity"
-			android:windowSoftInputMode="adjustResize|stateHidden"></activity>
-	    <activity
-			android:name=".NewsFeedPublishActivity"
-			android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustUnspecified|adjustResize"></activity>
-	    <activity
-			android:name=".PhotoPickerActivity"
-			android:theme="@style/MyDialogStyleBottom"></activity>
-	    <activity
-		    android:name=".WheelDatePickerActivity"
-		    android:theme="@style/MyDialogStyleBottomNoFloating"></activity>
-	    <activity android:name=".SelectSpecificActivity"/>
-	    <activity android:name=".FriendHomeActivity"/>
-	    <activity android:name=".FollowListActivity"></activity>
-	    <activity android:name=".FansListActivity"></activity>
-	    <activity android:name=".SelectFriendsActivity"></activity>
-	    <activity
-	        android:name=".NewsFeedForwardActivity"
-	        android:screenOrientation="portrait"
-			android:windowSoftInputMode="adjustUnspecified|adjustResize"></activity>
-	    <activity
-	        android:name=".NewsFeedDetailActivity"></activity>
-	    <activity
-	        android:name=".RecommendDetailActivity"></activity>
+            android:name=".MyGamesActivity">
+        </activity>
+        <activity android:name=".AddGameActivity"></activity>
     </application>
 
 </manifest>
