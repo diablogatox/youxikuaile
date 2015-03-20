@@ -107,7 +107,7 @@ public class NearbyPlayersActivity extends Activity {
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
-        params.put("distance", 2000);
+        params.put("mod", 0);
         HttpRestClient.post("user/findByDistance", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
