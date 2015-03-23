@@ -22,6 +22,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_UID = "uid";
     private static final String KEY_PHOTO = "photo";
     private static final String KEY_PHONE = "phone";
+    private static final String KEY_GEOLAT = "geoLat";
+    private static final String KEY_GEOLNG = "geoLng";
 
 //    public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
 //        super(context, name, factory, version);
@@ -39,7 +41,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_PASSWORD + " TEXT,"
                 + KEY_TOKEN + " TEXT,"
                 + KEY_PHONE + " TEXT,"
-                + KEY_PHOTO + " TEXT)";
+                + KEY_PHOTO + " TEXT,"
+                + KEY_GEOLAT + " TEXT,"
+                + KEY_GEOLNG + " TEXT)";
+                
         db.execSQL(CREATE_LOGIN_TABLE);
     }
 
@@ -49,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addUser(String username, String uid, String password, String token, String photo, String phone) {
+    public void addUser(String username, String uid, String password, String token, String photo, String phone, String geolat, String geolng) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_LOGIN);
         ContentValues values = new ContentValues();
@@ -59,6 +64,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TOKEN, token);
         values.put(KEY_PHONE, phone);
         values.put(KEY_PHOTO, photo);
+        values.put(KEY_GEOLAT, geolat);
+        values.put(KEY_GEOLNG, geolng);
         db.insert(TABLE_LOGIN, null, values);
         db.close();
     }
@@ -92,6 +99,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             user.put("token", cursor.getString(3));
             user.put("phone", cursor.getString(4));
             user.put("photo", cursor.getString(5));
+            user.put("geolat", cursor.getString(6));
+            user.put("geolng", cursor.getString(7));
         }
         cursor.close();
         db.close();

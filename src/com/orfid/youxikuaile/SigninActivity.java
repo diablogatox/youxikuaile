@@ -94,7 +94,7 @@ public class SigninActivity extends Activity {
                         token = response.getString("token");
                         photo = data.getString("photo");
                         phone = username.getText().toString().trim();
-                        dbHandler.addUser(name, uid, pwd, token, photo, phone);
+                        dbHandler.addUser(name, uid, pwd, token, photo, phone, null, null);
                         Log.d("db_rec_count======>", MainApplication.getInstance().getDbHandler().getRawCount() + "");
 
                         Intent intent = new Intent(SigninActivity.this, MainActivity.class);
