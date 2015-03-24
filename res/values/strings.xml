@@ -6,5 +6,6 @@
     <string name="loading">加载中&#8230;</string>
     <string name="no_games_yet">没有游戏</string>
     <string name="add_games_now">马上添加</string>
+    <string name="no_players_yet">还没有玩家</string>
 
 </resources>

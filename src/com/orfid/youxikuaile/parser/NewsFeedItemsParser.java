@@ -80,7 +80,7 @@ public class NewsFeedItemsParser {
             if (!jUserObj.isNull("photo")) photo = jUserObj.getString("photo");
             user = new UserItem(jUserObj.getString("uid"), jUserObj.has("birthday")?jUserObj.getString("birthday"):""
                     , jUserObj.has("sex")?jUserObj.getString("sex"):"", jUserObj.getString("username"), photo
-                    , jUserObj.has("signature")?jUserObj.getString("signature"):"");
+                    , jUserObj.has("signature")?jUserObj.getString("signature"):"", jUserObj.has("isFollow")?jUserObj.getBoolean("isFollow"):false, null, null);
         } catch (JSONException e) {
             e.printStackTrace();
         }

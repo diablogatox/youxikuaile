@@ -497,10 +497,10 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
                                 fileItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
                             }
                         }
-                        de.greenrobot.event.EventBus.getDefault().postSticky(new FeedItem(data.getInt("feedid"),
-                                new UserItem(user.getString("uid"), null, null, user.getString("username"), user.getString("photo"), null),
-                                data.getString("text"), data.getInt("commentcount"), data.getInt("forwardcount"),
-                                data.getInt("praisecount"), data.getString("publishtime"), data.getInt("type"), fileItems));
+//                        de.greenrobot.event.EventBus.getDefault().postSticky(new FeedItem(data.getInt("feedid"),
+//                                new UserItem(user.getString("uid"), null, null, user.getString("username"), user.getString("photo"), null),
+//                                data.getString("text"), data.getInt("commentcount"), data.getInt("forwardcount"),
+//                                data.getInt("praisecount"), data.getString("publishtime"), data.getInt("type"), fileItems));
                         setResult(RESULT_OK);
                         finish();
                     } else if (status == 0) {

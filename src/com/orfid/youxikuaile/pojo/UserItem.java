@@ -11,21 +11,39 @@ public class UserItem {
     private String photo;
     private String signature;
     private boolean isFollow;
-
-    public UserItem() {
+    private String distance;
+    private String utime;
+    private String type;
+    
+    public String getType() {
+		return type;
 	}
 
-	public UserItem(String uid, String birthday, String sex, String username, String photo, String signature) {
-        this.uid = uid;
-        this.birthday = birthday;
-        this.sex = sex;
-        this.username = username;
-        this.photo = photo;
-        this.signature = signature;
-    }
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(String distance) {
+		this.distance = distance;
+	}
+
+	public String getUtime() {
+		return utime;
+	}
+
+	public void setUtime(String utime) {
+		this.utime = utime;
+	}
+
+	public UserItem() {
+	}
 
     public UserItem(String uid, String birthday, String sex, String username,
-			String photo, String signature, boolean isFollow) {
+			String photo, String signature, boolean isFollow, String distance, String utime) {
 		super();
 		this.uid = uid;
 		this.birthday = birthday;
@@ -34,6 +52,8 @@ public class UserItem {
 		this.photo = photo;
 		this.signature = signature;
 		this.isFollow = isFollow;
+		this.distance = distance;
+		this.utime = utime;
 	}
 
 	public String getUid() {
