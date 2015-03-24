@@ -16,27 +16,36 @@
 	      	android:layout_height="wrap_content" 
 	      	android:layout_centerInParent="true"
 	      	android:textSize="20sp"
-	      	android:text="身边组织"
+	      	android:text="身边活动"
 			android:textColor="#ffffff" />
 		<ImageButton
-		    android:id="@+id/btn_back"
+		    android:id="@+id/back_btn"
 		    android:layout_width="wrap_content" 
        		android:layout_height="wrap_content"
        		android:layout_alignParentLeft="true" 
        		android:layout_centerVertical="true"
        		android:src="@drawable/icon_back"
-       		android:onClick="goBack"
        		android:background="@null" />
 
 	</RelativeLayout>
-
-    <ListView
-        android:id="@+id/lv_nearby_organizations"
+    
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:divider="#cecece"
-        android:cacheColorHint="@android:color/transparent"
-        android:dividerHeight="1dp" />
+        android:layout_height="match_parent">
+	    <ListView
+	        android:id="@+id/lv_nearby_organizations"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:divider="#cecece"
+	        android:cacheColorHint="@android:color/transparent"
+	        android:dividerHeight="1dp" />
+	    <TextView
+	        android:id="@+id/empty_hint_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:visibility="gone"
+	        android:text="@string/no_players_yet" />
+	</RelativeLayout>
 
 </LinearLayout>

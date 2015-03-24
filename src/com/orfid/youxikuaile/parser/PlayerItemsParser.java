@@ -13,14 +13,8 @@ import com.orfid.youxikuaile.pojo.UserItem;
  * Created by Administrator on 2015/3/5.
  */
 public class PlayerItemsParser {
-	
-	private boolean isNewFansNotify = false;
-	
+		
 	public PlayerItemsParser() {};
-	
-	public PlayerItemsParser(boolean isNewFansNotify) {
-		this.isNewFansNotify = isNewFansNotify;
-	}
 
     public List<UserItem> parse(JSONObject jObject) {
 
