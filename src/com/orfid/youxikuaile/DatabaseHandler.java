@@ -22,8 +22,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_UID = "uid";
     private static final String KEY_PHOTO = "photo";
     private static final String KEY_PHONE = "phone";
-    private static final String KEY_GEOLAT = "geoLat";
-    private static final String KEY_GEOLNG = "geoLng";
+    private static final String KEY_GEOLAT = "geolat";
+    private static final String KEY_GEOLNG = "geolng";
 
 //    public DatabaseHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
 //        super(context, name, factory, version);

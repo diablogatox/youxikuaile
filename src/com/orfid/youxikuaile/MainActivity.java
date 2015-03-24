@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -37,6 +38,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.LocationProviderProxy;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -48,7 +53,7 @@ import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, AMapLocationListener {
 
 	public static MainActivity instance = null;
 	private ViewPager mTabPager;
@@ -72,6 +77,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private MyAdapter myAdapter;
     private List<UserItem> userItems = new ArrayList<UserItem>();
     private List<RecommendItem> recommendItems = new ArrayList<RecommendItem>();
+    private LocationManagerProxy mLocationManagerProxy;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +160,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		mTabPager.setAdapter(mPagerAdapter);
 		
 		init();
-		setup(0);
 		
 		
 //		if (MainApplication.getInstance().getDbHandler().getRawCount() == 0) {
@@ -195,10 +200,14 @@ public class MainActivity extends Activity implements OnClickListener {
                         
                         // 获取消息数目
                 		doFetchMessageCountAction();
+                		// 获取用户位置
+                		doFetchUserLocationAction();
+
+                		setup(0);
 
 
                     } else if (status == 0) {
-                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(MainActivity.this, SigninActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -212,7 +221,16 @@ public class MainActivity extends Activity implements OnClickListener {
         });
     }
 
-    public class MyOnPageChangeListener implements OnPageChangeListener {
+    protected void doFetchUserLocationAction() {
+    	//此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+        //注意设置合适的定位时间的间隔，并且在合适时间调用removeUpdates()方法来取消定位请求
+        //在定位结束后，在合适的生命周期调用destroy()方法     
+        //其中如果间隔时间为-1，则定位只定一次
+        mLocationManagerProxy.requestLocationData(
+                LocationProviderProxy.AMapNetwork, 60*1000, 100, this);
+	}
+
+	public class MyOnPageChangeListener implements OnPageChangeListener {
 		@Override
 		public void onPageSelected(int arg0) {
 			
@@ -327,6 +345,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		imm = (InputMethodManager)getSystemService(
 				Context.INPUT_METHOD_SERVICE);
 //		view = views.get(currIndex);
+		
+		mLocationManagerProxy = LocationManagerProxy.getInstance(this);
+        mLocationManagerProxy.setGpsEnable(true);
 		
 	}
 	
@@ -605,8 +626,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			break;
 		case R.id.nearby_players:
-			
-			startActivity(new Intent(this, NearbyPlayersActivity.class));
+            Intent intent = new Intent(this, NearbyPlayersActivity.class);
+			startActivity(intent);
 			
 			break;
         case R.id.nearby_organizations:
@@ -918,7 +939,9 @@ public class MainActivity extends Activity implements OnClickListener {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
+        if (user != null && user.size() > 0) {
         params.put("token", user.get("token").toString());
+        }
         HttpRestClient.post("info", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -960,5 +983,82 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
         });
     }
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onLocationChanged(AMapLocation amapLocation) {
+		if(amapLocation != null && amapLocation.getAMapException().getErrorCode() == 0){
+            //获取位置信息
+            Double geoLat = amapLocation.getLatitude();
+            Double geoLng = amapLocation.getLongitude();   
+            Log.d("geoLat=====>", geoLat+"");
+            Log.d("getLng=====>", geoLng+"");
+            // save geo
+            final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+            HashMap user = dbHandler.getUserDetails();
+            if (user != null && user.size() > 0) {
+            	// local save
+            	dbHandler.updateUser(user.get("uid").toString(), new String[] {
+            		Constants.KEY_GEOLAT, Constants.KEY_GEOLNG}, new String[] {geoLat+"", geoLng+""});
+            	// server save
+            	try {
+					doSaveUserLocationAction(geoLat, geoLng);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        }
+	}
+
+	private void doSaveUserLocationAction(Double geoLat, Double geoLng) throws JSONException {
+		final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        if (user != null && user.size() > 0) {
+        	params.put("token", user.get("token").toString());
+        	params.put("latitude", geoLat);
+        	params.put("longitude", geoLng);
+        }
+        HttpRestClient.post("user/gps", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("doSaveUserLocation_response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+	}
 
 }

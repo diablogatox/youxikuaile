@@ -13,5 +13,7 @@ public class Constants {
     public static final String KEY_UID = "uid";
     public static final String KEY_PHOTO = "photo";
     public static final String KEY_PHONE = "phone";
+    public static final String KEY_GEOLAT = "geolat";
+    public static final String KEY_GEOLNG = "geolng";
     public static final String BASE_URL = "http://api.yxkuaile.com/";
 }
