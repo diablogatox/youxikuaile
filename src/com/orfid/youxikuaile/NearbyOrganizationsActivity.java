@@ -82,6 +82,10 @@ public class NearbyOrganizationsActivity extends Activity implements OnClickList
                         Log.d("organizationsItems count=====>", organizationsItems.size()+"");
                         adapter = new MyAdapter(NearbyOrganizationsActivity.this, R.layout.organization_item, organizationsItems);
                         nearbyOrganizationsLv.setAdapter(adapter);
+                        if (organizationsItems.size() <= 0) {
+                        	emptyTv.setText("没有活动");
+                        	emptyTv.setVisibility(View.VISIBLE);
+                        }
                     } else if (status == 0) {
                         Toast.makeText(NearbyOrganizationsActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
@@ -159,7 +163,7 @@ public class NearbyOrganizationsActivity extends Activity implements OnClickList
             objBean = items.get(position);
             if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
             if (objBean.getName() != null && !objBean.getName().equals("null")) viewHolder.userNameTv.setText(objBean.getName());
-            if (!objBean.getDistance().equals("未知距离")) {
+            if (objBean.getDistance() != null && !objBean.getDistance().equals("未知距离")) {
             	String geoInfo = objBean.getDistance() + " | " + objBean.getUtime();
             	viewHolder.userGeoInfoTv.setText(geoInfo);
             }

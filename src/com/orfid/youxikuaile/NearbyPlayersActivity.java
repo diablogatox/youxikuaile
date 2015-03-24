@@ -84,6 +84,10 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
                         Log.d("playersItems count=====>", playersItems.size()+"");
                         adapter = new MyAdapter(NearbyPlayersActivity.this, R.layout.player_item, playersItems);
                         nearbyPlayersLv.setAdapter(adapter);
+                        if (playersItems.size() <= 0) {
+                        	emptyTv.setText("没有玩家");
+                        	emptyTv.setVisibility(View.VISIBLE);
+                        }
                     } else if (status == 0) {
                         Toast.makeText(NearbyPlayersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

@@ -38,7 +38,7 @@ public class OrganizationItemsParser {
         for(int i=0; i<feedItemsCount;i++) {
             try {
                 feedItem = getFeedItem((JSONObject) jFeedItems.get(i));
-                feedItemsList.add(feedItem);
+                if (feedItem.getLastEvent() != null) feedItemsList.add(feedItem);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

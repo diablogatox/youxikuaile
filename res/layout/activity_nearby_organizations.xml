@@ -45,7 +45,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_centerInParent="true"
 	        android:visibility="gone"
-	        android:text="@string/no_players_yet" />
+	        android:text="@string/loading" />
 	</RelativeLayout>
 
 </LinearLayout>
