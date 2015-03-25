@@ -101,6 +101,12 @@
             android:name=".MyGamesActivity">
         </activity>
         <activity android:name=".AddGameActivity"></activity>
+        <activity android:name=".SittersActivity"></activity>
+        <activity
+            android:name=".GamesPickerActivity"
+            android:theme="@style/MyDialogStyleBottomNoFloating" >
+        </activity>
+        <activity android:name=".OnlineSitterPublishActivity"></activity>
     </application>
 
 </manifest>

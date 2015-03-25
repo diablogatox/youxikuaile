@@ -8,68 +8,61 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.parser.GameItemsParser;
 import com.orfid.youxikuaile.pojo.GameItem;
+import com.orfid.youxikuaile.widget.HorizontalListView;
 
-public class MyGamesActivity extends Activity implements OnClickListener {
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-	private ListView myGamesLv;
+public class OnlineSitterPublishActivity extends Activity implements OnClickListener {
+
 	private ImageButton backBtn;
-	private Button addBtn, emptyHintBtn;
-	private TextView loadingHintTv;
-	private View emptyHintLlView;
+	private Button saveBtn;
+	private HorizontalListView sitterGamesLv;
 	private MyAdapter myAdapter;
-	private String games;
 	private List<GameItem> gameItems = new ArrayList<GameItem>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_games);
+		setContentView(R.layout.activity_online_sitter_publish);
 		initView();
 		setListener();
 		obtainData();
 	}
 
 	private void initView() {
-		myGamesLv = (ListView) findViewById(R.id.my_games_lv);
 		backBtn = (ImageButton) findViewById(R.id.back_btn);
-		addBtn = (Button) findViewById(R.id.add_btn);
-		loadingHintTv = (TextView) findViewById(R.id.loading_hint_tv);
-		emptyHintLlView = findViewById(R.id.empty_hint_ll_view);
-		emptyHintBtn = (Button) findViewById(R.id.empty_hint_btn);
+		saveBtn = (Button) findViewById(R.id.btn_publish);
+		sitterGamesLv = (HorizontalListView) findViewById(R.id.lv_sitter_games);
 	}
 
 	private void setListener() {
 		backBtn.setOnClickListener(this);
-		addBtn.setOnClickListener(this);
-		emptyHintBtn.setOnClickListener(this);
+		saveBtn.setOnClickListener(this);
 	}
 
 	private void obtainData() {
 		try {
-			doFetchMyGamesListAction();
+			doFetchSitterGamesListAction();
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -80,20 +73,16 @@ public class MyGamesActivity extends Activity implements OnClickListener {
 		case R.id.back_btn:
 			finish();
 			break;
-		case R.id.add_btn:
-			Intent intent = new Intent(this, AddGameActivity.class);
-			intent.putExtra("games", games);
-			startActivity(intent);
+		case R.id.btn_publish:
 			break;
 		}
 	}
 	
-	private void doFetchMyGamesListAction() throws JSONException {
+	private void doFetchSitterGamesListAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
-        params.put("uid", user.get("uid").toString());
         HttpRestClient.post("game/list", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -101,34 +90,34 @@ public class MyGamesActivity extends Activity implements OnClickListener {
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-                    	games = response.toString();
+//                    	games = response.toString();
                     	GameItemsParser parser = new GameItemsParser();
                         gameItems = parser.parse(response);
                         Log.d("gameItems count=====>", gameItems.size()+"");
-                        myAdapter = new MyAdapter(MyGamesActivity.this, R.layout.game_item, gameItems);
-                        myGamesLv.setAdapter(myAdapter);
-                        if (gameItems.size() <= 0) {
-        					emptyHintLlView.setVisibility(View.VISIBLE);
-                        }
+                        myAdapter = new MyAdapter(OnlineSitterPublishActivity.this, R.layout.sitter_game, gameItems);
+                        sitterGamesLv.setAdapter(myAdapter);
+//                        if (gameItems.size() <= 0) {
+//        					emptyHintLlView.setVisibility(View.VISIBLE);
+//                        }
                     } else if (status == 0) {
-                        Toast.makeText(MyGamesActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OnlineSitterPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
             
-            @Override
-			public void onFinish() {
-            	loadingHintTv.setVisibility(View.GONE);
-			}
-
-			@Override
-			public void onStart() {
-				if (myGamesLv.getChildCount() <= 0) {
-					loadingHintTv.setVisibility(View.VISIBLE);
-				}
-			}
+//            @Override
+//			public void onFinish() {
+//            	loadingHintTv.setVisibility(View.GONE);
+//			}
+//
+//			@Override
+//			public void onStart() {
+//				if (myGamesLv.getChildCount() <= 0) {
+//					loadingHintTv.setVisibility(View.VISIBLE);
+//				}
+//			}
         });
     }
 	
@@ -183,7 +172,11 @@ public class MyGamesActivity extends Activity implements OnClickListener {
             }
             
             objBean = items.get(position);
-            if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.gameIconIv);
+            if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) {
+            		ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.gameIconIv);
+            } else {
+            		viewHolder.gameIconIv.setImageResource(R.drawable.game_icon);
+            }
             if (objBean.getName() != null) viewHolder.gameNameTv.setText(objBean.getName());
             
             return convertView;

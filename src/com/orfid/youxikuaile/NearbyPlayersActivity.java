@@ -10,12 +10,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -27,7 +30,6 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.orfid.youxikuaile.parser.FansItemsParser;
 import com.orfid.youxikuaile.parser.PlayerItemsParser;
 import com.orfid.youxikuaile.pojo.UserItem;
 
@@ -36,8 +38,11 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
     private ListView nearbyPlayersLv;
     private TextView emptyTv;
     private ImageButton backBtn;
+    private Button filterBtn;
 	private List<UserItem> playersItems = new ArrayList<UserItem>();
     private MyAdapter adapter;
+    private int gameId = 0;
+    private static final int FILTER_GAMES = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +57,38 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
 		backBtn = (ImageButton) findViewById(R.id.back_btn);
 		nearbyPlayersLv = (ListView) findViewById(R.id.lv_nearby_players);
 		emptyTv = (TextView) findViewById(R.id.npa_empty_hint_tv);
+		filterBtn = (Button) findViewById(R.id.filter_btn);
 	}
 
 	private void setListener() {
 		backBtn.setOnClickListener(this);
+		filterBtn.setOnClickListener(this);
+		nearbyPlayersLv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				UserItem item = adapter.getItem(position);
+				String type = item.getType();
+				String uid = item.getUid();
+				String username = item.getUsername();
+				String photo = item.getPhoto();
+				boolean isFollowed = item.isFollow();
+				Intent intent;
+            	if (type.equals("0")) {
+            		intent = new Intent(NearbyPlayersActivity.this, FriendHomeActivity.class);
+            	} else {
+            		intent = new Intent(NearbyPlayersActivity.this, PublicHomeActivity.class);
+            	}
+                intent.putExtra("uid", uid);
+                intent.putExtra("username", username);
+                intent.putExtra("photo", photo);
+                intent.putExtra("isFollowed", isFollowed);
+                
+                startActivity(intent);
+			}
+			
+		});
 	}
 
 	private void obtainData() {
@@ -72,6 +105,7 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
         params.put("mod", 0);
+        params.put("gameid", gameId);
         HttpRestClient.post("user/findByDistance", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -132,6 +166,11 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
 			return items.get(position);
 		}
 		
+		@Override
+		public long getItemId(int position) {
+			return Long.parseLong(items.get(position).getUid());
+		}
+
 		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
 		@Override
@@ -180,10 +219,31 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
 		case R.id.back_btn:
 			finish();
 			break;
-
+		case R.id.filter_btn:
+			Intent intent = new Intent(this, GamesPickerActivity.class);
+			startActivityForResult(intent, FILTER_GAMES);
+			break;
 		default:
 			break;
 		}
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case FILTER_GAMES:
+			gameId = Integer.parseInt(data.getStringExtra("gameId"));
+			Log.d("gameId returned=====>", gameId+"");
+			try {
+				doFindUsersByDistanceAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			break;
+		}
+	}
+	
+	
 	
 }

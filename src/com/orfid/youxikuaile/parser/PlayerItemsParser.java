@@ -53,8 +53,9 @@ public class PlayerItemsParser {
 
         UserItem followItem = new UserItem();
         
-        String uid = null, photo = null, username = null, utime = null, distance = null, signature = null, type = null;
-
+        String uid = null, photo = null, username = null, utime = null, distance = null, signature = null, type = null, sex = null;
+        boolean isFollowed = false;
+        
         try {
 	        uid = jFollowItem.getString("uid");
 	        photo = jFollowItem.getString("photo");
@@ -63,6 +64,8 @@ public class PlayerItemsParser {
 	        distance = jFollowItem.getString("distance");
 	        signature = jFollowItem.getString("signature");
 	        type = jFollowItem.getString("type");
+	        sex = jFollowItem.getString("sex");
+	        isFollowed = jFollowItem.getBoolean("isFollow");
         } catch (Exception e) {
         	e.printStackTrace();
         }
@@ -74,6 +77,8 @@ public class PlayerItemsParser {
         followItem.setUtime(utime);
         followItem.setType(type);
         followItem.setSignature(signature);
+        followItem.setSex(sex);
+        followItem.setFollow(isFollowed);
 
         return followItem;
     }
