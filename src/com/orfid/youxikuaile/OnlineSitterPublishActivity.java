@@ -8,27 +8,29 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.orfid.youxikuaile.parser.GameItemsParser;
-import com.orfid.youxikuaile.pojo.GameItem;
-import com.orfid.youxikuaile.widget.HorizontalListView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.parser.GameItemsParser;
+import com.orfid.youxikuaile.pojo.GameItem;
+import com.orfid.youxikuaile.widget.HorizontalListView;
 
 public class OnlineSitterPublishActivity extends Activity implements OnClickListener {
 
@@ -171,12 +173,15 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
             }
             
             objBean = items.get(position);
-            if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) {
-            		ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.gameIconIv);
-            } else {
-            		viewHolder.gameIconIv.setImageResource(R.drawable.game_icon);
+            if (objBean.getImg() != null && !objBean.getImg().equals("null")) {
+            		ImageLoader.getInstance().displayImage(objBean.getImg(), viewHolder.gameIconIv);
             }
-            if (objBean.getName() != null) viewHolder.gameNameTv.setText(objBean.getName());
+            if (objBean.getName() != null) {
+            	viewHolder.gameNameTv.setText(objBean.getName());
+            	//if (objBean.isSelected()) {
+            		//viewHolder.gameNameTv.setTextColor(getResources().getColor(R.color.header_bar_bg_color));
+            	//}
+            }
             
             return convertView;
 		}

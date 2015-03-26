@@ -49,16 +49,18 @@ public class GameItemsParser {
     private GameItem getFeedItem(JSONObject jFeedItem) {
 
         GameItem feedItem = new GameItem();
-        String id = null, name = null;
+        String id = null, name = null, img = null;
         try {
 			id = jFeedItem.getString("id");
 			name = jFeedItem.getString("name");
+			img = jFeedItem.getString("img");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
         feedItem.setId(id);
         feedItem.setName(name);
+        feedItem.setImg(img);
         
         return feedItem;
     }

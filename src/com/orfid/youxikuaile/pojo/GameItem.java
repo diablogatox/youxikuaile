@@ -5,6 +5,8 @@ public class GameItem {
 	private String id;
 	private String name;
 	private String photo;
+	private String img;
+	private boolean isSelected;
 	
 	public GameItem(String id, String name, String photo) {
 		super();
@@ -13,6 +15,14 @@ public class GameItem {
 		this.photo = photo;
 	}
 	
+	public GameItem(String id, String name, String photo, String img) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.photo = photo;
+		this.img = img;
+	}
+
 	public GameItem() {
 		super();
 	}
@@ -21,6 +31,14 @@ public class GameItem {
 		super();
 		this.name = name;
 		this.photo = photo;
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+	public void setSelected(boolean isSelected) {
+		this.isSelected = isSelected;
 	}
 
 	public String getId() {
@@ -40,6 +58,14 @@ public class GameItem {
 	}
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 	
 }
