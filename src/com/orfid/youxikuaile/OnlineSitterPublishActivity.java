@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -37,7 +38,9 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 	private ImageButton backBtn;
 	private Button saveBtn;
 	private HorizontalListView sitterGamesLv;
+	private TextView gameAreaTv;
 	private MyAdapter myAdapter;
+	private String selectedGameId;
 	private List<GameItem> gameItems = new ArrayList<GameItem>();
 	
 	@Override
@@ -53,11 +56,25 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		backBtn = (ImageButton) findViewById(R.id.back_btn);
 		saveBtn = (Button) findViewById(R.id.btn_publish);
 		sitterGamesLv = (HorizontalListView) findViewById(R.id.lv_sitter_games);
+		gameAreaTv = (TextView) findViewById(R.id.game_area_tv);
 	}
 
 	private void setListener() {
 		backBtn.setOnClickListener(this);
 		saveBtn.setOnClickListener(this);
+		gameAreaTv.setOnClickListener(this);
+		
+		sitterGamesLv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Log.d("current select game id=====>", myAdapter.getItem(position).getName()+":"+id);
+				selectedGameId = id+"";
+				myAdapter.setSelection(position);
+			}
+			
+		});
 	}
 
 	private void obtainData() {
@@ -75,6 +92,10 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 			finish();
 			break;
 		case R.id.btn_publish:
+			break;
+		case R.id.game_area_tv:
+//			Intent intent = new Intent();
+//			startActivityForResult()
 			break;
 		}
 	}
@@ -97,6 +118,8 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
                         Log.d("gameItems count=====>", gameItems.size()+"");
                         myAdapter = new MyAdapter(OnlineSitterPublishActivity.this, R.layout.sitter_game, gameItems);
                         sitterGamesLv.setAdapter(myAdapter);
+                        myAdapter.setSelection(0);
+                        selectedGameId = myAdapter.getItem(0).getId();
 //                        if (gameItems.size() <= 0) {
 //        					emptyHintLlView.setVisibility(View.VISIBLE);
 //                        }
@@ -128,6 +151,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		private GameItem objBean;
 		private Context context;
 		private int resource;
+		private int index;
 
 		public MyAdapter(Context context, int resource, List<GameItem> items) {
 			super(context, resource, items);
@@ -152,7 +176,10 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 			return Long.parseLong(items.get(position).getId());
 		}
 
-
+		public void setSelection(int index) {
+        	this.index = index;
+        	notifyDataSetChanged();
+        }
 
 		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
@@ -175,12 +202,19 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
             objBean = items.get(position);
             if (objBean.getImg() != null && !objBean.getImg().equals("null")) {
             		ImageLoader.getInstance().displayImage(objBean.getImg(), viewHolder.gameIconIv);
+//            		if (index == position) {
+//            			viewHolder.gameIconIv.setAlpha(1);
+//            		} else {
+//            			viewHolder.gameIconIv.setAlpha(0.5f);
+//            		}
             }
             if (objBean.getName() != null) {
             	viewHolder.gameNameTv.setText(objBean.getName());
-            	//if (objBean.isSelected()) {
-            		//viewHolder.gameNameTv.setTextColor(getResources().getColor(R.color.header_bar_bg_color));
-            	//}
+            	if (index==position) {
+            		viewHolder.gameNameTv.setTextColor(getResources().getColor(R.color.header_bar_bg_color));
+            	} else {
+            		viewHolder.gameNameTv.setTextColor(getResources().getColor(R.color.grey));
+            	}
             }
             
             return convertView;
