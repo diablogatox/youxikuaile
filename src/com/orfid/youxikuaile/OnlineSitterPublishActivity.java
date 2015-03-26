@@ -62,7 +62,6 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		try {
 			doFetchSitterGamesListAction();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
