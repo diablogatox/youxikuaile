@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +35,7 @@ import com.orfid.youxikuaile.widget.HorizontalListView;
 
 public class OnlineSitterPublishActivity extends Activity implements OnClickListener {
 
+	private final static int ADD_SITTER_GAME_SERVER_AREA = 0;
 	private ImageButton backBtn;
 	private Button saveBtn;
 	private HorizontalListView sitterGamesLv;
@@ -94,8 +95,10 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		case R.id.btn_publish:
 			break;
 		case R.id.game_area_tv:
-//			Intent intent = new Intent();
-//			startActivityForResult()
+			Log.d("selected gameid======>", selectedGameId);
+			Intent intent = new Intent(this, SearchGameServerAreaActivity.class);
+			intent.putExtra("gameId", selectedGameId);
+			startActivityForResult(intent, ADD_SITTER_GAME_SERVER_AREA);
 			break;
 		}
 	}

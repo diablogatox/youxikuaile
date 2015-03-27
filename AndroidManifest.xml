@@ -107,6 +107,8 @@
             android:theme="@style/MyDialogStyleBottomNoFloating" >
         </activity>
         <activity android:name=".OnlineSitterPublishActivity"></activity>
+        <activity android:name=".SearchGameServerAreaActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>
