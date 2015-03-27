@@ -25,7 +25,18 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/icon_back"
                 android:background="@null" />
-
+		<Button
+                android:id="@+id/confirm_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:textSize="20sp"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                android:background="@drawable/header_right_save_selector"
+                android:text="确定" />
     </RelativeLayout>
     
     <LinearLayout
@@ -33,6 +44,20 @@
         android:layout_height="match_parent"
         android:background="@color/global_bg_color"
         android:orientation="vertical">
+        
+        <GridView
+            android:id="@+id/area_gv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="5"
+            android:stretchMode="columnWidth"
+            android:columnWidth="100dp"
+            android:scrollbars="none"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:padding="5dp"
+            android:visibility="gone" />
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"

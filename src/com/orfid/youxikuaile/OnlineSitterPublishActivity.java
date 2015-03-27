@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +33,10 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.SearchGameServerAreaActivity.MyGridAdapter;
+import com.orfid.youxikuaile.SearchGameServerAreaActivity.MyGridAdapter.PictureViewHolder;
 import com.orfid.youxikuaile.parser.GameItemsParser;
+import com.orfid.youxikuaile.pojo.GameAreaItem;
 import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.widget.HorizontalListView;
 
@@ -39,10 +46,13 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 	private ImageButton backBtn;
 	private Button saveBtn;
 	private HorizontalListView sitterGamesLv;
+	private GridView areaGv;
 	private TextView gameAreaTv;
 	private MyAdapter myAdapter;
 	private String selectedGameId;
 	private List<GameItem> gameItems = new ArrayList<GameItem>();
+	private List<GameAreaItem> tagGameAreas = new ArrayList<GameAreaItem>();
+	private MyGridAdapter gridAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,10 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		saveBtn = (Button) findViewById(R.id.btn_publish);
 		sitterGamesLv = (HorizontalListView) findViewById(R.id.lv_sitter_games);
 		gameAreaTv = (TextView) findViewById(R.id.game_area_tv);
+		areaGv = (GridView) findViewById(R.id.area_gv);
+		
+		gridAdapter = new MyGridAdapter(this, R.layout.game_area_item_tag_style, tagGameAreas);
+		areaGv.setAdapter(gridAdapter);
 	}
 
 	private void setListener() {
@@ -73,6 +87,39 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 				Log.d("current select game id=====>", myAdapter.getItem(position).getName()+":"+id);
 				selectedGameId = id+"";
 				myAdapter.setSelection(position);
+			}
+			
+		});
+		
+		areaGv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				final View iv = view.findViewById(R.id.del_indicator_iv);
+				iv.setVisibility(View.VISIBLE);
+				new AlertDialog.Builder(OnlineSitterPublishActivity.this)
+					.setTitle("提示")
+					.setMessage("是否删除?")
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							gridAdapter.remove(gridAdapter.getItem(position));
+							gridAdapter.notifyDataSetChanged();
+							iv.setVisibility(View.GONE);
+						}
+						
+					})
+					.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							iv.setVisibility(View.GONE);
+						}
+						
+					})
+					.show();
 			}
 			
 		});
@@ -148,6 +195,34 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
         });
     }
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case ADD_SITTER_GAME_SERVER_AREA:
+			String gameId = data.getStringExtra("gameId");
+			Log.d("onActivityResult gameId=====>", gameId);
+			String areas = data.getStringExtra("areas");
+			Log.d("onActivityResult areas======>", areas);
+			try {
+				JSONArray jArr = new JSONArray(areas);
+				for (int i=0; i<jArr.length(); i++) {
+					JSONObject jObj = jArr.getJSONObject(i);
+					Log.d("id=====>", jObj.getString("id"));
+					Log.d("name=====>", jObj.getString("name"));
+					tagGameAreas.add(new GameAreaItem(jObj.getString("name")));
+				}
+				gridAdapter.notifyDataSetChanged();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
 	private class MyAdapter extends ArrayAdapter<GameItem> {
 		
 		private List<GameItem> items;
@@ -230,4 +305,59 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		
 	}
 
+	class MyGridAdapter extends ArrayAdapter<GameAreaItem>{
+		
+		private List<GameAreaItem> items;
+		private GameAreaItem objBean;
+		private int resource;
+		private Context context;
+		
+		public MyGridAdapter(Context context, int resource, List<GameAreaItem> arrayList) {
+			super(context, resource, arrayList);
+			this.items = arrayList;
+			this.resource = resource;
+			this.context = context;
+		}
+
+		
+		@Override
+		public int getCount() {
+			return items == null ? 0: items.size();
+		}
+
+
+		@Override
+		public GameAreaItem getItem(int position) {
+			return items.get(position);
+		}
+		
+
+//		@Override
+//		public long getItemId(int position) {
+//			return Long.parseLong(items.get(position).getId());
+//		}
+
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			PictureViewHolder viewHolder = null;
+			if (convertView == null) {
+				viewHolder = new PictureViewHolder();
+				convertView = LayoutInflater.from(context).inflate(
+						resource, parent, false);
+				viewHolder.tv_game_bg = (TextView) convertView.findViewById(R.id.game_area_item_tag_tv);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (PictureViewHolder) convertView.getTag();
+			}
+			
+			objBean = items.get(position);
+			viewHolder.tv_game_bg.setText(objBean.getName());
+			return convertView;
+		}
+		public class PictureViewHolder {
+			TextView tv_game_bg;
+		}
+		
+	}
 }

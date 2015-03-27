@@ -71,21 +71,41 @@
                 android:drawablePadding="5dp"
                 android:text="最多可添加10个区"/>
     </LinearLayout>
-    <com.orfid.youxikuaile.widget.MyGridView
-					android:id="@+id/gv_images"
-					android:layout_width="match_parent"
-					android:layout_height="200dp"
-					android:horizontalSpacing="2dp"
-					android:listSelector="@null"
-					android:numColumns="3"
-					android:stretchMode="columnWidth"
-					android:verticalSpacing="2dp" />
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+    <GridView
+            android:id="@+id/area_gv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="5"
+            android:stretchMode="columnWidth"
+            android:columnWidth="100dp"
+            android:scrollbars="none"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:background="@color/white"
+            android:padding="5dp"/>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                  android:background="#fff"
-            android:orientation="vertical">
-        
-    </LinearLayout>
-
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/area_gv"
+        android:paddingBottom="20dp">
+        <TextView
+            android:id="@+id/autodel_hint_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:layout_centerHorizontal="true"
+            android:text="陪玩信息发布后，一个月后自动删除" />
+        <EditText
+            android:id="@+id/sitter_desc_et"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/white"
+            android:gravity="top|left"
+            android:hint="请输入陪玩介绍" />
+    </RelativeLayout>
+</RelativeLayout>
 
 </LinearLayout>
