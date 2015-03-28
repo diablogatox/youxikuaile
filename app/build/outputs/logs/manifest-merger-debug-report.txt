@@ -1,0 +1,239 @@
+-- Merging decision tree log ---
+manifest
+ADDED from AndroidManifest.xml:2:1
+	package
+		ADDED from AndroidManifest.xml:3:5
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	android:versionName
+		ADDED from AndroidManifest.xml:5:5
+	android:versionCode
+		ADDED from AndroidManifest.xml:4:5
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	xmlns:android
+		ADDED from AndroidManifest.xml:2:11
+uses-sdk
+ADDED from AndroidManifest.xml:7:5
+	android:targetSdkVersion
+		ADDED from AndroidManifest.xml:9:9
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+	android:minSdkVersion
+		ADDED from AndroidManifest.xml:8:9
+		INJECTED from AndroidManifest.xml:0:0
+		INJECTED from AndroidManifest.xml:0:0
+uses-permission#android.permission.INTERNET
+ADDED from AndroidManifest.xml:11:5
+	android:name
+		ADDED from AndroidManifest.xml:11:22
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from AndroidManifest.xml:12:2
+	android:name
+		ADDED from AndroidManifest.xml:12:19
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from AndroidManifest.xml:13:2
+	android:name
+		ADDED from AndroidManifest.xml:13:19
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from AndroidManifest.xml:14:2
+	android:name
+		ADDED from AndroidManifest.xml:14:19
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from AndroidManifest.xml:15:2
+	android:name
+		ADDED from AndroidManifest.xml:15:19
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from AndroidManifest.xml:16:2
+	android:name
+		ADDED from AndroidManifest.xml:16:19
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from AndroidManifest.xml:17:2
+	android:name
+		ADDED from AndroidManifest.xml:17:19
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from AndroidManifest.xml:18:2
+	android:name
+		ADDED from AndroidManifest.xml:18:19
+uses-permission#android.permission.CHANGE_CONFIGURATION
+ADDED from AndroidManifest.xml:19:2
+	android:name
+		ADDED from AndroidManifest.xml:19:19
+application
+ADDED from AndroidManifest.xml:21:5
+	android:label
+		ADDED from AndroidManifest.xml:25:9
+	android:allowBackup
+		ADDED from AndroidManifest.xml:23:9
+	android:icon
+		ADDED from AndroidManifest.xml:24:9
+	android:theme
+		ADDED from AndroidManifest.xml:26:9
+	android:name
+		ADDED from AndroidManifest.xml:22:9
+meta-data#com.amap.api.v2.apikey
+ADDED from AndroidManifest.xml:27:9
+	android:value
+		ADDED from AndroidManifest.xml:29:13
+	android:name
+		ADDED from AndroidManifest.xml:28:13
+activity#com.orfid.youxikuaile.MainActivity
+ADDED from AndroidManifest.xml:30:9
+	android:label
+		ADDED from AndroidManifest.xml:32:13
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:33:13
+	android:name
+		ADDED from AndroidManifest.xml:31:13
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from AndroidManifest.xml:34:13
+action#android.intent.action.MAIN
+ADDED from AndroidManifest.xml:35:17
+	android:name
+		ADDED from AndroidManifest.xml:35:25
+category#android.intent.category.LAUNCHER
+ADDED from AndroidManifest.xml:37:17
+	android:name
+		ADDED from AndroidManifest.xml:37:27
+activity#com.orfid.youxikuaile.SigninActivity
+ADDED from AndroidManifest.xml:40:9
+	android:name
+		ADDED from AndroidManifest.xml:40:19
+activity#com.orfid.youxikuaile.SignupActivity
+ADDED from AndroidManifest.xml:42:9
+	android:name
+		ADDED from AndroidManifest.xml:42:19
+activity#com.orfid.youxikuaile.AddNewFriendActivity
+ADDED from AndroidManifest.xml:44:9
+	android:name
+		ADDED from AndroidManifest.xml:44:19
+activity#com.orfid.youxikuaile.NearbyPlayersActivity
+ADDED from AndroidManifest.xml:46:9
+	android:name
+		ADDED from AndroidManifest.xml:46:19
+activity#com.orfid.youxikuaile.NearbyOrganizationsActivity
+ADDED from AndroidManifest.xml:48:9
+	android:name
+		ADDED from AndroidManifest.xml:48:19
+activity#com.orfid.youxikuaile.OnlineSittersActivity
+ADDED from AndroidManifest.xml:50:9
+	android:name
+		ADDED from AndroidManifest.xml:50:19
+activity#com.orfid.youxikuaile.OfflineSittersActivity
+ADDED from AndroidManifest.xml:52:9
+	android:name
+		ADDED from AndroidManifest.xml:52:19
+activity#com.orfid.youxikuaile.SettingsActivity
+ADDED from AndroidManifest.xml:54:9
+	android:name
+		ADDED from AndroidManifest.xml:54:19
+activity#com.orfid.youxikuaile.UserInfoActivity
+ADDED from AndroidManifest.xml:56:9
+	android:name
+		ADDED from AndroidManifest.xml:56:19
+activity#com.orfid.youxikuaile.NicknameActivity
+ADDED from AndroidManifest.xml:58:9
+	android:name
+		ADDED from AndroidManifest.xml:58:19
+activity#com.orfid.youxikuaile.GenderActivity
+ADDED from AndroidManifest.xml:60:9
+	android:name
+		ADDED from AndroidManifest.xml:60:19
+activity#com.orfid.youxikuaile.NewFansActivity
+ADDED from AndroidManifest.xml:62:9
+	android:name
+		ADDED from AndroidManifest.xml:62:19
+activity#com.orfid.youxikuaile.NewsFeedActivity
+ADDED from AndroidManifest.xml:64:9
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:66:13
+	android:name
+		ADDED from AndroidManifest.xml:65:13
+activity#com.orfid.youxikuaile.NewsFeedPublishActivity
+ADDED from AndroidManifest.xml:68:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:70:13
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:71:13
+	android:name
+		ADDED from AndroidManifest.xml:69:13
+activity#com.orfid.youxikuaile.PhotoPickerActivity
+ADDED from AndroidManifest.xml:73:9
+	android:theme
+		ADDED from AndroidManifest.xml:75:13
+	android:name
+		ADDED from AndroidManifest.xml:74:13
+activity#com.orfid.youxikuaile.WheelDatePickerActivity
+ADDED from AndroidManifest.xml:77:9
+	android:theme
+		ADDED from AndroidManifest.xml:79:13
+	android:name
+		ADDED from AndroidManifest.xml:78:13
+activity#com.orfid.youxikuaile.SelectSpecificActivity
+ADDED from AndroidManifest.xml:81:9
+	android:name
+		ADDED from AndroidManifest.xml:81:19
+activity#com.orfid.youxikuaile.FriendHomeActivity
+ADDED from AndroidManifest.xml:82:9
+	android:name
+		ADDED from AndroidManifest.xml:82:19
+activity#com.orfid.youxikuaile.FollowListActivity
+ADDED from AndroidManifest.xml:83:9
+	android:name
+		ADDED from AndroidManifest.xml:83:19
+activity#com.orfid.youxikuaile.FansListActivity
+ADDED from AndroidManifest.xml:85:9
+	android:name
+		ADDED from AndroidManifest.xml:85:19
+activity#com.orfid.youxikuaile.SelectFriendsActivity
+ADDED from AndroidManifest.xml:87:9
+	android:name
+		ADDED from AndroidManifest.xml:87:19
+activity#com.orfid.youxikuaile.NewsFeedForwardActivity
+ADDED from AndroidManifest.xml:89:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:91:13
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:92:13
+	android:name
+		ADDED from AndroidManifest.xml:90:13
+activity#com.orfid.youxikuaile.NewsFeedDetailActivity
+ADDED from AndroidManifest.xml:94:9
+	android:name
+		ADDED from AndroidManifest.xml:94:19
+activity#com.orfid.youxikuaile.RecommendDetailActivity
+ADDED from AndroidManifest.xml:96:9
+	android:name
+		ADDED from AndroidManifest.xml:96:19
+activity#com.orfid.youxikuaile.PublicHomeActivity
+ADDED from AndroidManifest.xml:98:9
+	android:name
+		ADDED from AndroidManifest.xml:98:19
+activity#com.orfid.youxikuaile.MyGamesActivity
+ADDED from AndroidManifest.xml:100:9
+	android:name
+		ADDED from AndroidManifest.xml:101:13
+activity#com.orfid.youxikuaile.AddGameActivity
+ADDED from AndroidManifest.xml:103:9
+	android:name
+		ADDED from AndroidManifest.xml:103:19
+activity#com.orfid.youxikuaile.SittersActivity
+ADDED from AndroidManifest.xml:104:9
+	android:name
+		ADDED from AndroidManifest.xml:104:19
+activity#com.orfid.youxikuaile.GamesPickerActivity
+ADDED from AndroidManifest.xml:105:9
+	android:theme
+		ADDED from AndroidManifest.xml:107:13
+	android:name
+		ADDED from AndroidManifest.xml:106:13
+activity#com.orfid.youxikuaile.OnlineSitterPublishActivity
+ADDED from AndroidManifest.xml:109:9
+	android:name
+		ADDED from AndroidManifest.xml:109:19
+activity#com.orfid.youxikuaile.SearchGameServerAreaActivity
+ADDED from AndroidManifest.xml:110:9
+	android:windowSoftInputMode
+		ADDED from AndroidManifest.xml:111:13
+	android:name
+		ADDED from AndroidManifest.xml:110:19

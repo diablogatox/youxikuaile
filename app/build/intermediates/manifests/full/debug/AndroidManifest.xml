@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.orfid.youxikuaile"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+
+    <application
+        android:name="com.orfid.youxikuaile.MainApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Black.NoTitleBar" >
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="a5e76e1fe9f70ac7d710c854a04ce9d3" />
+
+        <activity
+            android:name="com.orfid.youxikuaile.MainActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.SigninActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.SignupActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.AddNewFriendActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.NearbyPlayersActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.NearbyOrganizationsActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.OnlineSittersActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.OfflineSittersActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.SettingsActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.UserInfoActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.NicknameActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.GenderActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.NewFansActivity" >
+        </activity>
+        <activity
+            android:name="com.orfid.youxikuaile.NewsFeedActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
+        <activity
+            android:name="com.orfid.youxikuaile.NewsFeedPublishActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|adjustResize" >
+        </activity>
+        <activity
+            android:name="com.orfid.youxikuaile.PhotoPickerActivity"
+            android:theme="@style/MyDialogStyleBottom" >
+        </activity>
+        <activity
+            android:name="com.orfid.youxikuaile.WheelDatePickerActivity"
+            android:theme="@style/MyDialogStyleBottomNoFloating" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.SelectSpecificActivity" />
+        <activity android:name="com.orfid.youxikuaile.FriendHomeActivity" />
+        <activity android:name="com.orfid.youxikuaile.FollowListActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.FansListActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.SelectFriendsActivity" >
+        </activity>
+        <activity
+            android:name="com.orfid.youxikuaile.NewsFeedForwardActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|adjustResize" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.NewsFeedDetailActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.RecommendDetailActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.PublicHomeActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.MyGamesActivity" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.AddGameActivity" />
+        <activity android:name="com.orfid.youxikuaile.SittersActivity" />
+        <activity
+            android:name="com.orfid.youxikuaile.GamesPickerActivity"
+            android:theme="@style/MyDialogStyleBottomNoFloating" >
+        </activity>
+        <activity android:name="com.orfid.youxikuaile.OnlineSitterPublishActivity" />
+        <activity
+            android:name="com.orfid.youxikuaile.SearchGameServerAreaActivity"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
+
+</manifest>

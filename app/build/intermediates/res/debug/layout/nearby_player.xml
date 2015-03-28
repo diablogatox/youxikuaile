@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:padding="8dp"
+              android:background="#fff"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageView
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_gravity="left"
+            android:src="@drawable/girl"/>
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:layout_height="65dp">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/sex1"
+                        android:textColor="#000"
+                        android:text="玲玲神"/>
+        </RelativeLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:gravity="bottom"
+                  android:paddingLeft="10dp"
+                  android:paddingBottom="20dp"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:text="想要问你敢不敢，像我这样为爱痴狂想要问你敢不敢，像我这样为爱痴狂"/>
+    </LinearLayout>
+</LinearLayout><!-- From: file:/C:/Users/diablogatox/git-repos/youxikuaile/app/src/main/res/layout/nearby_player.xml -->

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout 
+		android:layout_width="fill_parent"
+  		android:layout_height="45dp"
+  		android:id="@+id/title" 
+		android:background="#ffb400"
+		android:gravity="center_vertical"  >   			
+		<TextView
+            android:id="@+id/tv_title"
+			android:layout_width="wrap_content" 
+	      	android:layout_height="wrap_content" 
+	      	android:layout_centerInParent="true"
+	      	android:textSize="20sp"
+	      	android:text="游戏快乐"	
+			android:textColor="#ffffff" /> 
+		<ImageButton
+		    android:id="@+id/back_btn"
+		    android:layout_width="wrap_content" 
+       		android:layout_height="wrap_content"
+       		android:layout_alignParentLeft="true" 
+       		android:layout_centerVertical="true"
+       		android:src="@drawable/icon_back"
+       		android:onClick="goBack"
+       		android:background="@null" />   
+	</RelativeLayout>
+	
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/global_bg_color"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/detail_title_tv"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:paddingTop="20dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:paddingBottom="15dp"
+			android:textSize="18sp"
+			android:textStyle="bold"
+			android:gravity="center_horizontal"
+			android:textColor="@color/black" />
+    	<TextView
+    	    android:id="@+id/detail_content_tv"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="match_parent"
+    	    android:paddingTop="15dp"
+    	    android:textSize="13sp"
+    	    android:visibility="gone"
+    	    android:textColor="@color/black" />
+    	<WebView
+    	    android:id="@+id/detail_content_wv"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>
+<!-- From: file:/C:/Users/diablogatox/git-repos/youxikuaile/app/src/main/res/layout/activity_recommend_detail.xml -->

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:staggered="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#f3f4f9"
+              android:orientation="vertical" >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:id="@+id/title"
+            android:background="#ffb400"
+            android:gravity="center_vertical"  >
+        <Button
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:textSize="20sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/header_right_save_selector"
+                android:text="发布" />
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_back"
+            android:background="@null" />
+
+    </RelativeLayout>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#fff"
+		android:orientation="vertical">
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1">
+			<EditText
+				android:id="@+id/content_et"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="#fff"
+				android:padding="16dp"
+				android:maxLength="140"
+				android:hint="这一刻的想法..."
+				android:textColor="#000"
+				android:textSize="17sp"
+				android:gravity="top">
+				<requestFocus />
+			</EditText>
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/content_et"
+				android:paddingTop="30dp"
+				android:paddingLeft="16dp"
+				android:paddingRight="16dp">
+				<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="80dp"
+				    android:padding="10dp"
+				    android:gravity="center_vertical"
+				    android:background="#f3f4f9"
+				    android:orientation="horizontal">
+				    <ImageView
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:src="@drawable/news_repeat_pic" />
+				    <TextView
+				        android:id="@+id/original_content_tv"
+				        android:layout_width="0dp"
+				        android:layout_height="wrap_content"
+				        android:layout_weight="1"
+				        android:paddingLeft="5dp"
+				        android:ellipsize="end"
+				        android:maxLines="3"
+				        android:textColor="@color/black" />
+				</LinearLayout>
+			</FrameLayout>
+		</RelativeLayout>
+
+		<View android:layout_width="match_parent" android:layout_height="1dp"
+		      android:background="#cecece" />
+
+		<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="40dip"
+				android:background="#fff7f7f7"
+				android:gravity="center_vertical"
+				android:orientation="horizontal" >
+
+		    <ImageView
+					android:id="@+id/newsfeedpublish_face"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:src="@drawable/white3" />
+		    
+			<ImageView
+					android:id="@+id/newsfeedpublish_img"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1" />
+
+			<ImageView
+					android:id="@+id/newsfeedpublish_at"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1" />
+
+			
+			<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_weight="1" />
+
+		</LinearLayout>
+		
+		<RelativeLayout
+            android:id="@+id/rl_expression"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:background="#ffffff"
+            android:layout_height="195dp" >
+            
+            <include
+            layout="@layout/chat_face_container" />
+            
+		</RelativeLayout>            
+
+	</LinearLayout>
+
+
+</LinearLayout><!-- From: file:/C:/Users/diablogatox/git-repos/youxikuaile/app/src/main/res/layout/activity_newsfeed_forward.xml -->

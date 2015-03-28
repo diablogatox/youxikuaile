@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#ffffff"
+              android:orientation="vertical" >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:id="@+id/title"
+            android:background="#ffb400"
+            android:gravity="center_vertical"  >
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:text="设置"
+                android:textColor="#ffffff" />
+        <ImageButton
+                android:id="@+id/add_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back"
+                android:onClick="stepBack"
+                android:background="@null" />
+    </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/rl_setting1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+        <ImageView
+                android:id="@+id/iv_setting1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting1" />
+
+        <TextView
+                android:id="@+id/tv_setting1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_setting1"
+                android:text="清除缓存"
+                android:textSize="18sp" />
+
+        <TextView
+                android:id="@+id/tv_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:text="0.00M" />
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#efefef"
+            />
+
+    <RelativeLayout
+            android:id="@+id/rl_setting2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff" >
+
+        <ImageView
+                android:id="@+id/iv_setting2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting2" />
+
+        <TextView
+                android:id="@+id/tv_setting2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_setting2"
+                android:text="检查更新"
+                android:textSize="18sp" />
+
+        <TextView
+                android:id="@+id/tv_setting_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:text="当前版本 V1.1" />
+    </RelativeLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#efefef"
+            />
+
+    <RelativeLayout
+            android:id="@+id/rl_setting3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff" >
+
+        <ImageView
+                android:id="@+id/iv_setting3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting3" />
+
+        <TextView
+                android:id="@+id/tv_setting3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_setting3"
+                android:text="帮助中心"
+                android:textSize="18sp" />
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_arrow_right_gray"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#efefef"
+            />
+    <RelativeLayout
+            android:id="@+id/rl_setting4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff" >
+
+        <ImageView
+                android:id="@+id/iv_setting4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/setting4" />
+
+        <TextView
+                android:id="@+id/tv_setting4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/iv_setting4"
+                android:text="关于"
+                android:textSize="18sp" />
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_arrow_right_gray"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#efefef"
+            />
+
+    <Button
+            android:id="@+id/btn_signout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:background="@drawable/exit_selector"
+            android:textSize="22sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="53dp"
+            android:layout_marginRight="15dp"
+            />
+
+</LinearLayout>

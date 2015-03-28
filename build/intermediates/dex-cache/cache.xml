@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\diablogatox\git-repos\youxikuaile\app\libs\eventbus-2.4.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ddd166d01b3158d1c00576d29f7ed15c030df719">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\eventbus-2.4.0-4ddffcfd3c2c56c0179bb69799bd8061e817561d.jar" />
+    </item>
+    <item
+        jar="C:\Users\diablogatox\git-repos\youxikuaile\app\libs\android-async-http-1.4.6.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a845a88238be0b5be9d238652c1bc0605ef91f52">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.6-88f07111c75ab2bc3789b7271f49c793c528040d.jar" />
+    </item>
+    <item
+        jar="C:\Users\diablogatox\git-repos\youxikuaile\app\libs\pinyin4j-2.5.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ae353005f973da1cd8545b54354504c2503f6865">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\pinyin4j-2.5.0-aaf508391f2cb65cea243dcc682bf0f29a2b0fcc.jar" />
+    </item>
+    <item
+        jar="C:\Users\diablogatox\git-repos\youxikuaile\app\libs\Android_Location_V1.3.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="38a2f44a304a66fab0527c0a86e356ddd2cce30d">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\Android_Location_V1.3.1-483f4a7c095103cc5fe38d07e02658ee70a1c51e.jar" />
+    </item>
+    <item
+        jar="C:\Users\diablogatox\git-repos\youxikuaile\app\libs\universal-image-loader-1.9.3-with-sources.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="03e3948d42b8d78961a092a184af66bd86da42e6">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.3-with-sources-f4d2672ee50fb4f15df0777ece19062bfac06c84.jar" />
+    </item>
+    <item
+        jar="C:\Users\diablogatox\git-repos\youxikuaile\app\libs\jsoup-1.8.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3d57e95c0f150b885ccdbda7a12bef353fd31d02">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\jsoup-1.8.1-da18562a1807cd29b364c72bf114dec2483469c5.jar" />
+    </item>
+    <item
+        jar="D:\Android\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="C:\Users\diablogatox\git-repos\youxikuaile\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-73b9883bfda7e9a6ae205d0e99c174e73ba72aaa.jar" />
+    </item>
+
+</items>
