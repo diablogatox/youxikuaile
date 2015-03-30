@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,8 +34,6 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.orfid.youxikuaile.SearchGameServerAreaActivity.MyGridAdapter;
-import com.orfid.youxikuaile.SearchGameServerAreaActivity.MyGridAdapter.PictureViewHolder;
 import com.orfid.youxikuaile.parser.GameItemsParser;
 import com.orfid.youxikuaile.pojo.GameAreaItem;
 import com.orfid.youxikuaile.pojo.GameItem;
@@ -52,6 +51,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 	private String selectedGameId;
 	private List<GameItem> gameItems = new ArrayList<GameItem>();
 	private List<GameAreaItem> tagGameAreas = new ArrayList<GameAreaItem>();
+	private List<String> gameAreaNames = new ArrayList<String>();
 	private MyGridAdapter gridAdapter;
 	
 	@Override
@@ -140,6 +140,15 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 			finish();
 			break;
 		case R.id.btn_publish:
+			if (tagGameAreas.size() <= 0) {
+				Toast.makeText(this, "还没有选择游戏区", Toast.LENGTH_SHORT).show();
+			} else {
+				try {
+					doPublishGameSitterAction();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
 			break;
 		case R.id.game_area_tv:
 			Log.d("selected gameid======>", selectedGameId);
@@ -195,13 +204,53 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
         });
     }
 	
+	private void doPublishGameSitterAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("gameid", selectedGameId);
+        params.put("online", 1);
+//        params.put("desc", desc);
+        params.put("gamearea", gameAreaNames);
+        HttpRestClient.post("peiwan/publish", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	if (pDialog.isShowing()) pDialog.dismiss();
+                    	finish();
+                    } else if (status == 0) {
+                        Toast.makeText(OnlineSitterPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            @Override
+			public void onFinish() {
+            	
+			}
+
+			@Override
+			public void onStart() {
+				pDialog.setMessage("请稍等...");
+				pDialog.show();
+			}
+        });
+    }
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode != RESULT_OK) return;
 		switch (requestCode) {
 		case ADD_SITTER_GAME_SERVER_AREA:
-			String gameId = data.getStringExtra("gameId");
-			Log.d("onActivityResult gameId=====>", gameId);
+			selectedGameId = data.getStringExtra("gameId");
+			Log.d("onActivityResult gameId=====>", selectedGameId);
 			String areas = data.getStringExtra("areas");
 			Log.d("onActivityResult areas======>", areas);
 			try {
@@ -210,6 +259,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 					JSONObject jObj = jArr.getJSONObject(i);
 					Log.d("id=====>", jObj.getString("id"));
 					Log.d("name=====>", jObj.getString("name"));
+					gameAreaNames.add(jObj.getString("name"));
 					tagGameAreas.add(new GameAreaItem(jObj.getString("name")));
 				}
 				gridAdapter.notifyDataSetChanged();

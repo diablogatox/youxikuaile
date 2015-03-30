@@ -53,9 +53,10 @@
 	        android:id="@+id/sitters_lv"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:divider="#cecece"
+	        android:paddingTop="10dp"
+	        android:divider="#f3f4f9"
 	        android:cacheColorHint="@android:color/transparent"
-	        android:dividerHeight="1dp" />
+	        android:dividerHeight="10dp" />
 	    <TextView
 	        android:id="@+id/npa_empty_hint_tv"
 	        android:layout_width="wrap_content"
