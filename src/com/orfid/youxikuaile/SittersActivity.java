@@ -29,8 +29,10 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.OnlineSitterPublishActivity.MyGridAdapter.PictureViewHolder;
 import com.orfid.youxikuaile.parser.GameSitterItemsParser;
 import com.orfid.youxikuaile.pojo.ActionItem;
+import com.orfid.youxikuaile.pojo.GameAreaItem;
 import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.pojo.GameSitterItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
@@ -187,12 +189,21 @@ public class SittersActivity extends Activity implements OnClickListener {
             objBean = items.get(position);
             
             GameItem game = objBean.getGame();
-            if (game.getPhoto() != null && game.getPhoto().equals("null")) {
+            Log.d("game icon======>", game.getPhoto());
+            if (game.getPhoto() != null && !game.getPhoto().equals("null")) {
             	ImageLoader.getInstance().displayImage(game.getPhoto(), viewHolder.gameSitterGameiconIv);
             }
             viewHolder.gameSitterGamenameTv.setText(game.getName());
-            viewHolder.gameSitterDescTv.setText(objBean.getDesc());
+            if (objBean.getDesc() != null && !objBean.getDesc().equals("null")) {
+            	viewHolder.gameSitterDescTv.setText(objBean.getDesc());
+            } else {
+            	viewHolder.gameSitterDescTv.setVisibility(View.GONE);
+            }
             viewHolder.gameSitterUtimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
+            if (objBean.getAreas().size() > 0) {
+	            MyGridAdapter gridAdapter = new MyGridAdapter(context, R.layout.game_area_item_tag_style, objBean.getAreas());
+	    		viewHolder.gameSitterAreaGv.setAdapter(gridAdapter);
+            }
             
             
             viewHolder.actionRightArrowIv.setOnClickListener(new OnClickListener() {
@@ -218,4 +229,60 @@ public class SittersActivity extends Activity implements OnClickListener {
 		
 	}
 	
+	
+	class MyGridAdapter extends ArrayAdapter<GameAreaItem>{
+		
+		private List<GameAreaItem> items;
+		private GameAreaItem objBean;
+		private int resource;
+		private Context context;
+		
+		public MyGridAdapter(Context context, int resource, List<GameAreaItem> arrayList) {
+			super(context, resource, arrayList);
+			this.items = arrayList;
+			this.resource = resource;
+			this.context = context;
+		}
+
+		
+		@Override
+		public int getCount() {
+			return items == null ? 0: items.size();
+		}
+
+
+		@Override
+		public GameAreaItem getItem(int position) {
+			return items.get(position);
+		}
+		
+
+//		@Override
+//		public long getItemId(int position) {
+//			return Long.parseLong(items.get(position).getId());
+//		}
+
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			PictureViewHolder viewHolder = null;
+			if (convertView == null) {
+				viewHolder = new PictureViewHolder();
+				convertView = LayoutInflater.from(context).inflate(
+						resource, parent, false);
+				viewHolder.tv_game_bg = (TextView) convertView.findViewById(R.id.game_area_item_tag_tv);
+				convertView.setTag(viewHolder);
+			} else {
+				viewHolder = (PictureViewHolder) convertView.getTag();
+			}
+			
+			objBean = items.get(position);
+			viewHolder.tv_game_bg.setText(objBean.getName());
+			return convertView;
+		}
+		public class PictureViewHolder {
+			TextView tv_game_bg;
+		}
+		
+	}
 }

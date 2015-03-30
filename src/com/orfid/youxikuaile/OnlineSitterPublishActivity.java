@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -53,6 +54,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 	private List<GameAreaItem> tagGameAreas = new ArrayList<GameAreaItem>();
 	private List<String> gameAreaNames = new ArrayList<String>();
 	private MyGridAdapter gridAdapter;
+	private EditText gameSitterDescEt;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
 		sitterGamesLv = (HorizontalListView) findViewById(R.id.lv_sitter_games);
 		gameAreaTv = (TextView) findViewById(R.id.game_area_tv);
 		areaGv = (GridView) findViewById(R.id.area_gv);
+		gameSitterDescEt = (EditText) findViewById(R.id.sitter_desc_et);
 		
 		gridAdapter = new MyGridAdapter(this, R.layout.game_area_item_tag_style, tagGameAreas);
 		areaGv.setAdapter(gridAdapter);
@@ -212,7 +215,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
         params.put("token", user.get("token").toString());
         params.put("gameid", selectedGameId);
         params.put("online", 1);
-//        params.put("desc", desc);
+        params.put("desc", gameSitterDescEt.getText().toString().trim());
         params.put("gamearea", gameAreaNames);
         HttpRestClient.post("peiwan/publish", params, new JsonHttpResponseHandler() {
             @Override
