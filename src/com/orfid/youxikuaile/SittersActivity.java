@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -29,7 +31,6 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.orfid.youxikuaile.OnlineSitterPublishActivity.MyGridAdapter.PictureViewHolder;
 import com.orfid.youxikuaile.parser.GameSitterItemsParser;
 import com.orfid.youxikuaile.pojo.ActionItem;
 import com.orfid.youxikuaile.pojo.GameAreaItem;
@@ -71,6 +72,16 @@ public class SittersActivity extends Activity implements OnClickListener {
 //					startActivity(new Intent(SittersActivity.this, AddNewFriendActivity.class));
 					break;
 				}
+			}
+			
+		});
+		
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+//				Log.d("it works!======>", "yeahhhhhh");
 			}
 			
 		});
@@ -204,16 +215,6 @@ public class SittersActivity extends Activity implements OnClickListener {
 	            MyGridAdapter gridAdapter = new MyGridAdapter(context, R.layout.game_area_item_tag_style, objBean.getAreas());
 	    		viewHolder.gameSitterAreaGv.setAdapter(gridAdapter);
             }
-            
-            
-            viewHolder.actionRightArrowIv.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					
-				}
-            	
-            });
             
             return convertView;
 		}

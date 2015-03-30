@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-          android:drawable="@drawable/btn_icon_bj2" /> <!-- pressed -->
-    <item android:drawable="@drawable/btn_icon_bj1" /> <!-- default -->
-</selector>
-<!-- From: file:/C:/Users/diablogatox/git-repos/youxikuaile/app/src/main/res/drawable/friend_home_chat_selector.xml -->
