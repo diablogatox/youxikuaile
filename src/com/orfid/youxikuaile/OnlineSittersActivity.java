@@ -1,10 +1,27 @@
 package com.orfid.youxikuaile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
+import android.widget.AdapterView.OnItemClickListener;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.parser.GameItemsParser;
+import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.widget.HorizontalListView;
 
 /**
@@ -15,6 +32,9 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
     HorizontalListView sitterGamesLv;
     ImageButton backBtn;
     Button sitterOfflineBtn;
+    private MyAdapter myAdapter;
+	private String selectedGameId;
+	private List<GameItem> gameItems = new ArrayList<GameItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +49,23 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
         backBtn.setOnClickListener(this);
         sitterOfflineBtn.setOnClickListener(this);
 
-        sitterGamesLv.setAdapter(new MyAdapter());
+        sitterGamesLv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Log.d("current select game id=====>", myAdapter.getItem(position).getName()+":"+id);
+				selectedGameId = id+"";
+				myAdapter.setSelection(position);
+			}
+			
+		});
+        
+        try {
+			doFetchSitterGamesListAction();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
     }
 
     @Override
@@ -73,59 +109,130 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
         }
     }
 
-    class MyAdapter extends BaseAdapter {
+    private class MyAdapter extends ArrayAdapter<GameItem> {
+		
+		private List<GameItem> items;
+		private GameItem objBean;
+		private Context context;
+		private int resource;
+		private int index;
 
-        @Override
-        public int getCount() {
-            return 14;
+		public MyAdapter(Context context, int resource, List<GameItem> items) {
+			super(context, resource, items);
+			this.items = items;
+			this.context = context;
+			this.resource = resource;
+		}
+
+		@Override
+		public int getCount() {
+			return items == null ? 0: items.size();
+		}
+
+		@Override
+		public GameItem getItem(int position) {
+			return items.get(position);
+		}
+		
+		
+		@Override
+		public long getItemId(int position) {
+			return Long.parseLong(items.get(position).getId());
+		}
+
+		public void setSelection(int index) {
+        	this.index = index;
+        	notifyDataSetChanged();
         }
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
+		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            PictureViewHolder viewHolder = null;
-            if (convertView == null) {
-                viewHolder = new PictureViewHolder();
-                convertView = LayoutInflater.from(OnlineSittersActivity.this).inflate(
-                        R.layout.sitter_game, parent, false);
-//				viewHolder.iv_friends_pic = (ImageView) convertView
-//						.findViewById(R.id.iv_friends_pic);
-//				viewHolder.tv_friends_name = (TextView) convertView
-//						.findViewById(R.id.tv_friends_name);
-//				viewHolder.tv_music_content = (TextView) convertView
-//						.findViewById(R.id.tv_music_content);
-//				viewHolder.tv_distance = (TextView) convertView
-//						.findViewById(R.id.tv_distance);
-//				viewHolder.btn_voice = (Button) convertView
-//						.findViewById(R.id.btn_voice);
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder = null;
+            if (lmap.get(position)==null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(
+                        resource, parent, false);
+                viewHolder.gameIconIv = (ImageView) convertView.findViewById(R.id.game_icon_iv);
+                viewHolder.gameNameTv = (TextView) convertView.findViewById(R.id.game_name_tv);
+                lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
-                viewHolder = (PictureViewHolder) convertView.getTag();
+                convertView = lmap.get(position);
+                viewHolder = (ViewHolder) convertView.getTag();
             }
-
-//			viewHolder.tv_friends_name.setText("林俊杰");//名字
-//			viewHolder.tv_distance.setText(500 + "m"); //距离
-//			// 在下面进行判断，并显示或隐藏歌词和语音，实现相应的功能
-//			viewHolder.tv_music_content.setText("她静悄悄的来过，她慢慢带走沉默。只是最后的承诺，还是没有带走了"); // 歌词
-//			viewHolder.btn_voice.setVisibility(View.GONE);
-
+            
+            objBean = items.get(position);
+            if (objBean.getImg() != null && !objBean.getImg().equals("null")) {
+            		ImageLoader.getInstance().displayImage(objBean.getImg(), viewHolder.gameIconIv);
+//            		if (index == position) {
+//            			viewHolder.gameIconIv.setAlpha(1);
+//            		} else {
+//            			viewHolder.gameIconIv.setAlpha(0.5f);
+//            		}
+            }
+            if (objBean.getName() != null) {
+            	viewHolder.gameNameTv.setText(objBean.getName());
+            	if (index==position) {
+            		viewHolder.gameNameTv.setTextColor(getResources().getColor(R.color.header_bar_bg_color));
+            	} else {
+            		viewHolder.gameNameTv.setTextColor(getResources().getColor(R.color.grey));
+            	}
+            }
+            
             return convertView;
-        }
-
-        public class PictureViewHolder {
-            ImageView iv_friends_pic;
-            TextView tv_friends_name;
-            TextView tv_music_content;
-        }
-
+		}
+		
+		public class ViewHolder {
+			ImageView gameIconIv;
+			TextView gameNameTv;
+		}
+		
+	}
+    
+    private void doFetchSitterGamesListAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("game/list", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	games = response.toString();
+                    	GameItemsParser parser = new GameItemsParser();
+                        gameItems = parser.parse(response);
+                        Log.d("gameItems count=====>", gameItems.size()+"");
+                        myAdapter = new MyAdapter(OnlineSittersActivity.this, R.layout.sitter_game, gameItems);
+                        sitterGamesLv.setAdapter(myAdapter);
+                        myAdapter.setSelection(0);
+                        selectedGameId = myAdapter.getItem(0).getId();
+//                        if (gameItems.size() <= 0) {
+//        					emptyHintLlView.setVisibility(View.VISIBLE);
+//                        }
+                    } else if (status == 0) {
+                        Toast.makeText(OnlineSittersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+//            @Override
+//			public void onFinish() {
+//            	loadingHintTv.setVisibility(View.GONE);
+//			}
+//
+//			@Override
+//			public void onStart() {
+//				if (myGamesLv.getChildCount() <= 0) {
+//					loadingHintTv.setVisibility(View.VISIBLE);
+//				}
+//			}
+        });
     }
 }
