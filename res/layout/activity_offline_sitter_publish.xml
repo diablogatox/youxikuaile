@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#f3f4f9"
+              android:orientation="vertical" >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:id="@+id/title"
+            android:background="#ffb400"
+            android:gravity="center_vertical"  >
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:text="线下陪玩"
+                android:textColor="#ffffff" />
+        <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back"
+                android:background="@null" />
+        <Button
+                android:id="@+id/save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:textSize="20sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/header_right_save_selector"
+                android:text="发布" />
+
+    </RelativeLayout>
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="20dp">
+        <EditText
+            android:id="@+id/sitter_desc_et"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/white"
+            android:gravity="top|left"
+            android:padding="10dp"
+            android:hint="请输入陪玩介绍" />
+        <TextView
+            android:id="@+id/autodel_hint_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+			android:layout_below="@id/sitter_desc_et"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:paddingTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="陪玩信息发布后，一个月后自动删除" />
+    </RelativeLayout>
+
+
+</LinearLayout>

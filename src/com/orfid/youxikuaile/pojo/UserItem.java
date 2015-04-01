@@ -42,7 +42,17 @@ public class UserItem {
 	public UserItem() {
 	}
 
-    public UserItem(String uid, String birthday, String sex, String username,
+    public UserItem(String uid, String username, String photo,
+			String signature, String type) {
+		super();
+		this.uid = uid;
+		this.username = username;
+		this.photo = photo;
+		this.signature = signature;
+		this.type = type;
+	}
+
+	public UserItem(String uid, String birthday, String sex, String username,
 			String photo, String signature, boolean isFollow, String distance, String utime) {
 		super();
 		this.uid = uid;

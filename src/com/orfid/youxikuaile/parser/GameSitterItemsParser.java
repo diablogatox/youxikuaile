@@ -57,7 +57,7 @@ public class GameSitterItemsParser {
 			utime = jsonObject.getString("utime");
 			area = jsonObject.getString("gamearea");
 			
-			if (!area.trim().equals("")) {
+			if (!area.trim().equals("") && !area.trim().equals("null")) {
 				String[] gameAreas = area.split(",");
 				for (int i=0; i<gameAreas.length; i++) {
 					areas.add(new GameAreaItem(gameAreas[i]));
@@ -66,6 +66,8 @@ public class GameSitterItemsParser {
 			}
 			JSONObject jGame = jsonObject.getJSONObject("game");
 			game = new GameItem(jGame.getString("id"), jGame.getString("name"), jGame.getString("img"));
+			JSONObject jUser = jsonObject.getJSONObject("user");
+			user = new UserItem(jUser.getString("uid"), jUser.getString("username"), jUser.getString("photo"), null, jUser.getString("type") );
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -75,6 +77,7 @@ public class GameSitterItemsParser {
         gameSitterItem.setUtime(utime);
         gameSitterItem.setAreas(areas);
         gameSitterItem.setGame(game);
+        gameSitterItem.setUser(user);
         
         return gameSitterItem;
 	}

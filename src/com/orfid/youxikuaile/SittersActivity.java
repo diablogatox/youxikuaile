@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -36,6 +35,7 @@ import com.orfid.youxikuaile.pojo.ActionItem;
 import com.orfid.youxikuaile.pojo.GameAreaItem;
 import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.pojo.GameSitterItem;
+import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
 import com.orfid.youxikuaile.widget.TitlePopup.OnItemOnClickListener;
 
@@ -46,6 +46,8 @@ public class SittersActivity extends Activity implements OnClickListener {
 	private ListView mListView;
 	private List<GameSitterItem> gameSitterItems = new ArrayList<GameSitterItem>();
 	private MyAdapter adapter;
+	private static final int ONLINE_SITTER_PUBLISH = 0;
+	private static final int OFFLINE_SITTER_PUBLISH = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +68,12 @@ public class SittersActivity extends Activity implements OnClickListener {
 			public void onItemClick(ActionItem item, int position) {
 				switch (position) {
 				case 0:
-					startActivity(new Intent(SittersActivity.this, OnlineSitterPublishActivity.class));
+					Intent i1 = new Intent(SittersActivity.this, OnlineSitterPublishActivity.class);
+					startActivityForResult(i1, ONLINE_SITTER_PUBLISH);
 					break;
 				case 1:
-//					startActivity(new Intent(SittersActivity.this, AddNewFriendActivity.class));
+					Intent i2 = new Intent(SittersActivity.this, OfflineSitterPublishActivity.class);
+					startActivityForResult(i2, OFFLINE_SITTER_PUBLISH);
 					break;
 				}
 			}
@@ -89,6 +93,25 @@ public class SittersActivity extends Activity implements OnClickListener {
 //		});
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case ONLINE_SITTER_PUBLISH:
+			try {
+				doFetchSitterGameListAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			break;
+		case OFFLINE_SITTER_PUBLISH:
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+		
+	}
+
 	private void initView() {
 		backBtn = (ImageButton) findViewById(R.id.back_btn);
 		addSitterBtn = (ImageButton) findViewById(R.id.add_sitter_btn);
@@ -125,7 +148,6 @@ public class SittersActivity extends Activity implements OnClickListener {
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
-        params.put("online", 1);
         HttpRestClient.post("peiwan", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -162,6 +184,13 @@ public class SittersActivity extends Activity implements OnClickListener {
 			this.resource = resource;
 		}
 
+		@Override
+		public void unregisterDataSetObserver(DataSetObserver observer) {
+			if(observer != null){
+				super.unregisterDataSetObserver(observer);
+			}
+		}
+		
 		@Override
 		public int getCount() {
 			return items == null ? 0: items.size();
@@ -204,20 +233,35 @@ public class SittersActivity extends Activity implements OnClickListener {
             objBean = items.get(position);
             
             GameItem game = objBean.getGame();
-            Log.d("game icon======>", game.getPhoto());
-            if (game.getPhoto() != null && !game.getPhoto().equals("null")) {
-            	ImageLoader.getInstance().displayImage(game.getPhoto(), viewHolder.gameSitterGameiconIv);
-            }
-            viewHolder.gameSitterGamenameTv.setText(game.getName());
-            if (objBean.getDesc() != null && !objBean.getDesc().equals("null")) {
-            	viewHolder.gameSitterDescTv.setText(objBean.getDesc());
+            if (game.getId().equals("") || game.getId().equals("null") || game.getId() == null) {
+            	UserItem user = objBean.getUser();
+            	if (user.getPhoto() != null && !user.getPhoto().equals("null")) {
+	            	ImageLoader.getInstance().displayImage(user.getPhoto(), viewHolder.gameSitterGameiconIv);
+	            }
+	            viewHolder.gameSitterGamenameTv.setText(user.getUsername());
+	            if (objBean.getDesc() != null && !objBean.getDesc().equals("null")) {
+	            	viewHolder.gameSitterDescTv.setText(objBean.getDesc());
+	            } else {
+	            	viewHolder.gameSitterDescTv.setVisibility(View.GONE);
+	            }
+	            viewHolder.gameSitterUtimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
             } else {
-            	viewHolder.gameSitterDescTv.setVisibility(View.GONE);
-            }
-            viewHolder.gameSitterUtimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
-            if (objBean.getAreas().size() > 0) {
-	            MyGridAdapter gridAdapter = new MyGridAdapter(context, R.layout.game_area_item_tag_style, objBean.getAreas());
-	    		viewHolder.gameSitterAreaGv.setAdapter(gridAdapter);
+	            Log.d("game icon======>", game.getPhoto());
+	            if (game.getPhoto() != null && !game.getPhoto().equals("null")) {
+	            	ImageLoader.getInstance().displayImage(game.getPhoto(), viewHolder.gameSitterGameiconIv);
+	            }
+	            viewHolder.gameSitterGamenameTv.setText(game.getName());
+	            if (objBean.getDesc() != null && !objBean.getDesc().equals("null")) {
+	            	viewHolder.gameSitterDescTv.setText(objBean.getDesc());
+	            } else {
+	            	viewHolder.gameSitterDescTv.setVisibility(View.GONE);
+	            }
+	            viewHolder.gameSitterUtimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
+	            if (objBean.getAreas().size() > 0) {
+		            MyGridAdapter gridAdapter = new MyGridAdapter(context, R.layout.game_area_item_tag_style, objBean.getAreas());
+		    		viewHolder.gameSitterAreaGv.setAdapter(gridAdapter);
+		    		viewHolder.gameSitterAreaGv.setVisibility(View.VISIBLE);
+	            }
             }
 
             
@@ -253,6 +297,12 @@ public class SittersActivity extends Activity implements OnClickListener {
 			this.context = context;
 		}
 
+		@Override
+		public void unregisterDataSetObserver(DataSetObserver observer) {
+			if(observer != null){
+				super.unregisterDataSetObserver(observer);
+			}
+		}
 		
 		@Override
 		public int getCount() {

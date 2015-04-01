@@ -109,6 +109,8 @@
         <activity android:name=".OnlineSitterPublishActivity"></activity>
         <activity android:name=".SearchGameServerAreaActivity"
             android:windowSoftInputMode="adjustResize"></activity>
+        <activity android:name=".OfflineSitterPublishActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
     </application>
 
 </manifest>

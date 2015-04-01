@@ -225,6 +225,7 @@ public class OnlineSitterPublishActivity extends Activity implements OnClickList
                     int status = response.getInt("status");
                     if (status == 1) { // success
                     	if (pDialog.isShowing()) pDialog.dismiss();
+                    	setResult(RESULT_OK);
                     	finish();
                     } else if (status == 0) {
                         Toast.makeText(OnlineSitterPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();

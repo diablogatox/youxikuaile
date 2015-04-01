@@ -12,8 +12,9 @@
         android:paddingBottom="4dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:maxLines="2"
         android:textColor="@color/black"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:background="@color/grey" />
     <ImageView
         android:id="@+id/del_indicator_iv"
