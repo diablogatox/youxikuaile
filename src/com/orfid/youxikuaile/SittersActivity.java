@@ -76,15 +76,17 @@ public class SittersActivity extends Activity implements OnClickListener {
 			
 		});
 		
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-//				Log.d("it works!======>", "yeahhhhhh");
-			}
-			
-		});
+//		mListView.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				View overlayView = view.findViewById(R.id.overlay_rl);
+//				overlayView.setVisibility(View.VISIBLE);
+//				
+//			}
+//			
+//		});
 	}
 	
 	private void initView() {
@@ -190,6 +192,8 @@ public class SittersActivity extends Activity implements OnClickListener {
                 viewHolder.gameSitterUtimeTv = (TextView) convertView.findViewById(R.id.game_sitter_utime_tv);
                 viewHolder.gameSitterDescTv = (TextView) convertView.findViewById(R.id.game_sitter_desc_tv);
                 viewHolder.gameSitterAreaGv = (GridView) convertView.findViewById(R.id.game_sitter_area_gv);
+                viewHolder.overlayView = convertView.findViewById(R.id.overlay_rl);
+                viewHolder.sitterDeleteIv = (ImageView) convertView.findViewById(R.id.sitter_delete_iv);
                 lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -215,6 +219,7 @@ public class SittersActivity extends Activity implements OnClickListener {
 	            MyGridAdapter gridAdapter = new MyGridAdapter(context, R.layout.game_area_item_tag_style, objBean.getAreas());
 	    		viewHolder.gameSitterAreaGv.setAdapter(gridAdapter);
             }
+
             
             return convertView;
 		}
@@ -226,6 +231,9 @@ public class SittersActivity extends Activity implements OnClickListener {
 			TextView gameSitterUtimeTv;
 			TextView gameSitterDescTv;
 			GridView gameSitterAreaGv;
+			View overlayView;
+			ImageView sitterModifyIv;
+			ImageView sitterDeleteIv;
 		}
 		
 	}
