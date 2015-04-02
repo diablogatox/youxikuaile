@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,11 +46,13 @@ public class SearchGameServerAreaActivity extends Activity {
 	private GridView areaGv;
 	private TextView hintTv;
 	private Button confirmBtn;
+	private ImageButton backBtn;
 	private Handler mHandler = new Handler();
 	private List<String> gameAreas = new ArrayList<String>();
 	private List<GameAreaItem> tagGameAreas = new ArrayList<GameAreaItem>();
 	private MyGridAdapter gridAdapter;
 	private ArrayAdapter<String> listAdapter;
+	private boolean isSearch;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class SearchGameServerAreaActivity extends Activity {
 		setContentView(R.layout.activity_search_sittergame_serverarea);
 		Intent intent = getIntent();
 		gameId = intent.getStringExtra("gameId");
+		isSearch = intent.getBooleanExtra("isSearch", false);
 		initView();
 		setListener();
 		obtainData();
@@ -68,6 +72,7 @@ public class SearchGameServerAreaActivity extends Activity {
 		hintTv = (TextView) findViewById(R.id.hint_tv);
 		areaGv = (GridView) findViewById(R.id.area_gv);
 		confirmBtn = (Button) findViewById(R.id.confirm_btn);
+		backBtn = (ImageButton) findViewById(R.id.back_btn);
 		
 		listAdapter = new ArrayAdapter<String>(this, R.layout.game_area_item, gameAreas);
 		gridAdapter = new MyGridAdapter(this, R.layout.game_area_item_tag_style, tagGameAreas);
@@ -77,6 +82,15 @@ public class SearchGameServerAreaActivity extends Activity {
 	}
 
 	private void setListener() {
+		backBtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+			
+		});
+		
 		searchEt.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -123,22 +137,29 @@ public class SearchGameServerAreaActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (!areaGv.isShown()) areaGv.setVisibility(View.VISIBLE);
-				if (!confirmBtn.isShown()) confirmBtn.setVisibility(View.VISIBLE);
-				if (gridAdapter.getCount() < 10) {
-//					Log.d("index of======>", tagGameAreas.indexOf(listAdapter.getItem(position))+"");
-					for (int i=0; i<tagGameAreas.size(); i++) {
-						if (tagGameAreas.get(i).getName().equals(listAdapter.getItem(position))) {
-							Toast.makeText(SearchGameServerAreaActivity.this, "不能重复添加", Toast.LENGTH_SHORT).show();
-							return;
-						}
-					}
-				
-					tagGameAreas.add(new GameAreaItem(listAdapter.getItem(position)));
-					gridAdapter.notifyDataSetChanged();
-
+				if (isSearch == true) {
+					Intent intent = new Intent();
+					intent.putExtra("selectedArea", listAdapter.getItem(position));
+					setResult(RESULT_OK, intent);
+					finish();
 				} else {
-					Toast.makeText(SearchGameServerAreaActivity.this, "最多添加10个区", Toast.LENGTH_SHORT).show();
+					if (!areaGv.isShown()) areaGv.setVisibility(View.VISIBLE);
+					if (!confirmBtn.isShown()) confirmBtn.setVisibility(View.VISIBLE);
+					if (gridAdapter.getCount() < 10) {
+	//					Log.d("index of======>", tagGameAreas.indexOf(listAdapter.getItem(position))+"");
+						for (int i=0; i<tagGameAreas.size(); i++) {
+							if (tagGameAreas.get(i).getName().equals(listAdapter.getItem(position))) {
+								Toast.makeText(SearchGameServerAreaActivity.this, "不能重复添加", Toast.LENGTH_SHORT).show();
+								return;
+							}
+						}
+					
+						tagGameAreas.add(new GameAreaItem(listAdapter.getItem(position)));
+						gridAdapter.notifyDataSetChanged();
+	
+					} else {
+						Toast.makeText(SearchGameServerAreaActivity.this, "最多添加10个区", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 			

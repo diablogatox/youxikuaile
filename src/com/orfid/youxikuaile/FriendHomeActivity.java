@@ -81,6 +81,12 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
         	followActionHintIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.iv_unfollow_selector));
         }
         
+        try {
+			doFetchUserInfoAction();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+        
     }
 
     @Override
@@ -252,6 +258,42 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
 			public void onStart() {
 				followBtnView.setClickable(false);
 				mPbar.setVisibility(View.VISIBLE);
+			}
+            
+
+        });
+    }
+    
+    private void doFetchUserInfoAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("uid", uid);
+        HttpRestClient.post("home", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	
+                    } else if (status == 0) {
+                        Toast.makeText(FriendHomeActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+			@Override
+			public void onFinish() {
+
+			}
+
+			@Override
+			public void onStart() {
+
 			}
             
 

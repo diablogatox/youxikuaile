@@ -21,6 +21,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.parser.GameItemsParser;
+import com.orfid.youxikuaile.parser.PlayerItemsParser;
 import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.widget.HorizontalListView;
 
@@ -32,6 +33,11 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
     HorizontalListView sitterGamesLv;
     ImageButton backBtn;
     Button sitterOfflineBtn;
+    TextView selectedAreaNameTv;
+    Button searchBtn;
+    private static final int SELECT_GAME_AREA = 0;
+    private String selectedGameArea;
+    private View areaSelectBgLl;
     private MyAdapter myAdapter;
 	private String selectedGameId;
 	private List<GameItem> gameItems = new ArrayList<GameItem>();
@@ -45,9 +51,14 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
         backBtn = (ImageButton) findViewById(R.id.btn_back);
         sitterOfflineBtn = (Button) findViewById(R.id.btn_sitter_offline);
         sitterGamesLv = (HorizontalListView) findViewById(R.id.lv_sitter_games);
+        areaSelectBgLl = findViewById(R.id.area_select_bg_ll);
+        selectedAreaNameTv = (TextView) findViewById(R.id.selected_area_name_tv);
+        searchBtn = (Button) findViewById(R.id.search_btn);
 
         backBtn.setOnClickListener(this);
         sitterOfflineBtn.setOnClickListener(this);
+        areaSelectBgLl.setOnClickListener(this);
+        searchBtn.setOnClickListener(this);
 
         sitterGamesLv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -106,10 +117,42 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
                 break;
             case R.id.btn_sitter_offline:
                 startActivity(new Intent(this, OfflineSittersActivity.class));
+                break;
+            case R.id.area_select_bg_ll:
+            	Log.d("selected gameid======>", selectedGameId);
+    			Intent intent = new Intent(this, SearchGameServerAreaActivity.class);
+    			intent.putExtra("gameId", selectedGameId);
+    			intent.putExtra("isSearch", true);
+    			startActivityForResult(intent, SELECT_GAME_AREA);
+            	break;
+            case R.id.search_btn:
+            	if (selectedAreaNameTv.getText().toString().length() > 0) {
+            		try {
+						doFindGameSittersAction();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+            	} else {
+            		Toast.makeText(this, "请先选择游戏区", Toast.LENGTH_SHORT).show();
+            	}
+            	break;
         }
     }
 
-    private class MyAdapter extends ArrayAdapter<GameItem> {
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case SELECT_GAME_AREA:
+			selectedGameArea = data.getStringExtra("selectedArea");
+			selectedAreaNameTv.setText(selectedGameArea);
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	private class MyAdapter extends ArrayAdapter<GameItem> {
 		
 		private List<GameItem> items;
 		private GameItem objBean;
@@ -233,6 +276,44 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
 //					loadingHintTv.setVisibility(View.VISIBLE);
 //				}
 //			}
+        });
+    }
+    
+    private void doFindGameSittersAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("mod", 2);
+        params.put("gameid", selectedGameId);
+        params.put("gamearea", selectedGameArea);
+        Log.d("gameid====>", selectedGameId);
+        Log.d("gamearea====>", selectedGameArea);
+        HttpRestClient.post("user/findByDistance", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	
+                    } else if (status == 0) {
+                        Toast.makeText(OnlineSittersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+            @Override
+			public void onFinish() {
+            	
+			}
+
+			@Override
+			public void onStart() {
+				
+			}
         });
     }
 }
