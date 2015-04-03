@@ -39,7 +39,7 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
     private String selectedGameArea;
     private View areaSelectBgLl;
     private MyAdapter myAdapter;
-	private String selectedGameId;
+	private String selectedGameId, selectedGameName;
 	private List<GameItem> gameItems = new ArrayList<GameItem>();
 
     @Override
@@ -67,6 +67,7 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
 					int position, long id) {
 				Log.d("current select game id=====>", myAdapter.getItem(position).getName()+":"+id);
 				selectedGameId = id+"";
+				selectedGameName = myAdapter.getItem(position).getName();
 				myAdapter.setSelection(position);
 			}
 			
@@ -296,7 +297,15 @@ public class OnlineSittersActivity extends Activity implements GestureDetector.O
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-                    	
+                    	String result = response.getString("data");
+                    	if (!result.equals("[]")) {
+	                    	Intent intent = new Intent(OnlineSittersActivity.this, OnlineSitterSearchResultActivity.class);
+	                    	intent.putExtra("result", result);
+	                    	intent.putExtra("game", selectedGameName == null ? "魔兽世界": selectedGameName);
+	                    	startActivity(intent);
+                    	} else {
+                    		Toast.makeText(OnlineSittersActivity.this, "没有相关陪玩信息", Toast.LENGTH_SHORT).show();
+                    	}
                     } else if (status == 0) {
                         Toast.makeText(OnlineSittersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
