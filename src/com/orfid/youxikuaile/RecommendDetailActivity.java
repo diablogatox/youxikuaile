@@ -23,7 +23,7 @@ public class RecommendDetailActivity extends Activity {
 
 	private void set() {
 		titleTv.setText(title);
-		content = Util.changeImgWidth(content); 
+		content = Utils.changeImgWidth(content); 
 //		mWebView.loadUrl("http://www.oschina.net");
 		mWebView.setBackgroundColor(getResources().getColor(R.color.global_bg_color));
 		mWebView.loadDataWithBaseURL("", content, "text/html", "UTF-8", null);

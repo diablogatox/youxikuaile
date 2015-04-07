@@ -18,7 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.orfid.youxikuaile.R;
-import com.orfid.youxikuaile.Util;
+import com.orfid.youxikuaile.Utils;
 import com.orfid.youxikuaile.pojo.ActionItem;
 
 
@@ -68,8 +68,8 @@ public class TitlePopup extends PopupWindow {
 		setOutsideTouchable(true);
 		
 
-		mScreenWidth = Util.getScreenWidth(mContext);
-		mScreenHeight = Util.getScreenHeight(mContext);
+		mScreenWidth = Utils.getScreenWidth(mContext);
+		mScreenHeight = Utils.getScreenHeight(mContext);
 		
 
 		setWidth(width);

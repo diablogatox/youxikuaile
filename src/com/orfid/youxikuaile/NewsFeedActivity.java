@@ -335,7 +335,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             this.items = arrayList;
             this.resource = resource;
             this.context = context;
-            this.wh=(Util.getScreenWidth(context)-Util.Dp2Px(context, 99))/3;
+            this.wh=(Utils.getScreenWidth(context)-Utils.Dp2Px(context, 99))/3;
         }
 
         @Override
@@ -450,8 +450,8 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 			
             if (objBean.getUser().getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getUser().getPhoto(), viewHolder.userAvatarIv);
             viewHolder.usernameTv.setText(objBean.getUser().getUsername());
-            viewHolder.publishTimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getPublishTime()) * 1000));
-            SpannableStringBuilder sb = Util.handlerFaceInContent(context, viewHolder.contentTextTv,
+            viewHolder.publishTimeTv.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getPublishTime()) * 1000));
+            SpannableStringBuilder sb = Utils.handlerFaceInContent(context, viewHolder.contentTextTv,
                     objBean.getContentText());
             viewHolder.contentTextTv.setText(sb);
             if (objBean.getImgItems() != null && objBean.getImgItems().size() > 0) {
@@ -485,13 +485,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                     break;
                 case 2:
                 case 4:
-                    w=2*wh+Util.Dp2Px(context, 2);
+                    w=2*wh+Utils.Dp2Px(context, 2);
                     myGv.setNumColumns(2);
                     break;
                 case 3:
                 case 5:
                 case 6:
-                    w=wh*3+Util.Dp2Px(context, 2)*2;
+                    w=wh*3+Utils.Dp2Px(context, 2)*2;
                     myGv.setNumColumns(3);
                     break;
             }
@@ -521,7 +521,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 
         public GridViewAdapter(Context context, List<FeedAttachmentImgItem> data) {
             this.context=context;
-            this.wh=(Util.getScreenWidth(context)-Util.Dp2Px(context, 99))/3;
+            this.wh=(Utils.getScreenWidth(context)-Utils.Dp2Px(context, 99))/3;
             this.list=data;
         }
 

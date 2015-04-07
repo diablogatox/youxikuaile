@@ -244,7 +244,7 @@ public class SittersActivity extends Activity implements OnClickListener {
 	            } else {
 	            	viewHolder.gameSitterDescTv.setVisibility(View.GONE);
 	            }
-	            viewHolder.gameSitterUtimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
+	            viewHolder.gameSitterUtimeTv.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
             } else {
 	            Log.d("game icon======>", game.getPhoto());
 	            if (game.getPhoto() != null && !game.getPhoto().equals("null")) {
@@ -256,7 +256,7 @@ public class SittersActivity extends Activity implements OnClickListener {
 	            } else {
 	            	viewHolder.gameSitterDescTv.setVisibility(View.GONE);
 	            }
-	            viewHolder.gameSitterUtimeTv.setText(Util.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
+	            viewHolder.gameSitterUtimeTv.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getUtime()) * 1000));
 	            if (objBean.getAreas().size() > 0) {
 		            MyGridAdapter gridAdapter = new MyGridAdapter(context, R.layout.game_area_item_tag_style, objBean.getAreas());
 		    		viewHolder.gameSitterAreaGv.setAdapter(gridAdapter);

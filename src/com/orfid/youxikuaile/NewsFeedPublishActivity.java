@@ -352,7 +352,7 @@ public class NewsFeedPublishActivity extends Activity implements View.OnClickLis
             case PHOTO_PICKER:
                 // add to gridview
                 Bitmap photo = data.getExtras().getParcelable("data");
-                InputStream photoInputStream = Util.bitmap2InputStream(photo, 100);
+                InputStream photoInputStream = Utils.bitmap2InputStream(photo, 100);
 //                fileList.add(photoInputStream);
                 imageItems.add(new FeedAttachmentImgItem(photo));
                 adapter.notifyDataSetChanged();

@@ -121,6 +121,15 @@
         <activity
             android:name=".OnlineSitterSearchResultActivity">
         </activity>
+        <activity
+            android:name=".ChattingActivity"></activity>
+        <activity
+            android:name=".ImageDetailsActivity"></activity>
+        <activity
+            android:name=".VoiceStartActivity"></activity>
+        <activity
+            android:name=".SelectPicActivity"
+            android:theme="@style/MyDialogStyleBottom"></activity>
     </application>
 
 </manifest>

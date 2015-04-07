@@ -179,10 +179,10 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                         }
                         nicknameTv.setText(data.getString("username"));
                         timestamp = Long.parseLong(data.getString("birthday"));
-                        int age = Util.getAgeByTimestamp(Long.parseLong(data.getString("birthday")) * 1000L);
+                        int age = Utils.getAgeByTimestamp(Long.parseLong(data.getString("birthday")) * 1000L);
                         ageTv.setText(age==0?"":age+"");
                         gender = Integer.parseInt(data.getString("sex"));
-                        genderTv.setText(Util.showGender(data.getString("sex")));
+                        genderTv.setText(Utils.showGender(data.getString("sex")));
 
                     } else if (status == 0) {
                         Toast.makeText(UserInfoActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
@@ -210,7 +210,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         switch (requestCode) {
             case PHOTO_PICKER:
                 Bitmap photo = data.getExtras().getParcelable("data");
-                photoInputStream = Util.bitmap2InputStream(photo, 100);
+                photoInputStream = Utils.bitmap2InputStream(photo, 100);
                 userPickture.setImageBitmap(photo);
                 saveBtn.setEnabled(true);
                 break;

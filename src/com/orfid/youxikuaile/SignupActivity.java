@@ -130,7 +130,7 @@ public class SignupActivity extends Activity {
                 if (views[0].getText().toString().trim().equals("")) {
                     Toast.makeText(SignupActivity.this, "手机号不能为空", Toast.LENGTH_SHORT).show();
                     isValid = false;
-                } else if (Util.isMobile(views[0].getText().toString().trim()) == false) {
+                } else if (Utils.isMobile(views[0].getText().toString().trim()) == false) {
                     Toast.makeText(SignupActivity.this, "手机号码格式错误", Toast.LENGTH_SHORT).show();
                     isValid = false;
                 }

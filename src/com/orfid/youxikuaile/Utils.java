@@ -1,9 +1,11 @@
 package com.orfid.youxikuaile;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,13 +22,71 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 
-public class Util {
+public class Utils {
 
+	public static int getAge (long timestamp) {
+
+		if (timestamp == 0) return 0;
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+		int _year = cal.get(Calendar.YEAR);
+		int _month = cal.get(Calendar.MONTH);
+		int _day = cal.get(Calendar.DAY_OF_MONTH);
+
+        GregorianCalendar cal2 = new GregorianCalendar();
+        int y, m, d, a;         
+
+        y = cal2.get(Calendar.YEAR);
+        m = cal2.get(Calendar.MONTH);
+        d = cal2.get(Calendar.DAY_OF_MONTH);
+        cal2.set(_year, _month, _day);
+        a = y - cal2.get(Calendar.YEAR);
+        if ((m < cal2.get(Calendar.MONTH))
+                        || ((m == cal2.get(Calendar.MONTH)) && (d < cal2
+                                        .get(Calendar.DAY_OF_MONTH)))) {
+                --a;
+        }
+        if(a < 0)
+        	a = 0;
+//                throw new IllegalArgumentException("Age < 0");
+        return a;
+	}
+	
+	public static int componentTimeToTimestamp(int year, int month, int day, int hour, int minute) {
+
+	    Calendar c = Calendar.getInstance();
+	    c.set(Calendar.YEAR, year);
+	    c.set(Calendar.MONTH, month);
+	    c.set(Calendar.DAY_OF_MONTH, day);
+	    c.set(Calendar.HOUR, hour);
+	    c.set(Calendar.MINUTE, minute);
+	    c.set(Calendar.SECOND, 0);
+//	    c.set(Calendar.MILLISECOND, 0);
+
+	    return (int) (c.getTimeInMillis() / 1000L);
+	}
+	
+	public static MediaPlayer createNetAudio(String audioUrl) {
+        MediaPlayer mp=new MediaPlayer();  
+        try {  
+            mp.setDataSource(audioUrl);  
+        } catch (IllegalArgumentException e) {  
+            return null;  
+        } catch (IllegalStateException e) {  
+            return null;  
+        } catch (IOException e) {  
+            return null;  
+        }  
+        return mp;  
+    }
+	
 	public static int getScreenWidth(Context context) {
 		return context.getResources().getDisplayMetrics().widthPixels;
 	}
@@ -175,4 +235,26 @@ public class Util {
         String newHtmlContent=doc_Dis.toString();
         return newHtmlContent;
     }
+    
+    public static String convertStreamToString(InputStream is) {
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+		    while ((line = reader.readLine()) != null) {
+		        sb.append(line + "\n");
+		    }
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} finally {
+		    try {
+		        is.close();
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		}
+		return sb.toString();
+	}
 }

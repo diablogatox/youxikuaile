@@ -56,7 +56,7 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		
 		if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
 		nameTv.setText(name);
-		timeTv.setText(Util.covertTimestampToDate(Long.parseLong(time) * 1000));
+		timeTv.setText(Utils.covertTimestampToDate(Long.parseLong(time) * 1000));
 		contentTv.setText(content);
 		praiseNumTv.setText(praiseCount+" 赞");
 		

@@ -35,7 +35,7 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
     private TextView titleTv, uidTv, collegeTv, 
     	gendernageTv, followActionHintTv;
     private ImageButton backBtn;
-    private View followBtnView;
+    private View followBtnView, chatBtnView;
     private boolean isFollowed;
 
     @Override
@@ -67,11 +67,13 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
         gendernageTv = (TextView) findViewById(R.id.tv_gender_n_age);
         backBtn = (ImageButton) findViewById(R.id.btn_back);
         followBtnView = findViewById(R.id.btn_follow);
+        chatBtnView = findViewById(R.id.btn_chat);
         followActionHintTv = (TextView) findViewById(R.id.follow_action_hint_tv);
         followActionHintIv = (ImageView) findViewById(R.id.follow_action_hint_iv);
 
         backBtn.setOnClickListener(this);
         followBtnView.setOnClickListener(this);
+        chatBtnView.setOnClickListener(this);
 
         uidTv.setText(uid);
         if (username != null && !username.equals("null")) titleTv.setText(username);
@@ -128,6 +130,11 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
             	}
             	
                 break;
+            case R.id.btn_chat:
+            	Intent i = new Intent(FriendHomeActivity.this, ChattingActivity.class);
+            	i.putExtra("uid", uid);
+            	startActivity(i);
+            	break;
         }
     }
 
