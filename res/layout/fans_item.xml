@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/white"
+    android:clickable="true"
+    android:background="@drawable/bg_item"
     android:padding="10dp">
     
     <!-- 用户头像 -->

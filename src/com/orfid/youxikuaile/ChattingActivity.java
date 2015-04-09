@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,10 +20,13 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.app.Activity;
@@ -93,7 +97,6 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	private Bitmap imgAttachment = null;
 	private ChatAdapter chatAdapter;
 	private List<ChatEntity> chatList;
-	private SharedPreferences sp;
 	private String token;
 	private String uid = "";
 	private String sid = "";
@@ -125,6 +128,9 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	private float tmpRecTime;
 	private String photoPath;
 	
+	final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+    HashMap user = dbHandler.getUserDetails();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -133,7 +139,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
 		Intent intent = getIntent();
 		//if (intent != null) {
 			Bundle bundle = intent.getExtras();
-			uid = bundle.getString("toUid");
+			uid = bundle.getString("uid");
 			sid = bundle.getString("sid");
 			isGroup = bundle.getBoolean("isGroup");
 		//}
@@ -356,7 +362,12 @@ public class ChattingActivity extends Activity implements OnClickListener {
 		
 		mTimer = new Timer();  
         // start timer task  
-		new LoadMessageListTask(1).execute();
+//		new LoadMessageListTask(1).execute();
+		try {
+			doFetchMessageListAction(1);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override  
@@ -415,7 +426,12 @@ public class ChattingActivity extends Activity implements OnClickListener {
 					messageContent = et_chatting_input.getText().toString().trim();
 					Log.d("message=======>", messageContent);
 					send();
-					new SendMessageTask().execute();
+//					new SendMessageTask().execute();
+					try {
+						doSendMessageAction();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 
 				} else {
 					Toast.makeText(ChattingActivity.this, "请先输入内容", Toast.LENGTH_SHORT).show();
@@ -611,8 +627,8 @@ public class ChattingActivity extends Activity implements OnClickListener {
  			}else {
  				chatHolder = (ChatHolder)convertView.getTag();
  			}
- 			
- 			ImageLoader.getInstance().displayImage(Constants.BASE_URL + chatList.get(position).getUserImage(), chatHolder.userImageView);
+
+ 			ImageLoader.getInstance().displayImage(chatList.get(position).getUserImage(), chatHolder.userImageView);
 // 			if (!chatList.get(position).isNofityMsg()) {
 //	 			chatHolder.timeTextView.setText(chatList.get(position).getChatTime());
 	 			Log.d("recordTime============>", chatList.get(position).getRecordTime());
@@ -1005,7 +1021,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
      	ChatEntity chatEntity = new ChatEntity();
 //	     	chatEntity.setChatTime(Utils.getLocalTime());
      	chatEntity.setContent(messageContent);
-     	chatEntity.setUserImage(sp.getString("photo", ""));
+     	chatEntity.setUserImage(user.get("photo").toString());
      	chatEntity.setComeMsg(false);
      	chatEntity.setRecordTime(mRecord_Time+"");
      	chatEntity.setImageAttachmentBitmap(imgAttachment);
@@ -1043,67 +1059,90 @@ public class ChattingActivity extends Activity implements OnClickListener {
 		return iv;
 	}
 	
-	private class SendMessageTask extends AsyncTask<String, Void, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-			URL url=null;
-			String result = "";
-			try {
-				url = new URL(Constants.BASE_URL + "message/send");
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-				conn.setRequestMethod("POST");
-				conn.setDoOutput(true);
-
-				Writer writer = new OutputStreamWriter(conn.getOutputStream());
-
-				String str = "token=" + token + "&toUid=" + uid + "&sid=" + sid + "&text=" + messageContent
-						+ "&file=" + null;
-				Log.d("str-=========>", str);
-				writer.write(str);
-				writer.flush();
-
-				Reader is = new InputStreamReader(conn.getInputStream());
-
-				StringBuilder sb = new StringBuilder();
-				char c[] = new char[1024];
-				int len=0;
-
-				while ((len = is.read(c)) != -1) {
-					sb.append(c, 0, len);
-				}
-				result = sb.toString();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			Log.d("TEST", "发送消息JSON---" + result);
-			JSONObject obj;
-			try {
-				obj = new JSONObject(result);
-				if (1==obj.getInt("status")) {
-//					Toast.makeText(ChattingActivity.this,obj.getString("text"),Toast.LENGTH_SHORT).show();
-				}else if(0==obj.getInt("status")){
-//					Toast.makeText(ChattingActivity.this,obj.getString("text"),Toast.LENGTH_SHORT).show();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
+//	private class SendMessageTask extends AsyncTask<String, Void, String> {
+//
+//		@Override
+//		protected String doInBackground(String... params) {
+//			URL url=null;
+//			String result = "";
+//			try {
+//				url = new URL(Constants.BASE_URL + "message/send");
+//				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//
+//				conn.setRequestMethod("POST");
+//				conn.setDoOutput(true);
+//
+//				Writer writer = new OutputStreamWriter(conn.getOutputStream());
+//
+//				String str = "token=" + token + "&toUid=" + uid + "&sid=" + sid + "&text=" + messageContent
+//						+ "&file=" + null;
+//				Log.d("str-=========>", str);
+//				writer.write(str);
+//				writer.flush();
+//
+//				Reader is = new InputStreamReader(conn.getInputStream());
+//
+//				StringBuilder sb = new StringBuilder();
+//				char c[] = new char[1024];
+//				int len=0;
+//
+//				while ((len = is.read(c)) != -1) {
+//					sb.append(c, 0, len);
+//				}
+//				result = sb.toString();
+//
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return result;
+//		}
+//
+//		@Override
+//		protected void onPreExecute() {
+//			// TODO Auto-generated method stub
+//			super.onPreExecute();
+//		}
+//
+//		@Override
+//		protected void onPostExecute(String result) {
+//			Log.d("TEST", "发送消息JSON---" + result);
+//			JSONObject obj;
+//			try {
+//				obj = new JSONObject(result);
+//				if (1==obj.getInt("status")) {
+////					Toast.makeText(ChattingActivity.this,obj.getString("text"),Toast.LENGTH_SHORT).show();
+//				}else if(0==obj.getInt("status")){
+////					Toast.makeText(ChattingActivity.this,obj.getString("text"),Toast.LENGTH_SHORT).show();
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//	}
+	
+	private void doSendMessageAction() throws JSONException {
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("toUid", uid);
+        params.put("text", messageContent);
+        HttpRestClient.post("message/send", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	Toast.makeText(ChattingActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    } else if (status == 0) {
+                        Toast.makeText(ChattingActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 	
 	/** 
      * do some action 
@@ -1117,7 +1156,12 @@ public class ChattingActivity extends Activity implements OnClickListener {
                 case 1:  
                     // do some action  
 //                	Log.d("test========>", "ddd");
-                	new LoadMessageListTask(0).execute();
+//                	new LoadMessageListTask(0).execute();
+				try {
+					doFetchMessageListAction(0);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
                     break;  
                 default:  
                     break;  
@@ -1125,144 +1169,145 @@ public class ChattingActivity extends Activity implements OnClickListener {
         }  
     }; 
     
-    private class LoadMessageListTask extends AsyncTask<String, Void, String> {
-
-		private int init = 0;
-		
-		public LoadMessageListTask(int init) {
-			this.init = init;
-		}
-		
-		@Override
-		protected String doInBackground(String... params) {
-			URL url=null;
-			String result = "";
-			try {
-				url = new URL(Constants.BASE_URL + "message/list");
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-				conn.setRequestMethod("POST");
-				conn.setDoOutput(true);
-
-				Writer writer = new OutputStreamWriter(conn.getOutputStream());
-
-				String str = "token=" + token + "&toUid=" + uid + "&sid=" + sid + "&init=" + init;
-				Log.d("str-=========>", str);
-				writer.write(str);
-				writer.flush();
-
-				Reader is = new InputStreamReader(conn.getInputStream());
-
-				StringBuilder sb = new StringBuilder();
-				char c[] = new char[1024];
-				int len=0;
-
-				while ((len = is.read(c)) != -1) {
-					sb.append(c, 0, len);
-				}
-				result = sb.toString();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			Log.d("TEST", "消息列表JSONddd---" + result);
-			JSONObject obj;
-			try {
-				obj = new JSONObject(result);
-				if (1==obj.getInt("status")) {
+//    private class LoadMessageListTask extends AsyncTask<String, Void, String> {
+//
+//		private int init = 0;
+//		private HashMap user;
+//		
+//		public LoadMessageListTask(int init) {
+//			this.init = init;
+//			final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+//	        user = dbHandler.getUserDetails();
+//		}
+//		
+//		@Override
+//		protected String doInBackground(String... params) {
+//			URL url=null;
+//			String result = "";
+//			try {
+//				url = new URL(Constants.BASE_URL + "message/list");
+//				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//
+//				conn.setRequestMethod("POST");
+//				conn.setDoOutput(true);
+//
+//				Writer writer = new OutputStreamWriter(conn.getOutputStream());
+//
+//				String str = "token=" + user.get("token").toString() + "&touid=" + uid + "&sid=" + sid + "&init=" + init;
+//				Log.d("str-=========>", str);
+//				writer.write(str);
+//				writer.flush();
+//
+//				Reader is = new InputStreamReader(conn.getInputStream());
+//
+//				StringBuilder sb = new StringBuilder();
+//				char c[] = new char[1024];
+//				int len=0;
+//
+//				while ((len = is.read(c)) != -1) {
+//					sb.append(c, 0, len);
+//				}
+//				result = sb.toString();
+//
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return result;
+//		}
+//
+//		@Override
+//		protected void onPreExecute() {
+//			// TODO Auto-generated method stub
+//			super.onPreExecute();
+//		}
+//
+//		@Override
+//		protected void onPostExecute(String result) {
+//			Log.d("TEST", "消息列表JSONddd---" + result);
+//			JSONObject obj;
+//			try {
+//				obj = new JSONObject(result);
+//				if (1==obj.getInt("status")) {
+//
+//					if (init == 1) {
+//						JSONObject jObj = new JSONObject(obj.getString("data"));
+//						if (jObj != null && jObj.length() > 0) {
+//							JSONArray jArr = new JSONArray(jObj.getString("messages"));
+//							if (jArr.length() > 0) {
+//								for (int i=0; i<jArr.length(); i++) {
+//									String attachImgUrl = null, attachRcdUrl = null;
+//									JSONObject jsonObj = (JSONObject) jArr.get(i); 
+//									JSONObject jUser = jsonObj.getJSONObject("user");
+//									if (!jsonObj.getJSONArray("files").equals("[]")) {
+//										JSONArray jFiles = jsonObj.getJSONArray("files");
+//										if (jFiles.length() > 0) {
+//											JSONObject jFile = (JSONObject) jFiles.get(0);
+//											if (jFile.getString("type").equals("image")) {
+//												attachImgUrl = Constants.BASE_URL + jFile.getString("url");
+//											} else {
+//												attachRcdUrl = Constants.BASE_URL + jFile.getString("url");
+//											}
+//										}
+//									}
+//									
+//									String currentUserId = user.get("uid").toString();
+//									boolean isComeMsg = false;
+//									if (!jUser.getString("uid").equals(currentUserId)) {
+//										isComeMsg = true;
+//									}
+//									ChatEntity chatEntity = new ChatEntity();
+//							      	chatEntity.setChatTime(jsonObj.getString("sendtime"));
+//							      	chatEntity.setContent(jsonObj.getString("text"));
+//							      	chatEntity.setUserImage(jUser.getString("photo"));
+//							      	chatEntity.setComeMsg(isComeMsg);
+//							      	chatEntity.setRecordTime("");
+//							      	chatEntity.setImageAttachmentBitmap(null);
+//							      	chatEntity.setImgAttachmentUrl(attachImgUrl);
+//							      	chatEntity.setRecordUrl(attachRcdUrl);
+//							      	chatList.add(chatEntity);
+//								}
+//								
+//								Collections.reverse(chatList);
+//								lv_chatting_history.setSelection(chatList.size() - 1);
+//								chatAdapter.notifyDataSetChanged();
+//							}
+//							
+//							setTimerTask();
+//						}
+//					} else {
+//						JSONObject jObj = new JSONObject(obj.getString("data"));
+//						if (jObj != null && jObj.length() > 0) {
+//							JSONArray jArr = new JSONArray(jObj.getString("messages"));
+//							
+//							for (int i=0; i<jArr.length(); i++) {
+//								String attachImg = null, attachRcdUrl = null;
+//								JSONObject jsonObj = (JSONObject) jArr.get(i); 
+//								JSONArray jFiles = jsonObj.getJSONArray("files");
+//								if (jFiles.length() > 0) {
+//									JSONObject jFile = (JSONObject) jFiles.get(i);
+//									if (jFile.getString("type").equals("image")) {
+//										attachImg = Constants.BASE_URL + jFile.getString("url");
+//									} else {
+//										attachRcdUrl = jFile.getString("url");
+//									}
+//								}
+//								JSONObject jUser = new JSONObject(jsonObj.getString("user"));
+//								if (!jUser.getString("uid").equals(user.get("uid").toString())) {
+//									receive(jsonObj.getString("text"), "", attachRcdUrl, attachImg);
+//								}
+//							}
+//							
+//						}
+//					}
+//				}else if(0==obj.getInt("status")){
 //					Toast.makeText(ChattingActivity.this,obj.getString("text"),Toast.LENGTH_SHORT).show();
-//					Log.d("init==============>", "");
-					if (init == 1) {
-//						setTimerTask();
-						JSONObject jObj = new JSONObject(obj.getString("data"));
-						if (jObj != null && jObj.length() > 0) {
-							JSONArray jArr = new JSONArray(jObj.getString("messages"));
-							if (jArr.length() > 0) {
-								for (int i=0; i<jArr.length(); i++) {
-									String attachImgUrl = null, attachRcdUrl = null;
-									JSONObject jsonObj = (JSONObject) jArr.get(i); 
-									JSONObject jUser = jsonObj.getJSONObject("user");
-									if (!jsonObj.getJSONArray("files").equals("[]")) {
-										JSONArray jFiles = jsonObj.getJSONArray("files");
-										if (jFiles.length() > 0) {
-											JSONObject jFile = (JSONObject) jFiles.get(0);
-											if (jFile.getString("type").equals("image")) {
-												attachImgUrl = Constants.BASE_URL + jFile.getString("url");
-											} else {
-												attachRcdUrl = Constants.BASE_URL + jFile.getString("url");
-											}
-										}
-									}
-									
-									String currentUserId = sp.getString("uid", "");
-									boolean isComeMsg = false;
-									if (!jUser.getString("uid").equals(currentUserId)) {
-										isComeMsg = true;
-									}
-									ChatEntity chatEntity = new ChatEntity();
-							      	chatEntity.setChatTime(jsonObj.getString("sendtime"));
-							      	chatEntity.setContent(jsonObj.getString("text"));
-							      	chatEntity.setUserImage(jUser.getString("photo"));
-							      	chatEntity.setComeMsg(isComeMsg);
-							      	chatEntity.setRecordTime("");
-							      	chatEntity.setImageAttachmentBitmap(null);
-							      	chatEntity.setImgAttachmentUrl(attachImgUrl);
-							      	chatEntity.setRecordUrl(attachRcdUrl);
-							      	chatList.add(chatEntity);
-								}
-								
-								Collections.reverse(chatList);
-								lv_chatting_history.setSelection(chatList.size() - 1);
-								chatAdapter.notifyDataSetChanged();
-							}
-							
-							setTimerTask();
-						}
-					} else {
-						JSONObject jObj = new JSONObject(obj.getString("data"));
-						if (jObj != null && jObj.length() > 0) {
-							JSONArray jArr = new JSONArray(jObj.getString("messages"));
-							
-							for (int i=0; i<jArr.length(); i++) {
-								String attachImg = null, attachRcdUrl = null;
-								JSONObject jsonObj = (JSONObject) jArr.get(i); 
-								JSONArray jFiles = jsonObj.getJSONArray("files");
-								if (jFiles.length() > 0) {
-									JSONObject jFile = (JSONObject) jFiles.get(i);
-									if (jFile.getString("type").equals("image")) {
-										attachImg = Constants.BASE_URL + jFile.getString("url");
-									} else {
-										attachRcdUrl = jFile.getString("url");
-									}
-								}
-								JSONObject jUser = new JSONObject(jsonObj.getString("user"));
-								if (!jUser.getString("uid").equals(sp.getString("uid", ""))) {
-									receive(jsonObj.getString("text"), "", attachRcdUrl, attachImg);
-								}
-							}
-							
-						}
-					}
-				}else if(0==obj.getInt("status")){
-					Toast.makeText(ChattingActivity.this,obj.getString("text"),Toast.LENGTH_SHORT).show();
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//	}
 	
 	private void setTimerTask() {  
 		try {
@@ -1306,4 +1351,96 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	      	lv_chatting_history.setSelection(chatList.size() - 1);
 	  	}
 
+	  	
+	  	private void doFetchMessageListAction(final int init) throws JSONException {
+	        RequestParams params = new RequestParams();
+	        params.put("token", user.get("token").toString());
+	        params.put("touid", uid);
+	        params.put("init", init);
+	        HttpRestClient.post("message/list", params, new JsonHttpResponseHandler() {
+	            @Override
+	            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+	                Log.d("response=======>", response.toString());
+	                try {
+	                    int status = response.getInt("status");
+	                    if (status == 1) { // success
+	                    	if (init == 1) {
+	    						JSONObject jObj = new JSONObject(response.getString("data"));
+	    						if (jObj != null && jObj.length() > 0) {
+	    							JSONArray jArr = new JSONArray(jObj.getString("messages"));
+	    							if (jArr.length() > 0) {
+	    								for (int i=0; i<jArr.length(); i++) {
+	    									String attachImgUrl = null, attachRcdUrl = null;
+	    									JSONObject jsonObj = (JSONObject) jArr.get(i); 
+	    									JSONObject jUser = jsonObj.getJSONObject("user");
+	    									if (!jsonObj.getJSONArray("files").equals("[]")) {
+	    										JSONArray jFiles = jsonObj.getJSONArray("files");
+	    										if (jFiles.length() > 0) {
+	    											JSONObject jFile = (JSONObject) jFiles.get(0);
+	    											if (jFile.getString("type").equals("image")) {
+	    												attachImgUrl = Constants.BASE_URL + jFile.getString("url");
+	    											} else {
+	    												attachRcdUrl = Constants.BASE_URL + jFile.getString("url");
+	    											}
+	    										}
+	    									}
+	    									
+	    									String currentUserId = user.get("uid").toString();
+	    									boolean isComeMsg = false;
+	    									if (!jUser.getString("uid").equals(currentUserId)) {
+	    										isComeMsg = true;
+	    									}
+	    									ChatEntity chatEntity = new ChatEntity();
+	    							      	chatEntity.setChatTime(jsonObj.getString("sendtime"));
+	    							      	chatEntity.setContent(jsonObj.getString("text"));
+	    							      	chatEntity.setUserImage(jUser.getString("photo"));
+	    							      	chatEntity.setComeMsg(isComeMsg);
+	    							      	chatEntity.setRecordTime("");
+	    							      	chatEntity.setImageAttachmentBitmap(null);
+	    							      	chatEntity.setImgAttachmentUrl(attachImgUrl);
+	    							      	chatEntity.setRecordUrl(attachRcdUrl);
+	    							      	chatList.add(chatEntity);
+	    								}
+	    								
+	    								Collections.reverse(chatList);
+	    								lv_chatting_history.setSelection(chatList.size() - 1);
+	    								chatAdapter.notifyDataSetChanged();
+	    							}
+	    							
+	    							setTimerTask();
+	    						}
+	    					} else {
+	    						JSONObject jObj = new JSONObject(response.getString("data"));
+	    						if (jObj != null && jObj.length() > 0) {
+	    							JSONArray jArr = new JSONArray(jObj.getString("messages"));
+	    							
+	    							for (int i=0; i<jArr.length(); i++) {
+	    								String attachImg = null, attachRcdUrl = null;
+	    								JSONObject jsonObj = (JSONObject) jArr.get(i); 
+	    								JSONArray jFiles = jsonObj.getJSONArray("files");
+	    								if (jFiles.length() > 0) {
+	    									JSONObject jFile = (JSONObject) jFiles.get(i);
+	    									if (jFile.getString("type").equals("image")) {
+	    										attachImg = Constants.BASE_URL + jFile.getString("url");
+	    									} else {
+	    										attachRcdUrl = jFile.getString("url");
+	    									}
+	    								}
+	    								JSONObject jUser = new JSONObject(jsonObj.getString("user"));
+	    								if (!jUser.getString("uid").equals(user.get("uid").toString())) {
+	    									receive(jsonObj.getString("text"), "", attachRcdUrl, attachImg);
+	    								}
+	    							}
+	    							
+	    						}
+	    					}
+	                    } else if (status == 0) {
+	                        Toast.makeText(ChattingActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+	                    }
+	                } catch (JSONException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        });
+	    }
 }

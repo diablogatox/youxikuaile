@@ -51,6 +51,17 @@ public class UserItem {
 		this.signature = signature;
 		this.type = type;
 	}
+    
+    public UserItem(String uid, String username, String photo,
+			String signature, String type, boolean isFollow) {
+		super();
+		this.uid = uid;
+		this.username = username;
+		this.photo = photo;
+		this.signature = signature;
+		this.type = type;
+		this.isFollow = isFollow;
+	}
 
 	public UserItem(String uid, String birthday, String sex, String username,
 			String photo, String signature, boolean isFollow, String distance, String utime) {

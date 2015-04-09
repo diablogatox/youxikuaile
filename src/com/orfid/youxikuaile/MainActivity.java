@@ -18,6 +18,8 @@ import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,8 +70,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
-	private ListView hotRecommendLv, followedPublicLv;
-	private TextView nameTv, uidTv, emptyTv, hotEmptyTv;
+	private ListView hotRecommendLv, followedPublicLv, userSearchLv;
+	private TextView nameTv, uidTv, emptyTv, hotEmptyTv, userSearchEmptyTv;
 	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
 	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
@@ -79,6 +81,10 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
     private List<UserItem> userItems = new ArrayList<UserItem>();
     private List<RecommendItem> recommendItems = new ArrayList<RecommendItem>();
     private LocationManagerProxy mLocationManagerProxy;
+    
+    private List<UserItem> friendUserItems = new ArrayList<UserItem>();
+	private MyAdapter2 listAdapter;
+	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -360,6 +366,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 		
 		if (index == 0) {
 			
+			listAdapter = new MyAdapter2(this, R.layout.fans_item, friendUserItems);
+			
 			hotRecommendLv = (ListView) view.findViewById(R.id.hot_recommend);
 			titleBar = view.findViewById(R.id.title);
 			edittextBottomLine = view.findViewById(R.id.et_bottom_line);
@@ -369,10 +377,80 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			backBtn = (ImageButton) view.findViewById(R.id.btn_back);
 			searchInput = (EditText) view.findViewById(R.id.et_search_input);
 			hotEmptyTv = (TextView) view.findViewById(R.id.hot_empty_view);
+			userSearchEmptyTv = (TextView) view.findViewById(R.id.user_search_empty_tv);
+			userSearchLv = (ListView) view.findViewById(R.id.user_search_result_lv);
+			
+			userSearchLv.setAdapter(listAdapter);
 			
 			searchBtn.setOnClickListener(this);
 			backBtn.setOnClickListener(this);
 			searchOverlay.setOnClickListener(this);
+			userSearchLv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+						UserItem item = listAdapter.getItem(position);
+						String type = item.getType();
+						String uid = item.getUid();
+						String username = item.getUsername();
+						String photo = item.getPhoto();
+						boolean isFollowed = item.isFollow();
+						Intent intent;
+		            	if (type.equals("0")) {
+		            		intent = new Intent(MainActivity.this, FriendHomeActivity.class);
+		            	} else {
+		            		intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+		            	}
+		                intent.putExtra("uid", uid);
+		                intent.putExtra("username", username);
+		                intent.putExtra("photo", photo);
+		                intent.putExtra("isFollowed", isFollowed);
+		                
+		                startActivity(intent);
+				}
+				
+			});
+			
+			searchInput.addTextChangedListener(new TextWatcher() {
+				
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					
+				}
+				
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					
+				}
+				
+				@Override
+				public void afterTextChanged(final Editable s) {
+					if (s.length() > 0) {
+						Log.d("text is ====>", s.toString());
+						listAdapter.clear();
+						mHandler.removeCallbacksAndMessages(null);
+						mHandler.postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									doSearchFriendUserAction(s.toString());
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+							
+						}, 1000);
+					} else {
+						listAdapter.clear();
+						if (userSearchEmptyTv.isShown())
+							userSearchEmptyTv.setVisibility(View.GONE);
+					}
+				}
+			});
+			
 			titlePopup.setItemOnClickListener(new OnItemOnClickListener() {
 
 				@Override
@@ -1069,6 +1147,132 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                 }
             }
         });
+	}
+	
+	private void doSearchFriendUserAction(String id) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        if (user != null && user.size() > 0) {
+        params.put("token", user.get("token").toString());
+        params.put("id", id);
+        }
+        HttpRestClient.post("user/find", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	Log.d("length========>", response.getJSONArray("data").length() +"");
+                    	if (response.getJSONArray("data").length() > 0) {
+                    		if (userSearchEmptyTv.isShown()) userSearchEmptyTv.setVisibility(View.GONE);
+                    		JSONArray jsonArray = response.getJSONArray("data");
+                    		int len = jsonArray.length();
+							for (int i=0;i<len;i++) {
+								JSONObject user = jsonArray.getJSONObject(i);
+								UserItem userItem = new UserItem(
+										user.getString("uid"),
+										user.getString("username"),
+										user.isNull("photo")?null:user.getString("photo"),
+										user.isNull("signature")?null:user.getString("signature"),
+										user.getString("type"),
+										user.getBoolean("isfollow")
+								);
+								friendUserItems.add(userItem);
+							}
+							listAdapter.notifyDataSetChanged();
+							
+                    	} else {
+                    		userSearchEmptyTv.setText("无相关信息");
+                    	}
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+			@Override
+			public void onStart() {
+				if (!userSearchEmptyTv.isShown()) 
+					userSearchEmptyTv.setVisibility(View.VISIBLE);
+				
+				userSearchEmptyTv.setText("搜索中...");
+			}
+            
+        });
+    }
+	
+	private class MyAdapter2 extends ArrayAdapter<UserItem> {
+		
+		private Context context;
+		private List<UserItem> items;
+		private int resource;
+		private UserItem objBean;
+
+		public MyAdapter2(Context context, int resource, List<UserItem> items) {
+			super(context, resource, items);
+			this.context = context;
+			this.items = items;
+			this.resource = resource;
+		}
+
+		@Override
+		public int getCount() {
+			return items == null ? 0 : items.size();
+		}
+
+		@Override
+		public UserItem getItem(int position) {
+			return items.get(position);
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			
+			ViewHolder viewHolder = null;
+            if (convertView==null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(
+                        resource, parent, false);
+                viewHolder.userPhotoIv = (ImageView) convertView.findViewById(R.id.user_photo_iv);
+                viewHolder.userNameTv = (TextView) convertView.findViewById(R.id.user_name_tv);
+                viewHolder.actionBtn = (Button) convertView.findViewById(R.id.action_btn);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            
+            objBean = items.get(position);
+            if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
+            if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
+            if (objBean.isFollow() == false) {
+            	viewHolder.actionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_fans2));
+            	viewHolder.actionBtn.setText("加关注");
+            	viewHolder.actionBtn.setClickable(true);
+            }
+            
+            viewHolder.actionBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Log.d("hahaha======>", "it works!" + position);
+				}
+            	
+            });
+            
+            return convertView;
+
+		}
+		
+		public class ViewHolder {
+			ImageView userPhotoIv;
+			TextView userNameTv;
+			Button actionBtn;
+		}
+		
 	}
 
 }

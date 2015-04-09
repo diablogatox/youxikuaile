@@ -131,14 +131,27 @@
 		</LinearLayout>
 		
 	</LinearLayout>
-	<LinearLayout
+	<RelativeLayout
 	    android:id="@+id/search_overlay"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_marginTop="45dp"
-	    android:orientation="vertical"
 	    android:visibility="gone"
+	    android:padding="5dp"
 	    android:background="#7f000000">
-	    
-	</LinearLayout>
+	    <TextView
+	        android:id="@+id/user_search_empty_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:paddingTop="100dp"
+	        android:textColor="@color/white" />
+	    <ListView 
+		    android:id="@+id/user_search_result_lv"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:divider="#7f000000"
+		    android:cacheColorHint="@android:color/transparent"
+		    android:dividerHeight="1dp" />
+	</RelativeLayout>
 </FrameLayout>
