@@ -94,7 +94,7 @@ public class SelectFriendsActivity extends Activity implements OnClickListener {
 					Log.d("uid==========>", contact.get("uid").toString());
 					item.put("lvIndex", position);
 					item.put("uid", contact.get("uid").toString());
-					item.put("icon", contact.get("icon").toString());
+					item.put("icon", contact.get("icon") == null?null:contact.get("icon").toString());
 					item.put("name", contact.get("name").toString());
 					mapList2.add(item);
 					gvAdapter.notifyDataSetChanged();

@@ -70,8 +70,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
-	private ListView hotRecommendLv, followedPublicLv, userSearchLv;
-	private TextView nameTv, uidTv, emptyTv, hotEmptyTv, userSearchEmptyTv;
+	private ListView hotRecommendLv, followedPublicLv, userSearchLv, msgSessionLv;
+	private TextView nameTv, uidTv, emptyTv, hotEmptyTv, userSearchEmptyTv, titleTv;
 	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
 	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
@@ -81,6 +81,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
     private List<UserItem> userItems = new ArrayList<UserItem>();
     private List<RecommendItem> recommendItems = new ArrayList<RecommendItem>();
     private LocationManagerProxy mLocationManagerProxy;
+    private int currentIndex = 0;
     
     private List<UserItem> friendUserItems = new ArrayList<UserItem>();
 	private MyAdapter2 listAdapter;
@@ -340,7 +341,40 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	};
 	
 	public void toggleDropdownMenu(View view) {
-		titlePopup.show(view);
+		if (currentIndex == 2) {
+			TitlePopup popup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			popup.addAction(new ActionItem(this, "发起群聊", R.drawable.icon_chat_more));
+			popup.addAction(new ActionItem(this, "发布动态", R.drawable.icon_pen));
+			popup.addAction(new ActionItem(this, "添加好友", R.drawable.icon_add_friend));
+			
+			popup.setItemOnClickListener(new OnItemOnClickListener() {
+
+				@Override
+				public void onItemClick(ActionItem item, int position) {
+					switch (position) {
+					case 0:
+						
+						startActivity(new Intent(MainActivity.this, SelectChatFriendsActivity.class));
+						
+						break;
+					case 1:
+						
+						startActivity(new Intent(MainActivity.this, NewsFeedPublishActivity.class));
+						
+						break;
+					case 2:
+						
+						startActivity(new Intent(MainActivity.this, AddNewFriendActivity.class));
+						
+						break;
+					}
+				}
+				
+			});
+			popup.show(view);
+		} else {
+			titlePopup.show(view);
+		}
 	}
 	
 	private void init() {
@@ -361,6 +395,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private void setup(int index) {
 		
 		Log.d("currentIndex==========>", index+"");
+		
+		currentIndex = index;
 		
 		view = views.get(index);
 		
@@ -503,12 +539,95 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			
 		} else if (index == 1) {
 			
+			edittextBottomLine = view.findViewById(R.id.et_bottom_line);
+			searchOverlay = view.findViewById(R.id.search_overlay);
+			searchBtn = (ImageButton) view.findViewById(R.id.ib_search);
+			addBtn = (ImageButton) view.findViewById(R.id.ib_add);
+			backBtn = (ImageButton) view.findViewById(R.id.btn_back);
+			searchInput = (EditText) view.findViewById(R.id.et_search_input);
+			
+			userSearchEmptyTv = (TextView) view.findViewById(R.id.user_search_empty_tv);
+			userSearchLv = (ListView) view.findViewById(R.id.user_search_result_lv);
+			
+			userSearchLv.setAdapter(listAdapter);
+			
+			searchBtn.setOnClickListener(this);
+			backBtn.setOnClickListener(this);
+			searchOverlay.setOnClickListener(this);
+			userSearchLv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+						UserItem item = listAdapter.getItem(position);
+						String type = item.getType();
+						String uid = item.getUid();
+						String username = item.getUsername();
+						String photo = item.getPhoto();
+						boolean isFollowed = item.isFollow();
+						Intent intent;
+		            	if (type.equals("0")) {
+		            		intent = new Intent(MainActivity.this, FriendHomeActivity.class);
+		            	} else {
+		            		intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+		            	}
+		                intent.putExtra("uid", uid);
+		                intent.putExtra("username", username);
+		                intent.putExtra("photo", photo);
+		                intent.putExtra("isFollowed", isFollowed);
+		                
+		                startActivity(intent);
+				}
+				
+			});
+			
+			searchInput.addTextChangedListener(new TextWatcher() {
+				
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					
+				}
+				
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					
+				}
+				
+				@Override
+				public void afterTextChanged(final Editable s) {
+					if (s.length() > 0) {
+						Log.d("text is ====>", s.toString());
+						listAdapter.clear();
+						mHandler.removeCallbacksAndMessages(null);
+						mHandler.postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									doSearchFriendUserAction(s.toString());
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+							
+						}, 1000);
+					} else {
+						listAdapter.clear();
+						if (userSearchEmptyTv.isShown())
+							userSearchEmptyTv.setVisibility(View.GONE);
+					}
+				}
+			});
+			
+			
 			nearbyPlayersBtn = (ImageButton) view.findViewById(R.id.nearby_players);
             nearbyOrganizationsBtn = (ImageButton) view.findViewById(R.id.nearby_organizations);
             nearbySittersBtn = (ImageButton) view.findViewById(R.id.nearby_sitters);
 			followedPublicLv = (ListView) view.findViewById(R.id.followed_public);
 			mPbar = (ProgressBar) findViewById(R.id.progress_bar);
 			emptyTv = (TextView) view.findViewById(R.id.empty_tv);
+			titleTv = (TextView) view.findViewById(R.id.tv_title);
 			
 			nearbyPlayersBtn.setOnClickListener(this);
             nearbyOrganizationsBtn.setOnClickListener(this);
@@ -549,6 +668,88 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			
 		} else if (index == 2) { // 消息
 
+			edittextBottomLine = view.findViewById(R.id.et_bottom_line);
+			searchOverlay = view.findViewById(R.id.search_overlay);
+			searchBtn = (ImageButton) view.findViewById(R.id.ib_search);
+			addBtn = (ImageButton) view.findViewById(R.id.ib_add);
+			backBtn = (ImageButton) view.findViewById(R.id.btn_back);
+			searchInput = (EditText) view.findViewById(R.id.et_search_input);
+			
+			userSearchEmptyTv = (TextView) view.findViewById(R.id.user_search_empty_tv);
+			userSearchLv = (ListView) view.findViewById(R.id.user_search_result_lv);
+			
+			userSearchLv.setAdapter(listAdapter);
+			
+			searchBtn.setOnClickListener(this);
+			backBtn.setOnClickListener(this);
+			searchOverlay.setOnClickListener(this);
+			userSearchLv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+						UserItem item = listAdapter.getItem(position);
+						String type = item.getType();
+						String uid = item.getUid();
+						String username = item.getUsername();
+						String photo = item.getPhoto();
+						boolean isFollowed = item.isFollow();
+						Intent intent;
+		            	if (type.equals("0")) {
+		            		intent = new Intent(MainActivity.this, FriendHomeActivity.class);
+		            	} else {
+		            		intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+		            	}
+		                intent.putExtra("uid", uid);
+		                intent.putExtra("username", username);
+		                intent.putExtra("photo", photo);
+		                intent.putExtra("isFollowed", isFollowed);
+		                
+		                startActivity(intent);
+				}
+				
+			});
+			
+			searchInput.addTextChangedListener(new TextWatcher() {
+				
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					
+				}
+				
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					
+				}
+				
+				@Override
+				public void afterTextChanged(final Editable s) {
+					if (s.length() > 0) {
+						Log.d("text is ====>", s.toString());
+						listAdapter.clear();
+						mHandler.removeCallbacksAndMessages(null);
+						mHandler.postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									doSearchFriendUserAction(s.toString());
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+							
+						}, 1000);
+					} else {
+						listAdapter.clear();
+						if (userSearchEmptyTv.isShown())
+							userSearchEmptyTv.setVisibility(View.GONE);
+					}
+				}
+			});
+			
+			
             feedRlView = findViewById(R.id.rl_feed);
             newFansRlView = findViewById(R.id.rl_new_fans);
             newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
@@ -556,6 +757,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             mPbar = (ProgressBar) findViewById(R.id.progress_bar);
             latestFeedFl = findViewById(R.id.latest_feed_fl);
             mPhotoIv = (ImageView) findViewById(R.id.user_photo_iv);
+            titleTv = (TextView) view.findViewById(R.id.tv_title);
+            msgSessionLv = (ListView) view.findViewById(R.id.msg_session_lv);
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
@@ -588,6 +791,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                 public void run() {
 		            try {
 						doFetchLatestFeedAction();
+						doFetchMessageSessionsAction();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -679,7 +883,10 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			searchInput.setVisibility(View.VISIBLE);
 			edittextBottomLine.setVisibility(View.VISIBLE);
 			searchOverlay.setVisibility(View.VISIBLE);
-			titleBar.setBackgroundResource(R.color.header_bar_bg_color);
+			if (currentIndex == 0)
+				titleBar.setBackgroundResource(R.color.header_bar_bg_color);
+			
+			if (currentIndex == 1 || currentIndex == 2) titleTv.setVisibility(View.GONE);
 			
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 			searchInput.requestFocus();
@@ -696,6 +903,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			searchBtn.setVisibility(View.VISIBLE);
 			titleBar.setBackgroundDrawable(null);
 			
+			if (currentIndex == 1 || currentIndex == 2) titleTv.setVisibility(View.VISIBLE);
+			
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 			searchInput.setText("");
 			imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
@@ -710,6 +919,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			addBtn.setVisibility(View.VISIBLE);
 			searchBtn.setVisibility(View.VISIBLE);
 			titleBar.setBackgroundDrawable(null);
+			
+			if (currentIndex == 1 || currentIndex == 2) titleTv.setVisibility(View.VISIBLE);
 			
 			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 			searchInput.setText("");
@@ -1072,6 +1283,29 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 					hotEmptyTv.setVisibility(View.VISIBLE);
 				}
 			}
+        });
+    }
+    
+    private void doFetchMessageSessionsAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("message/session", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 

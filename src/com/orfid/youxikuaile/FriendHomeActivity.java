@@ -321,7 +321,7 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
                     	if (!data.isNull("feed")) {
                     		JSONObject jFeed = data.getJSONObject("feed");
                     		if (jFeed.has("files")) {
-                    			if (!jFeed.isNull("files")) {
+                    			if (!jFeed.isNull("files") && !jFeed.getString("files").equals("[]")) {
                     				JSONArray files = jFeed.getJSONArray("files");
                     				JSONObject jObj = files.getJSONObject(0);
                     				String url = jObj.getString("url");
