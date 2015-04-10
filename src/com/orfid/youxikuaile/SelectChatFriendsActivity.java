@@ -21,7 +21,10 @@ import com.orfid.youxikuaile.pojo.Contacts;
 import com.orfid.youxikuaile.pojo.UserItem;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,16 +100,22 @@ public class SelectChatFriendsActivity extends Activity {
 			public void onClick(View arg0) {
 				if (gv_ps.getChildCount() !=0) {
 					List  inviteeUnRegisteredUserList = new LinkedList();
+					List<String> members = new ArrayList<String>();
 					for (int i=0; i<mapList2.size(); i++) {
 						inviteMap.put("uid", mapList2.get(i).get("uid"));
-						
+						members.add(mapList2.get(i).get("uid").toString());
 						JSONObject obj1 = new JSONObject(inviteMap);
 						inviteeUnRegisteredUserList.add(obj1);
 					}
 					
 					Log.d("inviteeUnRegisteredUserList=========>", inviteeUnRegisteredUserList.toString());
+					Log.d("members=======>", members.toString());
 					
-//					new CreateGroupTask(inviteeUnRegisteredUserList.toString()).execute();
+					try {
+						doCreateGroupTalkAction(members);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 					
 				} else {
 					Toast.makeText(SelectChatFriendsActivity.this, "还没有添加邀请人", Toast.LENGTH_SHORT).show();
@@ -232,6 +241,7 @@ public class SelectChatFriendsActivity extends Activity {
 		    								pos = i;
 		    							}
 		    						}
+
 		    						mapList2.remove(pos);
 		    						gvAdapter.notifyDataSetChanged();
 		    					}
@@ -254,6 +264,52 @@ public class SelectChatFriendsActivity extends Activity {
 			@Override
 			public void onStart() {
 				
+			}
+        });
+	}
+	
+	private void doCreateGroupTalkAction(List<String> members) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("members", members);
+        final ProgressDialog pDialog = new ProgressDialog(this);
+        HttpRestClient.post("message/createGroup", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	if (!response.isNull("data")) {
+                    		JSONObject jObj = response.getJSONObject("data");
+                    		int sid = jObj.getInt("sid");
+    						Intent i = new Intent();
+    						i.setClass(SelectChatFriendsActivity.this, ChattingActivity.class);
+    						i.putExtra("sid", sid);
+    						startActivity(i);
+    						finish();
+                    	}
+    					
+                    } else if (status == 0) {
+                        Toast.makeText(SelectChatFriendsActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+			@Override
+			public void onFinish() {
+				if (pDialog.isShowing())
+					pDialog.dismiss();
+			}
+
+			@Override
+			public void onStart() {
+				pDialog.setMessage("请稍等...");
+				pDialog.show();
 			}
         });
 	}
