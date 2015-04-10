@@ -1,4 +1,4 @@
-package com.orfid.youxikuaile.pojo;
+package com.orfid.youxikuaile.adapter;
 
 import java.util.List;
 import java.util.Map;
@@ -11,19 +11,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.orfid.youxikuaile.Constants;
 import com.orfid.youxikuaile.PinyinUtils;
 import com.orfid.youxikuaile.R;
-
 
 public class ContactsAdapterSF extends BaseAdapter {
 
 	private Context context;
 	private List<Map<String, Object>> list;
+	ImageLoader imageLoader;
+	private DisplayImageOptions options;
 
 	public ContactsAdapterSF(Context context, List<Map<String, Object>> list) {
 		this.context = context;
 		this.list = list;
+		
+		imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration
+				.createDefault(context));
 	}
 
 	public int getCount() {
@@ -69,9 +77,10 @@ public class ContactsAdapterSF extends BaseAdapter {
 		}
 		
 		holder.iv_select_friends.setImageResource(R.drawable.select_friends);
-//		imageLoader.displayImage(AppConstants.MAIN_DOMAIN + "/" + list.get(position).get("icon"), holder.iv_sf_pic,
-//				options, null);
-		if (!list.get(position).get("icon").toString().equals("null")) ImageLoader.getInstance().displayImage(list.get(position).get("icon").toString(), holder.iv_sf_pic);
+//		holder.iv_sf_pic.setImageResource((Integer) list.get(position).get("icon"));
+		if (list.get(position).get("icon") != null) {
+			ImageLoader.getInstance().displayImage(list.get(position).get("icon").toString(), holder.iv_sf_pic);
+		}
 		holder.tv_sf_name.setText((String) list.get(position).get("name"));
 		
 

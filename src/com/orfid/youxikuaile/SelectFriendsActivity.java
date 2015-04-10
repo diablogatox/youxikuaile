@@ -33,9 +33,9 @@ import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.orfid.youxikuaile.adapter.ContactsAdapterSF;
 import com.orfid.youxikuaile.parser.FollowItemsParser;
 import com.orfid.youxikuaile.pojo.Contacts;
-import com.orfid.youxikuaile.pojo.ContactsAdapterSF;
 import com.orfid.youxikuaile.pojo.UserItem;
 
 public class SelectFriendsActivity extends Activity implements OnClickListener {

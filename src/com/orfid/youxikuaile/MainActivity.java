@@ -457,6 +457,9 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 				public void onItemClick(ActionItem item, int position) {
 					switch (position) {
 					case 0:
+						
+						startActivity(new Intent(MainActivity.this, SelectChatFriendsActivity.class));
+						
 						break;
 					case 1:
 						

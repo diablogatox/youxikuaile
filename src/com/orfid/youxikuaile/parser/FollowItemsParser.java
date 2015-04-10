@@ -54,7 +54,9 @@ public class FollowItemsParser {
         
         try {
 	        uid = jFollowItem.getString("uid");
-	        photo = jFollowItem.getString("photo");
+	        if (!jFollowItem.isNull("photo")) {
+	        	photo = jFollowItem.getString("photo");
+	        }
 	        username = jFollowItem.getString("username");
         } catch (Exception e) {
         	e.printStackTrace();

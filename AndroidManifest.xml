@@ -130,6 +130,8 @@
         <activity
             android:name=".SelectPicActivity"
             android:theme="@style/MyDialogStyleBottom"></activity>
+        <activity
+            android:name=".SelectChatFriendsActivity"></activity>
     </application>
 
 </manifest>
