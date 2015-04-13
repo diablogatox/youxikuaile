@@ -48,8 +48,11 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.parser.FollowItemsParser;
+import com.orfid.youxikuaile.parser.MessageSessionItemsParser;
 import com.orfid.youxikuaile.parser.RecommendItemsParser;
 import com.orfid.youxikuaile.pojo.ActionItem;
+import com.orfid.youxikuaile.pojo.MessageItem;
+import com.orfid.youxikuaile.pojo.MessageSession;
 import com.orfid.youxikuaile.pojo.RecommendItem;
 import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.TitlePopup;
@@ -84,7 +87,9 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
     private int currentIndex = 0;
     
     private List<UserItem> friendUserItems = new ArrayList<UserItem>();
+    private List<MessageSession> sessionMessageItems = new ArrayList<MessageSession>();
 	private MyAdapter2 listAdapter;
+	private MyAdapter3 myAdapter3;
 	private Handler mHandler = new Handler();
 
 	@Override
@@ -166,6 +171,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 		};
 		
 		mTabPager.setAdapter(mPagerAdapter);
+		
+//		mTabPager.setOffscreenPageLimit(5);
 		
 		init();
 		
@@ -750,6 +757,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			});
 			
 			
+//			myAdapter3 = new MyAdapter3(this, R.layout.session_message_item, sessionMessageItems);
+			
             feedRlView = findViewById(R.id.rl_feed);
             newFansRlView = findViewById(R.id.rl_new_fans);
             newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
@@ -759,6 +768,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             mPhotoIv = (ImageView) findViewById(R.id.user_photo_iv);
             titleTv = (TextView) view.findViewById(R.id.tv_title);
             msgSessionLv = (ListView) view.findViewById(R.id.msg_session_lv);
+            
+//            msgSessionLv.setAdapter(myAdapter3);
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
@@ -1298,7 +1309,10 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-                    	
+                    	MessageSessionItemsParser parser = new MessageSessionItemsParser();
+                    	sessionMessageItems = parser.parse(response.getJSONObject("data"));
+                    	myAdapter3 = new MyAdapter3(MainActivity.this, R.layout.session_message_item, sessionMessageItems);
+                    	msgSessionLv.setAdapter(myAdapter3);
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
@@ -1508,6 +1522,133 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			ImageView userPhotoIv;
 			TextView userNameTv;
 			Button actionBtn;
+		}
+		
+	}
+	
+	
+	private class MyAdapter3 extends ArrayAdapter<MessageSession> {
+		
+		private Context context;
+		private List<MessageSession> items;
+		private int resource;
+		private MessageSession objBean;
+
+		public MyAdapter3(Context context, int resource, List<MessageSession> items) {
+			super(context, resource, items);
+			this.context = context;
+			this.items = items;
+			this.resource = resource;
+		}
+
+		@Override
+		public int getCount() {
+			return items == null ? 0 : items.size();
+		}
+
+		@Override
+		public MessageSession getItem(int position) {
+			return items.get(position);
+		}
+
+		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
+		
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			
+			ViewHolder viewHolder = null;
+			if (lmap.get(position)==null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(
+                        resource, parent, false);
+                viewHolder.msgIcon = (ImageView) convertView.findViewById(R.id.msg_icon);
+                viewHolder.newmsgHint = (Button) convertView.findViewById(R.id.newmsg_hint);
+                viewHolder.sessionName = (TextView) convertView.findViewById(R.id.session_name);
+                viewHolder.msgTime = (TextView) convertView.findViewById(R.id.msg_time);
+                viewHolder.msgContent = (TextView) convertView.findViewById(R.id.msg_content);
+                viewHolder.groupIcon = convertView.findViewById(R.id.group_icon);
+                viewHolder.topIcon = (ImageView) convertView.findViewById(R.id.top_center);
+                viewHolder.bottomLeftIcon = (ImageView) convertView.findViewById(R.id.bottom_left);
+                viewHolder.bottomRightIcon = (ImageView) convertView.findViewById(R.id.bottom_right);
+                lmap.put(position, convertView);
+                convertView.setTag(viewHolder);
+            } else {
+            	convertView = lmap.get(position);
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            
+            objBean = items.get(position);
+            
+            String sid = objBean.getId();
+            String newmsg = objBean.getNewmsg();
+            if (Integer.parseInt(newmsg) > 0) {
+            	viewHolder.newmsgHint.setText(newmsg);
+            	viewHolder.newmsgHint.setVisibility(View.VISIBLE);
+            }
+            
+            MessageItem msg = objBean.getMessage();
+            if (msg != null) {
+            	UserItem u = msg.getUser();
+            	if (objBean.getType().equals("1")) {
+            		if (u.getPhoto() != null && !u.getPhoto().equals("null"))
+            			ImageLoader.getInstance().displayImage(u.getPhoto(), viewHolder.msgIcon);
+            		if (u.getUsername() != null && !u.getPhoto().equals("null"))
+            			viewHolder.sessionName.setText(u.getUsername());
+            		viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000 ));
+            	} else if (objBean.getType().equals("2")) {
+            		
+            		viewHolder.msgIcon.setVisibility(View.GONE);
+            		viewHolder.groupIcon.setVisibility(View.VISIBLE);
+            	}
+            	
+            	viewHolder.msgContent.setText(msg.getText());
+            	
+            } else {
+            	UserItem[] users = objBean.getUsers();
+            	int size = users.length;
+            	if (size <= 2) {
+            		String photo = null, name = null;
+            		final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+                    HashMap user = dbHandler.getUserDetails();
+            		for (int i=0; i<users.length; i++) {
+                		if (!users[i].getUid().equals(user.get("uid").toString())) {
+                			photo = users[i].getPhoto();
+                			name = users[i].getUsername();
+                		}
+                	}
+            		ImageLoader.getInstance().displayImage(photo, viewHolder.msgIcon);
+            		viewHolder.sessionName.setText(name);
+            		viewHolder.msgContent.setText("[正在聊天]");
+            	} else {
+            		String sessionName = "";
+                	for (int i=0; i<users.length; i++) {
+                		UserItem user = users[i];
+                		sessionName += user.getUsername() + (i != users.length-1?",":"");
+                	}
+                	viewHolder.sessionName.setText(sessionName + " 加入聊天室");
+                	ImageLoader loader = ImageLoader.getInstance();
+                	loader.displayImage(users[size-1].getPhoto(), viewHolder.topIcon);
+                	loader.displayImage(users[size-2].getPhoto(), viewHolder.bottomLeftIcon);
+                	loader.displayImage(users[size-3].getPhoto(), viewHolder.bottomRightIcon);
+                	viewHolder.msgIcon.setVisibility(View.GONE);
+                	viewHolder.groupIcon.setVisibility(View.VISIBLE);
+            	}
+            	
+            	
+            }
+            
+            return convertView;
+
+		}
+		
+		public class ViewHolder {
+			ImageView msgIcon;
+			TextView sessionName;
+			TextView msgTime;
+			TextView msgContent;
+			Button newmsgHint;
+			View groupIcon;
+			ImageView topIcon, bottomLeftIcon, bottomRightIcon;
 		}
 		
 	}

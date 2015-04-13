@@ -123,8 +123,8 @@
 		            
 		            <Button
 		                android:id="@+id/newfeed_count_btn"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
+		                android:layout_width="25dp"
+		                android:layout_height="25dp"
 		                android:layout_centerVertical="true"
 		                android:layout_marginRight="10dp"
 		                android:layout_toRightOf="@id/feed_title_tv"
@@ -196,8 +196,8 @@
 		            
 		            <Button
 		                android:id="@+id/newfans_count_btn"
-		                android:layout_width="wrap_content"
-		                android:layout_height="wrap_content"
+		                android:layout_width="25dp"
+		                android:layout_height="25dp"
 		                android:layout_toLeftOf="@id/jump_arrow_iv"
 		                android:layout_centerVertical="true"
 		                android:layout_marginRight="10dp"
@@ -212,7 +212,6 @@
 		            android:id="@+id/msg_session_lv"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
-		            android:padding="8dp"
 		            android:divider="#cecece"
 				    android:cacheColorHint="@android:color/transparent"
 				    android:dividerHeight="1dp" />
