@@ -1299,7 +1299,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
     
     private void doFetchMessageSessionsAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
-        HashMap user = dbHandler.getUserDetails();
+        final HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
         HttpRestClient.post("message/session", params, new JsonHttpResponseHandler() {
@@ -1313,6 +1313,33 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                     	sessionMessageItems = parser.parse(response.getJSONObject("data"));
                     	myAdapter3 = new MyAdapter3(MainActivity.this, R.layout.session_message_item, sessionMessageItems);
                     	msgSessionLv.setAdapter(myAdapter3);
+                    	msgSessionLv.setOnItemClickListener(new OnItemClickListener() {
+
+							@Override
+							public void onItemClick(AdapterView<?> parent,
+									View view, int position, long id) {
+								Log.d("enter here======>", "true");
+								MessageSession item = myAdapter3.getItem(position);
+								String sid = null;
+//								if (item.getUsers().length <= 2) {
+//									for(int i=0; i<item.getUsers().length; i++) {
+//										if (!item.getUsers()[i].equals(user.get("uid").toString())) {
+//											uid = item.getUsers()[i].getUid();
+//										}
+//									}
+//								} else {
+									sid = item.getId();
+//								}
+//								Log.d("uid=====xxxx======>", uid);
+								Log.d("sid=====xxxx=======>", sid);
+								Intent i = new Intent();
+	    						i.setClass(MainActivity.this, ChattingActivity.class);
+	    						i.putExtra("sid", sid);
+//	    						i.putExtra("uid", uid);
+	    						startActivity(i);
+							}
+                    		
+                    	});
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
@@ -1597,8 +1624,34 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             		viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000 ));
             	} else if (objBean.getType().equals("2")) {
             		
-            		viewHolder.msgIcon.setVisibility(View.GONE);
-            		viewHolder.groupIcon.setVisibility(View.VISIBLE);
+            		UserItem[] users = objBean.getUsers();
+                	int size = users.length;
+                	if (size <= 2) {
+                		String photo = null, name = null;
+                		final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+                        HashMap user = dbHandler.getUserDetails();
+                		for (int i=0; i<users.length; i++) {
+                    		if (!users[i].getUid().equals(user.get("uid").toString())) {
+                    			photo = users[i].getPhoto();
+                    			name = users[i].getUsername();
+                    		}
+                    	}
+                		ImageLoader.getInstance().displayImage(photo, viewHolder.msgIcon);
+                		viewHolder.sessionName.setText(name);
+                		viewHolder.msgContent.setText(msg.getText());
+                	} else {
+                		String sessionName = "";
+                    	UserItem userItem = msg.getUser();
+                    	viewHolder.sessionName.setText(userItem.getUsername());
+                    	ImageLoader loader = ImageLoader.getInstance();
+                    	if (!users[size-1].getPhoto().equals("null")) loader.displayImage(users[size-1].getPhoto(), viewHolder.topIcon);
+                    	if (!users[size-2].getPhoto().equals("null")) loader.displayImage(users[size-2].getPhoto(), viewHolder.bottomLeftIcon);
+                    	if (!users[size-3].getPhoto().equals("null")) loader.displayImage(users[size-3].getPhoto(), viewHolder.bottomRightIcon);
+                    	viewHolder.msgIcon.setVisibility(View.GONE);
+                    	viewHolder.groupIcon.setVisibility(View.VISIBLE);
+                	}
+                	
+                	viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000 ));
             	}
             	
             	viewHolder.msgContent.setText(msg.getText());
@@ -1627,9 +1680,9 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                 	}
                 	viewHolder.sessionName.setText(sessionName + " 加入聊天室");
                 	ImageLoader loader = ImageLoader.getInstance();
-                	loader.displayImage(users[size-1].getPhoto(), viewHolder.topIcon);
-                	loader.displayImage(users[size-2].getPhoto(), viewHolder.bottomLeftIcon);
-                	loader.displayImage(users[size-3].getPhoto(), viewHolder.bottomRightIcon);
+                	if (!users[size-1].getPhoto().equals("null")) loader.displayImage(users[size-1].getPhoto(), viewHolder.topIcon);
+                	if (!users[size-2].getPhoto().equals("null")) loader.displayImage(users[size-2].getPhoto(), viewHolder.bottomLeftIcon);
+                	if (!users[size-3].getPhoto().equals("null")) loader.displayImage(users[size-3].getPhoto(), viewHolder.bottomRightIcon);
                 	viewHolder.msgIcon.setVisibility(View.GONE);
                 	viewHolder.groupIcon.setVisibility(View.VISIBLE);
             	}

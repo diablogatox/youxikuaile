@@ -1125,6 +1125,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
         params.put("toUid", uid);
+        params.put("sid", sid);
         params.put("text", messageContent);
         HttpRestClient.post("message/send", params, new JsonHttpResponseHandler() {
             @Override
@@ -1356,6 +1357,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	        RequestParams params = new RequestParams();
 	        params.put("token", user.get("token").toString());
 	        params.put("touid", uid);
+	        params.put("sid", sid);
 	        params.put("init", init);
 	        HttpRestClient.post("message/list", params, new JsonHttpResponseHandler() {
 	            @Override
