@@ -30,12 +30,12 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
     private Button saveBtn;
     private View editAvatarRlView, editNicknameRlView, editGenderRlView, editAgeRlView,
         editAreaRlView, editCollegeRlView;
-    private TextView ageTv, nicknameTv, genderTv, areaTv;
+    private TextView ageTv, nicknameTv, genderTv, areaTv, collegeTv;
     private ProgressBar pBar;
 
     private int gender = 0;
     private long timestamp;
-    private String province, city;
+    private String province, city, school;
     private InputStream photoInputStream;
 
     private static final int PHOTO_PICKER = 0;
@@ -74,6 +74,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         genderTv = (TextView) findViewById(R.id.tv_gender);
         pBar = (ProgressBar) findViewById(R.id.progress_bar);
         areaTv = (TextView) findViewById(R.id.area_tv);
+        collegeTv = (TextView) findViewById(R.id.college_tv);
 
         backBtn.setOnClickListener(this);
         editAvatarRlView.setOnClickListener(this);
@@ -81,6 +82,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         editGenderRlView.setOnClickListener(this);
         editAgeRlView.setOnClickListener(this);
         editAreaRlView.setOnClickListener(this);
+        editCollegeRlView.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
     }
 
@@ -115,9 +117,8 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                 overridePendingTransition(0, 0);
             	break;
             case R.id.rl_edit_college:
-//            	Intent i6 = new Intent(this, WheelAreaPickerActivity.class);
-//              startActivityForResult(i6, COLLEGE_PICKER);
-//              overridePendingTransition(0, 0);
+            	Intent i6 = new Intent(this, SearchCollegeActivity.class);
+	            startActivityForResult(i6, COLLEGE_PICKER);
             	break;
             case R.id.btn_save:
                 try {
@@ -139,6 +140,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         params.put("sex", gender);
         params.put("province", province);
         params.put("city", city);
+        params.put("school", school);
         if (photoInputStream != null) params.put("file", photoInputStream, "image_"+System.currentTimeMillis()+".png");
         final ProgressDialog dialog = new ProgressDialog(this);
         HttpRestClient.post("user/SaveInfo", params, new JsonHttpResponseHandler() {
@@ -200,6 +202,15 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                         ageTv.setText(age==0?"":age+"");
                         gender = Integer.parseInt(data.getString("sex"));
                         genderTv.setText(Utils.showGender(data.getString("sex")));
+                        String p = "", c = "", s = "";
+                        if (!data.isNull("province_name")) 
+                        	p = data.getString("province_name");
+                        if (!data.isNull("city_name")) 
+                        	c = data.getString("city_name");
+                        areaTv.setText(p + " " + c);
+                        if (!data.isNull("school_name"))
+                        	s = data.getString("school_name");
+                        collegeTv.setText(s);
 
                     } else if (status == 0) {
                         Toast.makeText(UserInfoActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
@@ -253,6 +264,12 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
             	city = data.getStringExtra("cityId");
             	String area = data.getStringExtra("provinceName") + " " + data.getStringExtra("cityName");
             	areaTv.setText(area);
+            	saveBtn.setEnabled(true);
+            	break;
+            case COLLEGE_PICKER:
+            	school = data.getStringExtra("collegeId");
+            	String collegeName = data.getStringExtra("collegeName");
+            	collegeTv.setText(collegeName);
             	saveBtn.setEnabled(true);
             	break;
         }

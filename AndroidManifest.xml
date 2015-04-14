@@ -136,6 +136,10 @@
             android:name=".WheelAreaPickerActivity"
             android:theme="@style/MyDialogStyleBottomNoFloating" >
         </activity>
+        <activity
+            android:name=".SearchCollegeActivity"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
     </application>
 
 </manifest>

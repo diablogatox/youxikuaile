@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical" >
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:id="@+id/title"
+            android:background="#ffb400"
+            android:gravity="center_vertical"  >
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:text="大学"
+                android:textColor="#ffffff" />
+        <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back"
+                android:background="@null" />
+		<Button
+                android:id="@+id/confirm_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="12dp"
+                android:textSize="20sp"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                android:background="@drawable/header_right_save_selector"
+                android:text="确定" />
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/global_bg_color"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp"
+            android:background="@color/white">
+            <ImageView
+                android:id="@+id/search_iv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/search_icon" />
+            <EditText
+                android:id="@+id/search_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/search_iv"
+                android:layout_centerVertical="true"
+                android:hint="输入大学名称"
+                android:singleLine="true"
+                android:background="@null" />
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+	        <ListView
+	            android:id="@+id/search_result_lv"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:background="@color/white"
+		        android:layout_marginTop="12dp"
+		        android:divider="#f3f4f9"
+		        android:cacheColorHint="@android:color/transparent"
+		        android:dividerHeight="1dp"
+		        android:fadingEdge="none"
+		        android:fastScrollEnabled="true"
+		        android:scrollbars="none"/>
+	        <TextView
+	            android:id="@+id/hint_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:visibility="gone"
+	            android:layout_centerInParent="true"
+	            android:text="搜索中..." />
+	</RelativeLayout>	        
+    </LinearLayout>
+    
+</LinearLayout>
