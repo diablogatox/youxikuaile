@@ -35,7 +35,17 @@
 			android:orientation="horizontal" >
 
 		<com.orfid.youxikuaile.widget.wheelview.WheelView
-				android:id="@+id/games"
+				android:id="@+id/parent_areas"
+				android:layout_width="0dip"
+				android:layout_height="wrap_content"
+				android:layout_weight="1" />
+		
+		<View android:layout_width="1dp"
+		      android:layout_height="match_parent"
+		      android:background="#cecece" />
+		
+		<com.orfid.youxikuaile.widget.wheelview.WheelView
+				android:id="@+id/sub_areas"
 				android:layout_width="0dip"
 				android:layout_height="wrap_content"
 				android:layout_weight="1" />

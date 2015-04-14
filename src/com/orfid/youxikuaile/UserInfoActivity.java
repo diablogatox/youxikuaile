@@ -30,17 +30,20 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
     private Button saveBtn;
     private View editAvatarRlView, editNicknameRlView, editGenderRlView, editAgeRlView,
         editAreaRlView, editCollegeRlView;
-    private TextView ageTv, nicknameTv, genderTv;
+    private TextView ageTv, nicknameTv, genderTv, areaTv;
     private ProgressBar pBar;
 
     private int gender = 0;
     private long timestamp;
+    private String province, city;
     private InputStream photoInputStream;
 
     private static final int PHOTO_PICKER = 0;
     private static final int DATE_PICKER = 1;
     private static final int USER_NICKNAME = 2;
     private static final int USER_GENDER = 3;
+    private static final int AREA_PICKER = 4;
+    private static final int COLLEGE_PICKER = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +73,14 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         nicknameTv = (TextView) findViewById(R.id.tv_nickname);
         genderTv = (TextView) findViewById(R.id.tv_gender);
         pBar = (ProgressBar) findViewById(R.id.progress_bar);
+        areaTv = (TextView) findViewById(R.id.area_tv);
 
         backBtn.setOnClickListener(this);
         editAvatarRlView.setOnClickListener(this);
         editNicknameRlView.setOnClickListener(this);
         editGenderRlView.setOnClickListener(this);
         editAgeRlView.setOnClickListener(this);
+        editAreaRlView.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
     }
 
@@ -104,6 +109,16 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                 startActivityForResult(i4, DATE_PICKER);
                 overridePendingTransition(0, 0);
                 break;
+            case R.id.rl_edit_area:
+            	Intent i5 = new Intent(this, WheelAreaPickerActivity.class);
+                startActivityForResult(i5, AREA_PICKER);
+                overridePendingTransition(0, 0);
+            	break;
+            case R.id.rl_edit_college:
+//            	Intent i6 = new Intent(this, WheelAreaPickerActivity.class);
+//              startActivityForResult(i6, COLLEGE_PICKER);
+//              overridePendingTransition(0, 0);
+            	break;
             case R.id.btn_save:
                 try {
                     doSaveUserInfoAction();
@@ -122,6 +137,8 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
         params.put("username", nicknameTv.getText().toString().trim());
         params.put("birthday", timestamp);
         params.put("sex", gender);
+        params.put("province", province);
+        params.put("city", city);
         if (photoInputStream != null) params.put("file", photoInputStream, "image_"+System.currentTimeMillis()+".png");
         final ProgressDialog dialog = new ProgressDialog(this);
         HttpRestClient.post("user/SaveInfo", params, new JsonHttpResponseHandler() {
@@ -179,7 +196,7 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                         }
                         nicknameTv.setText(data.getString("username"));
                         timestamp = Long.parseLong(data.getString("birthday"));
-                        int age = Utils.getAgeByTimestamp(Long.parseLong(data.getString("birthday")) * 1000L);
+                        int age = Utils.getAgeByTimestamp(Long.parseLong(data.getString("birthday")) * 1000);
                         ageTv.setText(age==0?"":age+"");
                         gender = Integer.parseInt(data.getString("sex"));
                         genderTv.setText(Utils.showGender(data.getString("sex")));
@@ -231,6 +248,13 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                 genderTv.setText(genderText);
 //                saveBtn.setEnabled(true);
                 break;
+            case AREA_PICKER:
+            	province = data.getStringExtra("provinceId");
+            	city = data.getStringExtra("cityId");
+            	String area = data.getStringExtra("provinceName") + " " + data.getStringExtra("cityName");
+            	areaTv.setText(area);
+            	saveBtn.setEnabled(true);
+            	break;
         }
     }
 }

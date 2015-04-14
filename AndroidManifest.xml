@@ -132,6 +132,10 @@
             android:theme="@style/MyDialogStyleBottom"></activity>
         <activity
             android:name=".SelectChatFriendsActivity"></activity>
+        <activity
+            android:name=".WheelAreaPickerActivity"
+            android:theme="@style/MyDialogStyleBottomNoFloating" >
+        </activity>
     </application>
 
 </manifest>
