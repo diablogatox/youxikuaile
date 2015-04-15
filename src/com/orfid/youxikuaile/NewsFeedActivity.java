@@ -378,6 +378,9 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 viewHolder.replyNumTv = (TextView) convertView.findViewById(R.id.reply_num_tv);
                 viewHolder.praiseRlView = convertView.findViewById(R.id.praise_rl_view);
                 viewHolder.praiseNumTv = (TextView) convertView.findViewById(R.id.praise_tv);
+                viewHolder.forwardArea = convertView.findViewById(R.id.forword_area);
+                viewHolder.forwardIcon = (ImageView) convertView.findViewById(R.id.forward_icon);
+                viewHolder.forwardContent = (TextView) convertView.findViewById(R.id.forward_content);
                 lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -391,18 +394,25 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, v.getId()+"", Toast.LENGTH_SHORT).show();
+                	Log.d("avatar clicked =====> ", "true");
                 }
             });
             viewHolder.forwardRlView.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					long feedId = objBean.getFeedId();
-					String content = objBean.getContentText();
+					FeedItem item = items.get(position);
+					long feedId = item.getFeedId();
+					String contentd = item.getContentText();
+					if (item.getForward() != null) {
+						feedId = item.getForward().getFeedId();
+						contentd = item.getForward().getContentText();
+					}
+					Log.d("content text =====> ", contentd);
 					Intent intent = new Intent(NewsFeedActivity.this, NewsFeedForwardActivity.class);
 					intent.putExtra("position", position);
 					intent.putExtra("feedId", feedId);
-					intent.putExtra("content", content);
+					intent.putExtra("content", contentd);
 					startActivityForResult(intent, FORWARD_ACTION);
 				}
             	
@@ -427,12 +437,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             	
 				@Override
 				public void onClick(View v) {
-					if (objBean.isPraised() == false) {
-						feedId = objBean.getFeedId();
+					FeedItem item = items.get(position);
+					if (item.isPraised() == false) {
+						feedId = item.getFeedId();
 	//					pos = position;
-						int newval = objBean.getPraiseCount()+1;
-						objBean.setPraiseCount(newval);
-						objBean.setPraised(true);
+						int newval = item.getPraiseCount()+1;
+						item.setPraiseCount(newval);
+						item.setPraised(true);
 						adapter.notifyDataSetChanged();
 						
 						try {
@@ -472,6 +483,12 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             } else if (objBean.getPraiseCount() > 0) {
             	viewHolder.praiseNumTv.setText(objBean.getPraiseCount()+"");
             }
+            
+            if (objBean.getForward() != null) {
+            	FeedItem forward = objBean.getForward();
+            	viewHolder.forwardContent.setText(forward.getContentText());
+            	viewHolder.forwardArea.setVisibility(View.VISIBLE);
+            }
 
             return convertView;
         }
@@ -502,13 +519,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         }
 
         public class ViewHolder {
-            ImageView userAvatarIv;
+            ImageView userAvatarIv, forwardIcon;
             TextView usernameTv;
             TextView publishTimeTv;
             TextView contentTextTv;
             MyGridView imagesGv;
-            View rlGvWrapper, forwardRlView, replyRlView, praiseRlView;
-            TextView forwardNumTv, replyNumTv, praiseNumTv;
+            View rlGvWrapper, forwardRlView, replyRlView, praiseRlView, forwardArea;
+            TextView forwardNumTv, replyNumTv, praiseNumTv, forwardContent;
         }
 
     }

@@ -57,6 +57,7 @@ public class NewsFeedItemsParser {
         boolean isPraised = false;
         String contentText = null, publishTime = null;
         UserItem user = null;
+        FeedItem reference = null;
         List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
         try {
             feedId = Long.parseLong(jFeedItem.getString("feedid"));
@@ -81,6 +82,23 @@ public class NewsFeedItemsParser {
             user = new UserItem(jUserObj.getString("uid"), jUserObj.has("birthday")?jUserObj.getString("birthday"):""
                     , jUserObj.has("sex")?jUserObj.getString("sex"):"", jUserObj.getString("username"), photo
                     , jUserObj.has("signature")?jUserObj.getString("signature"):"", jUserObj.has("isFollow")?jUserObj.getBoolean("isFollow"):false, null, null);
+            
+            if (!jFeedItem.isNull("reference") && !jFeedItem.getString("reference").equals("[]")) {
+            	JSONObject ref = jFeedItem.getJSONArray("reference").getJSONObject(0);
+            	JSONObject u = ref.getJSONObject("user");
+            	reference = new FeedItem(
+            			Long.parseLong(ref.getString("feedid")),
+            			new UserItem(u.getString("uid"), u.getString("username"), u.getString("photo"), u.getString("signature"), u.getString("type")),
+            			ref.getString("text"),
+            			0, 
+            			0,
+            			0,
+            			ref.getString("publishtime"),
+            			Integer.parseInt(ref.getString("type")),
+            			null
+            			);
+            }
+            
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -96,6 +114,7 @@ public class NewsFeedItemsParser {
         feedItem.setCommentCount(commentCount);
         feedItem.setImgItems(imgItems);
         feedItem.setPraised(isPraised);
+        feedItem.setForward(reference);
         
         Log.d("praise num====>", praiseCount+"");
         Log.d("is praised====>", isPraised?"yes":"no");

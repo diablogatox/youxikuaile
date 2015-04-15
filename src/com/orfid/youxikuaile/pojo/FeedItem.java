@@ -17,6 +17,7 @@ public class FeedItem {
     private int type;
     private boolean isPraised;
     private List<FeedAttachmentImgItem> imgItems;
+    private FeedItem forward;
 
     public List<FeedAttachmentImgItem> getImgItems() {
         return imgItems;
@@ -39,6 +40,21 @@ public class FeedItem {
         this.publishTime = publishTime;
         this.type = type;
         this.imgItems = imgItems;
+    }
+    
+    public FeedItem(long feedId, UserItem user, String contentText, 
+    		int commentCount, int forwardCount, int praiseCount, String publishTime, 
+    		int type, List<FeedAttachmentImgItem> imgItems, FeedItem forward) {
+        this.feedId = feedId;
+        this.user = user;
+        this.contentText = contentText;
+        this.commentCount = commentCount;
+        this.forwardCount = forwardCount;
+        this.praiseCount = praiseCount;
+        this.publishTime = publishTime;
+        this.type = type;
+        this.imgItems = imgItems;
+        this.forward = forward;
     }
 
     public UserItem getUser() {
@@ -112,4 +128,13 @@ public class FeedItem {
 	public void setPraised(boolean isPraised) {
 		this.isPraised = isPraised;
 	}
+
+	public FeedItem getForward() {
+		return forward;
+	}
+
+	public void setForward(FeedItem forward) {
+		this.forward = forward;
+	}
+	
 }
