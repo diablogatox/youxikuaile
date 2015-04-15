@@ -428,32 +428,33 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			searchBtn.setOnClickListener(this);
 			backBtn.setOnClickListener(this);
 			searchOverlay.setOnClickListener(this);
-			userSearchLv.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-						UserItem item = listAdapter.getItem(position);
-						String type = item.getType();
-						String uid = item.getUid();
-						String username = item.getUsername();
-						String photo = item.getPhoto();
-						boolean isFollowed = item.isFollow();
-						Intent intent;
-		            	if (type.equals("0")) {
-		            		intent = new Intent(MainActivity.this, FriendHomeActivity.class);
-		            	} else {
-		            		intent = new Intent(MainActivity.this, PublicHomeActivity.class);
-		            	}
-		                intent.putExtra("uid", uid);
-		                intent.putExtra("username", username);
-		                intent.putExtra("photo", photo);
-		                intent.putExtra("isFollowed", isFollowed);
-		                
-		                startActivity(intent);
-				}
-				
-			});
+//			userSearchLv.setOnItemClickListener(new OnItemClickListener() {
+//
+//				@Override
+//				public void onItemClick(AdapterView<?> parent, View view,
+//						int position, long id) {
+//					Log.d("testddddd======>", "true");
+//						UserItem item = listAdapter.getItem(position);
+//						String type = item.getType();
+//						String uid = item.getUid();
+//						String username = item.getUsername();
+//						String photo = item.getPhoto();
+//						boolean isFollowed = item.isFollow();
+//						Intent intent;
+//		            	if (type.equals("0")) {
+//		            		intent = new Intent(MainActivity.this, FriendHomeActivity.class);
+//		            	} else {
+//		            		intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+//		            	}
+//		                intent.putExtra("uid", uid);
+//		                intent.putExtra("username", username);
+//		                intent.putExtra("photo", photo);
+//		                intent.putExtra("isFollowed", isFollowed);
+//		                
+//		                startActivity(intent);
+//				}
+//				
+//			});
 			
 			searchInput.addTextChangedListener(new TextWatcher() {
 				
@@ -1507,19 +1508,23 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			return items.get(position);
 		}
 
+		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
+		
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			
 			ViewHolder viewHolder = null;
-            if (convertView==null) {
+			if (lmap.get(position)==null) {
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(context).inflate(
                         resource, parent, false);
                 viewHolder.userPhotoIv = (ImageView) convertView.findViewById(R.id.user_photo_iv);
                 viewHolder.userNameTv = (TextView) convertView.findViewById(R.id.user_name_tv);
                 viewHolder.actionBtn = (Button) convertView.findViewById(R.id.action_btn);
+                lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
+            	convertView = lmap.get(position);
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             
@@ -1530,13 +1535,50 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             	viewHolder.actionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_fans2));
             	viewHolder.actionBtn.setText("加关注");
             	viewHolder.actionBtn.setClickable(true);
+            } else {
+            	viewHolder.actionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_fans1));
+            	viewHolder.actionBtn.setText("已关注");
+            	viewHolder.actionBtn.setClickable(false);
             }
             
             viewHolder.actionBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					Log.d("hahaha======>", "it works!" + position);
+					if (objBean.isFollow()) return;
+					getItem(position).setFollow(true);
+					listAdapter.notifyDataSetChanged();
+					try {
+						doFollowUserAction(objBean.getUid());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+            	
+            });
+            
+            viewHolder.userPhotoIv.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					UserItem item = objBean;
+					String type = item.getType();
+					String uid = item.getUid();
+					String username = item.getUsername();
+					String photo = item.getPhoto();
+					boolean isFollowed = item.isFollow();
+					Intent intent;
+	            	if (type.equals("0")) {
+	            		intent = new Intent(MainActivity.this, FriendHomeActivity.class);
+	            	} else {
+	            		intent = new Intent(MainActivity.this, PublicHomeActivity.class);
+	            	}
+	                intent.putExtra("uid", uid);
+	                intent.putExtra("username", username);
+	                intent.putExtra("photo", photo);
+	                intent.putExtra("isFollowed", isFollowed);
+	                
+	                startActivity(intent);
 				}
             	
             });
@@ -1705,5 +1747,29 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 		}
 		
 	}
+	
+	private void doFollowUserAction(String uid) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("followUid", uid);
+        HttpRestClient.post("follow/addFollow", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
 
 }
