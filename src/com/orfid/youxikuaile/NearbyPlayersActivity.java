@@ -200,6 +200,14 @@ public class NearbyPlayersActivity extends Activity implements OnClickListener {
             	viewHolder.userGeoInfoTv.setText(geoInfo);
             }
             if (objBean.getSignature() != null && !objBean.getSignature().equals("null")) viewHolder.userSignatureTv.setText(objBean.getSignature());
+            if (objBean.getSex() != null && !objBean.getSex().equals("null")) {
+            	if (objBean.getSex().equals("1")) {
+            		viewHolder.userNameTv.setCompoundDrawablesWithIntrinsicBounds( R.drawable.sex2, 0, 0, 0);
+            	} else if (objBean.getSex().equals("2")) {
+            		viewHolder.userNameTv.setCompoundDrawablesWithIntrinsicBounds( R.drawable.sex1, 0, 0, 0);
+            	}
+            }
+            
             return convertView;
 
 		}
