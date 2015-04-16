@@ -24,8 +24,8 @@ public class MyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         String message = getArguments().getString(EXTRA_MESSAGE);
         View v = inflater.inflate(R.layout.fragment_main, container, false);
-        TextView messageTextView = (TextView)v.findViewById(R.id.textView);
-        messageTextView.setText(message);
+//        TextView messageTextView = (TextView)v.findViewById(R.id.textView);
+//        messageTextView.setText(message);
         return v;
     }
 }

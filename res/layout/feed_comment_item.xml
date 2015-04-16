@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@drawable/bg_item" >
+	<com.orfid.youxikuaile.widget.CircleImageView
+		android:id="@+id/comment_user_iv"
+	    android:layout_width="50dp"
+	    android:layout_height="50dp"
+	    android:layout_gravity="top|center_vertical"
+	    app:border_color="@android:color/transparent"
+	    android:src="@drawable/no_portrait_circle" />
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="5dp"
+	    android:layout_gravity="top|center_vertical"
+	    android:orientation="vertical">
+	    <TextView
+	        android:id="@+id/comment_name_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:singleLine="true"
+	        android:ellipsize="end"
+	        android:textSize="16sp"
+	        android:textColor="@color/black"
+	        android:textStyle="bold" />
+	    <TextView
+	        android:id="@+id/comment_msg_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingTop="5dp"
+	        android:paddingBottom="5dp"
+	        android:alpha="0.7"
+	        android:textColor="@color/black" />
+	    <TextView
+	        android:id="@+id/comment_time_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content" />
+	</LinearLayout>
+</LinearLayout>

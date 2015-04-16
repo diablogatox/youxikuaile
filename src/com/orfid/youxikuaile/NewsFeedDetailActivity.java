@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,6 +72,7 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		Log.d("forward num======>", forwardNum+"");
 		Log.d("comment num======>", commentNum+"");
 		String photo = intent.getStringExtra("photo");
+//		Log.d("photo============>", photo);
 		String name = intent.getStringExtra("name");
 		String time = intent.getStringExtra("time");
 		String content = intent.getStringExtra("content");
@@ -121,6 +123,7 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
         pagertab.setViewPager(pager);
         pagertab.setScrollOffset(0);
         pagertab.setTextColorResource(R.color.grey);
+
 	}
 
 	private void setListener() {
@@ -181,8 +184,8 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 
     private List<Fragment> getFragments(){
         List<Fragment> fList = new ArrayList<Fragment>();
-        fList.add(MyFragment.newInstance("0 转发"));
-        fList.add(MyFragment.newInstance("0 评论"));
+        fList.add(CommonListFragment.newInstance(feedId, 0));
+        fList.add(CommonListFragment.newInstance(feedId, 1));
         return fList;
     }
 
