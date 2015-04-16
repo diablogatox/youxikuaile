@@ -65,8 +65,8 @@
 	                android:orientation="horizontal">
 	                <ImageView
 	                    android:id="@+id/photo"
-	                    android:layout_width="50dp"
-	                    android:layout_height="50dp"
+	                    android:layout_width="60dp"
+	                    android:layout_height="60dp"
 	                    android:background="@color/grey" />
 	                <LinearLayout
 	                    android:layout_width="match_parent"
@@ -79,25 +79,70 @@
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
 	                        android:paddingBottom="5dp"
-	                        android:textSize="14sp"
+	                        android:textSize="17sp"
 	                        android:textColor="@color/black" />
 	                    <TextView
 	                        android:id="@+id/time"
 	                        android:layout_width="match_parent"
 	                        android:layout_height="wrap_content"
 	                        android:singleLine="true"
-	                        android:textSize="12sp" />
+	                        android:textSize="14sp" />
 	                </LinearLayout>
 	            </LinearLayout>
 	            <TextView
 	                android:id="@+id/content"
 	                android:layout_width="match_parent"
 	                android:layout_height="wrap_content"
-	                android:paddingTop="5dp"
+	                android:paddingTop="10dp"
 	                android:maxLines="6"
 	                android:ellipsize="end"
 	                android:textColor="@color/black"
-	                android:textSize="15sp" />
+	                android:textSize="17sp" />
+	            <RelativeLayout
+					android:id="@+id/rl_gv_wrapper"
+					android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+					android:visibility="gone">
+					<com.orfid.youxikuaile.widget.MyGridView
+							android:id="@+id/gv_images"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:horizontalSpacing="2dp"
+							android:listSelector="@null"
+							android:numColumns="3"
+							android:stretchMode="columnWidth"
+							android:verticalSpacing="2dp" />
+				</RelativeLayout>
+	            <FrameLayout
+				    android:id="@+id/forward_area"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="18dp"
+					android:visibility="gone">
+					<LinearLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="80dp"
+					    android:padding="8dp"
+					    android:gravity="center_vertical"
+					    android:background="#f3f4f9"
+					    android:orientation="horizontal">
+					    <ImageView
+					        android:id="@+id/forward_icon"
+					        android:layout_width="60dp"
+					        android:layout_height="wrap_content"
+					        android:src="@drawable/news_repeat_pic" />
+					    <TextView
+					        android:id="@+id/forward_content"
+					        android:layout_width="0dp"
+					        android:layout_height="wrap_content"
+					        android:layout_weight="1"
+					        android:paddingLeft="5dp"
+					        android:ellipsize="end"
+					        android:maxLines="3"
+					        android:alpha="0.7"
+					        android:textColor="@color/black" />
+					</LinearLayout>
+				</FrameLayout>
 	        </LinearLayout>
 	        <View
 				android:layout_width="match_parent"
@@ -107,7 +152,8 @@
 	        <FrameLayout
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_margin="10dp"
+	            android:layout_marginTop="10dp"
+	            android:layout_marginBottom="10dp"
 	            android:background="@drawable/border"
 	            android:padding="1dp" >
 
@@ -213,12 +259,14 @@
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
 			android:layout_alignParentBottom="true"
-			android:background="@color/white"
-			android:padding="10dp">
+			android:background="@color/white">
 			<RelativeLayout
 			    android:id="@+id/forward_rl_vew"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
+				android:clickable="true"
+				android:background="@drawable/bg_item"
+				android:padding="10dp"
 				android:layout_weight="1">
 				<TextView
 				    android:id="@+id/forward_num_tv"
@@ -239,6 +287,9 @@
 			    	android:id="@+id/reply_rl_view"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
+					android:clickable="true"
+					android:background="@drawable/bg_item"
+					android:padding="10dp"
 					android:layout_weight="1">
 				<TextView
 				    	android:id="@+id/reply_num_tv"
@@ -258,6 +309,9 @@
 			<RelativeLayout
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
+					android:clickable="true"
+					android:background="@drawable/bg_item"
+					android:padding="10dp"
 					android:layout_weight="1">
 				<TextView
 						android:layout_width="wrap_content"

@@ -59,6 +59,7 @@ public class NewsFeedItemsParser {
         UserItem user = null;
         FeedItem reference = null;
         List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
+        List<FeedAttachmentImgItem> imgItems2 = new ArrayList<FeedAttachmentImgItem>();
         try {
             feedId = Long.parseLong(jFeedItem.getString("feedid"));
             contentText = jFeedItem.getString("text");
@@ -86,6 +87,14 @@ public class NewsFeedItemsParser {
             if (!jFeedItem.isNull("reference") && !jFeedItem.getString("reference").equals("[]")) {
             	JSONObject ref = jFeedItem.getJSONArray("reference").getJSONObject(0);
             	JSONObject u = ref.getJSONObject("user");
+            	if (!ref.isNull("files") && !ref.getString("files").equals("[]")) {
+                    JSONArray jImgItemsArr = ref.getJSONArray("files");
+                    for (int i=0; i<jImgItemsArr.length(); i++) {
+                        JSONObject jFile = jImgItemsArr.getJSONObject(i);
+                        Log.d("image url==========>", jFile.getString("url"));
+                        imgItems2.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+                    }
+                }
             	reference = new FeedItem(
             			Long.parseLong(ref.getString("feedid")),
             			new UserItem(u.getString("uid"), u.getString("username"), u.getString("photo"), u.getString("signature"), u.getString("type")),
@@ -95,7 +104,7 @@ public class NewsFeedItemsParser {
             			0,
             			ref.getString("publishtime"),
             			Integer.parseInt(ref.getString("type")),
-            			null
+            			imgItems2
             			);
             }
             

@@ -98,26 +98,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         newsFeedLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-//                new AlertDialog.Builder(NewsFeedActivity.this)
-//                        .setTitle("提示")
-//                        .setMessage("确定删除吗?")
-//                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Toast.makeText(NewsFeedActivity.this, "position====>"+position, Toast.LENGTH_SHORT).show();
-//                                Toast.makeText(NewsFeedActivity.this, "feedid====>"+id, Toast.LENGTH_SHORT).show();
-//                                feedItems.remove(position);
-//                                adapter.notifyDataSetChanged();
-//                                if (feedItems.size() <=0 ) emptyViewLl.setVisibility(View.VISIBLE);
-//                                try {
-//                                    doRemoveFeedAction(id);
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        })
-//                        .setNegativeButton("否", null)
-//                        .show();
+
             	FeedItem item = adapter.getItem(position);
             	Intent intent = new Intent(NewsFeedActivity.this, NewsFeedDetailActivity.class);
             	intent.putExtra("feedId", id);
@@ -128,6 +109,27 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             	intent.putExtra("forwardNum", item.getForwardCount());
             	intent.putExtra("commentNum", item.getCommentCount());
             	intent.putExtra("praiseNum", item.getPraiseCount());
+            	if (item.getImgItems() != null && item.getImgItems().size() > 0) {
+            		List<FeedAttachmentImgItem> imgItems = item.getImgItems();
+            		String imgs = "[";
+            		for (int i=0; i<imgItems.size(); i++) {
+            			FeedAttachmentImgItem imgItem = imgItems.get(i);
+            			imgs += "{\"id\":\"" + imgItem.getId() + "\",\"url\":\"" + imgItem.getUrl() + "\"}";
+            			if (i != imgItems.size() -1) imgs += ",";
+            		}
+            		imgs += "]";
+            		Log.d("imgs========>", imgs);
+            		intent.putExtra("imgs", imgs);
+            	}
+            	if (item.getForward() != null) {
+            		FeedItem forward = item.getForward();
+            		if (forward.getImgItems() != null && forward.getImgItems().size() > 0) {
+            			intent.putExtra("forwardHasImg", true);
+            			intent.putExtra("forwardIcon", forward.getImgItems().get(forward.getImgItems().size() - 1).getUrl());
+            		}
+            		intent.putExtra("hasForward", true);
+            		intent.putExtra("forwardContent", forward.getContentText());
+            	}
             	startActivity(intent);
             }
         });
@@ -404,15 +406,21 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 					FeedItem item = items.get(position);
 					long feedId = item.getFeedId();
 					String contentd = item.getContentText();
+					String photo = null;
 					if (item.getForward() != null) {
 						feedId = item.getForward().getFeedId();
 						contentd = item.getForward().getContentText();
 					}
-					Log.d("content text =====> ", contentd);
+					if (item.getImgItems() != null && item.getImgItems().size() > 0) {
+						FeedAttachmentImgItem imgItem = item.getImgItems().get(item.getImgItems().size() - 1);
+						photo = imgItem.getUrl();
+					}
+
 					Intent intent = new Intent(NewsFeedActivity.this, NewsFeedForwardActivity.class);
 					intent.putExtra("position", position);
 					intent.putExtra("feedId", feedId);
 					intent.putExtra("content", contentd);
+					intent.putExtra("photo", photo);
 					startActivityForResult(intent, FORWARD_ACTION);
 				}
             	
@@ -486,7 +494,13 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             
             if (objBean.getForward() != null) {
             	FeedItem forward = objBean.getForward();
-            	viewHolder.forwardContent.setText(forward.getContentText());
+            	if (forward.getImgItems() != null && forward.getImgItems().size() > 0) {
+            		FeedAttachmentImgItem imgItem = forward.getImgItems().get(forward.getImgItems().size() - 1);
+            		ImageLoader.getInstance().displayImage(imgItem.getUrl(), viewHolder.forwardIcon);
+            	}
+            	SpannableStringBuilder s = Utils.handlerFaceInContent(NewsFeedActivity.this, viewHolder.forwardContent,
+            			forward.getContentText());
+            	viewHolder.forwardContent.setText(s);
             	viewHolder.forwardArea.setVisibility(View.VISIBLE);
             }
 
