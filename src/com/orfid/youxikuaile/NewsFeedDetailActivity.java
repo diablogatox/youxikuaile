@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +35,8 @@ import com.orfid.youxikuaile.widget.PagerSlidingTabStrip;
 
 public class NewsFeedDetailActivity extends FragmentActivity implements OnClickListener {
 
+	private static final int FORWARD_ACTION = 0;
+	
 	private ViewPager pager;
     private PagerSlidingTabStrip pagertab;
     private MyPageAdapter pageAdapter;
@@ -46,10 +47,12 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
     private ImageView forwardIcon;
     private TextView forwardContent;
     private MyGridView imagesGv;
-    View rlGvWrapper;
+    View rlGvWrapper, forward_rl_view, reply_rl_view, praise_rl_view;
     
     private int forwardNum, commentNum;
     private long feedId;
+    private String content, ct, icon;
+    private boolean hasForward, forwardHasImg;
     private int wh;
     
     List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
@@ -69,20 +72,17 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		feedId = intent.getLongExtra("feedId", 0);
 		forwardNum = intent.getIntExtra("forwardNum", 0);
 		commentNum = intent.getIntExtra("commentNum", 0);
-		Log.d("forward num======>", forwardNum+"");
-		Log.d("comment num======>", commentNum+"");
 		String photo = intent.getStringExtra("photo");
-//		Log.d("photo============>", photo);
 		String name = intent.getStringExtra("name");
 		String time = intent.getStringExtra("time");
-		String content = intent.getStringExtra("content");
+		content = intent.getStringExtra("content");
 		String imgs = intent.getStringExtra("imgs");
 		int praiseCount = intent.getIntExtra("praiseNum", 0);
-		boolean hasForward = intent.getBooleanExtra("hasForward", false);
-		boolean forwardHasImg = intent.getBooleanExtra("forwardHasImg", false);
-		String ct = intent.getStringExtra("forwardContent");
-		String icon = intent.getStringExtra("forwardIcon");
-//		Log.d("received imgs=======>", imgs);
+		hasForward = intent.getBooleanExtra("hasForward", false);
+		forwardHasImg = intent.getBooleanExtra("forwardHasImg", false);
+		ct = intent.getStringExtra("forwardContent");
+		icon = intent.getStringExtra("forwardIcon");
+
 		if (imgs != null) {
 			rlGvWrapper.setVisibility(View.VISIBLE);
 			JSONArray jImgItemsArr = null;
@@ -128,7 +128,9 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 
 	private void setListener() {
 		backBtn.setOnClickListener(this);
-		
+		forward_rl_view.setOnClickListener(this);
+		reply_rl_view.setOnClickListener(this);
+		praise_rl_view.setOnClickListener(this);
 	}
 
 	private void init() {
@@ -145,6 +147,9 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
         forwardContent = (TextView) findViewById(R.id.forward_content);
         imagesGv = (MyGridView) findViewById(R.id.gv_images);
         rlGvWrapper = findViewById(R.id.rl_gv_wrapper);
+        forward_rl_view = findViewById(R.id.forward_rl_view);
+        reply_rl_view = findViewById(R.id.reply_rl_view);
+        praise_rl_view = findViewById(R.id.praise_rl_view);
         
         wh = (Utils.getScreenWidth(this)-Utils.Dp2Px(this, 99))/3;
 	}
@@ -194,6 +199,31 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		switch (v.getId()) {
 		case R.id.back_btn:
 			finish();
+			break;
+		case R.id.forward_rl_view:
+			if (hasForward) {
+				Intent intent = new Intent(NewsFeedDetailActivity.this, NewsFeedForwardActivity.class);
+				intent.putExtra("feedId", feedId);
+				intent.putExtra("content", ct);
+				intent.putExtra("photo", icon);
+				startActivityForResult(intent, FORWARD_ACTION);
+			} else {
+				String photo = null;
+				if (imgItems.size() > 0) {
+					photo = imgItems.get(imgItems.size() - 1).getUrl();
+				}
+				
+				Intent intent = new Intent(NewsFeedDetailActivity.this, NewsFeedForwardActivity.class);
+				intent.putExtra("feedId", feedId);
+				intent.putExtra("content", content);
+				intent.putExtra("photo", photo);
+				startActivityForResult(intent, FORWARD_ACTION);
+			}
+			
+			break;
+		case R.id.reply_rl_view:
+			break;
+		case R.id.praise_rl_view:
 			break;
 		}
 	}
@@ -277,4 +307,23 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 
     }
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case FORWARD_ACTION:
+			forwardNum += 1;
+			List<Fragment> fragments = getFragments();
+	        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
+	        pager.setAdapter(pageAdapter);
+	        pagertab.setViewPager(pager);
+	        pagertab.setScrollOffset(0);
+	        pagertab.setTextColorResource(R.color.grey);
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	
 }

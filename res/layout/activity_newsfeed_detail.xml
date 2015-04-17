@@ -261,7 +261,7 @@
 			android:layout_alignParentBottom="true"
 			android:background="@color/white">
 			<RelativeLayout
-			    android:id="@+id/forward_rl_vew"
+			    android:id="@+id/forward_rl_view"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:clickable="true"
@@ -307,6 +307,7 @@
 				android:layout_height="match_parent"
 				android:background="#ffe7e7e7" />
 			<RelativeLayout
+			    	android:id="@+id/praise_rl_view"
 					android:layout_width="0dp"
 					android:layout_height="wrap_content"
 					android:clickable="true"
