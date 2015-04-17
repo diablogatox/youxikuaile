@@ -1,5 +1,14 @@
 package com.orfid.youxikuaile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,8 +26,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -27,16 +48,6 @@ import com.orfid.youxikuaile.parser.NewsFeedItemsParser;
 import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
 import com.orfid.youxikuaile.pojo.FeedItem;
 import com.orfid.youxikuaile.widget.MyGridView;
-
-import de.greenrobot.event.EventBus;
-
-import org.apache.http.Header;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Administrator on 2015/3/3.
@@ -48,7 +59,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
     private SwipeRefreshLayout swipeContainer;
     private ImageButton backBtn, composeAddBtn;
     private ListView newsFeedLv;
-    private View headerView, emptyViewLl, editboxLlView;
+    private View emptyViewLl, editboxLlView, msgHintView;
     private ProgressBar pBar;
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
     private MyAdapter adapter;
@@ -57,9 +68,12 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
     private Button publishBtn;
     private EditText commentEt;
     private ImageView mImageView;
+    private ImageView msgIcon;
+    private TextView msgCount;
     private boolean isButtonSent = false;
     private long feedId;
     private int pos;
+    private int messageFeedCount = 0;
     private Handler handler = new Handler();
 
     @Override
@@ -68,6 +82,9 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_news_feed);
         init();
         try {
+        	if (messageFeedCount > 0) 
+        		doFetchMessageFeedAction();
+        	
             doFetchFeedListAction(false);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -75,10 +92,12 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
     }
 
     private void init() {
+    	
+    	messageFeedCount = getIntent().getIntExtra("feedCount", 0);
+    	
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         backBtn = (ImageButton) findViewById(R.id.btn_back);
         composeAddBtn = (ImageButton) findViewById(R.id.btn_compose_add);
-        headerView = getLayoutInflater().inflate(R.layout.unread_message, null);
         newsFeedLv = (ListView) findViewById(R.id.lv_news_feed);
         pBar = (ProgressBar) findViewById(R.id.progress_bar);
         loadingTv = (TextView) findViewById(R.id.tv_loading);
@@ -87,7 +106,11 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         commentEt = (EditText) findViewById(R.id.newsfeedpublish_et);
         editboxLlView = findViewById(R.id.editbox_ll_view);
         mImageView = (ImageView) findViewById(R.id.newsfeedpublish_img);
-
+        
+        msgHintView = findViewById(R.id.ll_header_view);
+        msgIcon = (ImageView) findViewById(R.id.last_msg_icon);
+        msgCount = (TextView)  findViewById(R.id.msg_count_num);
+        
         backBtn.setOnClickListener(this);
         composeAddBtn.setOnClickListener(this);
         publishBtn.setOnClickListener(this);
@@ -689,6 +712,61 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                     int status = response.getInt("status");
                     if (status == 1) { // success
                        
+                    } else if (status == 0) {
+                        Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
+    
+    private void doFetchMessageFeedAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("message/feed", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                       final String msgFeedData = response.getString("data");
+                       JSONArray jArr;
+                       try {
+                    	   jArr = response.getJSONArray("data");
+                    	   int length = jArr.length();
+                    	   String photo = null;
+                    	   if (length > 0) {
+                    		   JSONObject jObj = jArr.getJSONObject(length - 1);
+                    		   JSONObject jUser = jObj.getJSONObject("user");
+                    		   if (jUser.getString("photo") != null && 
+                    				   !jUser.getString("photo").equals("null")) {
+                    			   photo = jUser.getString("photo");
+                    		   }
+                    		   if (photo != null && !photo.equals("null"))
+                    			   ImageLoader.getInstance().displayImage(photo, msgIcon);
+                    		   msgCount.setText(length+"条新消息");
+                    		   msgHintView.setVisibility(View.VISIBLE);
+                    		   msgHintView.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(NewsFeedActivity.this, MessageFeedActivity.class);
+									intent.putExtra("msgFeedData", msgFeedData);
+									startActivity(intent);
+									msgHintView.setVisibility(View.GONE);
+								}
+                    			   
+                    		   });
+                    	   }
+                       } catch (Exception e) {
+                    	   e.printStackTrace();
+                       }
                     } else if (status == 0) {
                         Toast.makeText(NewsFeedActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

@@ -118,27 +118,30 @@
             android:name=".OfflineSitterPublishActivity"
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
-        <activity
-            android:name=".OnlineSitterSearchResultActivity">
+        <activity android:name=".OnlineSitterSearchResultActivity" >
+        </activity>
+        <activity android:name=".ChattingActivity" >
+        </activity>
+        <activity android:name=".ImageDetailsActivity" >
+        </activity>
+        <activity android:name=".VoiceStartActivity" >
         </activity>
         <activity
-            android:name=".ChattingActivity"></activity>
-        <activity
-            android:name=".ImageDetailsActivity"></activity>
-        <activity
-            android:name=".VoiceStartActivity"></activity>
-        <activity
             android:name=".SelectPicActivity"
-            android:theme="@style/MyDialogStyleBottom"></activity>
-        <activity
-            android:name=".SelectChatFriendsActivity"></activity>
+            android:theme="@style/MyDialogStyleBottom" >
+        </activity>
+        <activity android:name=".SelectChatFriendsActivity" >
+        </activity>
         <activity
             android:name=".WheelAreaPickerActivity"
             android:theme="@style/MyDialogStyleBottomNoFloating" >
         </activity>
         <activity
             android:name=".SearchCollegeActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".MessageFeedActivity">
         </activity>
     </application>
 

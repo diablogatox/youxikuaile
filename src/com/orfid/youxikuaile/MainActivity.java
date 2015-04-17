@@ -955,8 +955,10 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 
             break;
         case R.id.rl_feed:
-
-            startActivity(new Intent(this, NewsFeedActivity.class));
+        	Intent i = new Intent(this, NewsFeedActivity.class);
+        	i.putExtra("feedCount", !newFeedMsgCountBtn.getText().toString().equals("") ? 
+        			Integer.parseInt(newFeedMsgCountBtn.getText().toString()) : 0);
+            startActivity(i);
             newFeedMsgCountBtn.setText("");
         	newFeedMsgCountBtn.setVisibility(View.GONE);
         	latestFeedFl.setVisibility(View.GONE);

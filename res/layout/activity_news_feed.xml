@@ -46,6 +46,8 @@
 
 	</RelativeLayout>
 
+    <include layout="@layout/unread_message" />
+    
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
