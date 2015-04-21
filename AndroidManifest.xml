@@ -143,6 +143,11 @@
         <activity
             android:name=".MessageFeedActivity">
         </activity>
+        <activity
+            android:name=".NewsFeedReplyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|adjustResize" >
+        </activity>
     </application>
 
 </manifest>

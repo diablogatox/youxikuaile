@@ -1,8 +1,10 @@
 package com.orfid.youxikuaile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
 import com.orfid.youxikuaile.widget.MyGridView;
@@ -36,6 +41,8 @@ import com.orfid.youxikuaile.widget.PagerSlidingTabStrip;
 public class NewsFeedDetailActivity extends FragmentActivity implements OnClickListener {
 
 	private static final int FORWARD_ACTION = 0;
+	private static final int REPLY_ACTION = 1;
+	private static final int PRAISE_ACTION = 2;
 	
 	private ViewPager pager;
     private PagerSlidingTabStrip pagertab;
@@ -49,7 +56,7 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
     private MyGridView imagesGv;
     View rlGvWrapper, forward_rl_view, reply_rl_view, praise_rl_view;
     
-    private int forwardNum, commentNum;
+    private int forwardNum, commentNum, praiseCount;
     private long feedId;
     private String content, ct, icon;
     private boolean hasForward, forwardHasImg;
@@ -77,7 +84,7 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		String time = intent.getStringExtra("time");
 		content = intent.getStringExtra("content");
 		String imgs = intent.getStringExtra("imgs");
-		int praiseCount = intent.getIntExtra("praiseNum", 0);
+		praiseCount = intent.getIntExtra("praiseNum", 0);
 		hasForward = intent.getBooleanExtra("hasForward", false);
 		forwardHasImg = intent.getBooleanExtra("forwardHasImg", false);
 		ct = intent.getStringExtra("forwardContent");
@@ -219,11 +226,18 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 				intent.putExtra("photo", photo);
 				startActivityForResult(intent, FORWARD_ACTION);
 			}
-			
 			break;
 		case R.id.reply_rl_view:
+			Intent intent2 = new Intent(NewsFeedDetailActivity.this, NewsFeedReplyActivity.class);
+			intent2.putExtra("feedId", feedId);
+			startActivityForResult(intent2, REPLY_ACTION);
 			break;
 		case R.id.praise_rl_view:
+			try {
+				doPraiseFeedAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			break;
 		}
 	}
@@ -317,7 +331,16 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 	        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
 	        pager.setAdapter(pageAdapter);
 	        pagertab.setViewPager(pager);
-	        pagertab.setScrollOffset(0);
+//	        pagertab.setScrollOffset(0);
+	        pagertab.setTextColorResource(R.color.grey);
+			break;
+		case REPLY_ACTION:
+			commentNum += 1;
+			List<Fragment> fragments2 = getFragments();
+	        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments2);
+	        pager.setAdapter(pageAdapter);
+	        pagertab.setViewPager(pager);
+	        pager.setCurrentItem(1);
 	        pagertab.setTextColorResource(R.color.grey);
 			break;
 		default:
@@ -325,5 +348,31 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		}
 	}
 
+	private void doPraiseFeedAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", feedId);
+        HttpRestClient.post("feed/praise", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	praiseCount += 1;
+//                    	praiseNumTv.setText(praiseCount+" 赞");
+                    	Toast.makeText(NewsFeedDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    } else if (status == 0) {
+                        Toast.makeText(NewsFeedDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
 	
 }
