@@ -148,6 +148,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|adjustResize" >
         </activity>
+        <activity
+            android:name=".RechargeActivity">
+        </activity>
+        <activity
+            android:name=".GiftActivity">
+        </activity>
     </application>
 
 </manifest>

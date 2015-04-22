@@ -69,7 +69,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
 		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl, mineGamesRlView,
-		mineSittersRlView;
+		mineSittersRlView, mineRechargeRlView, mineGiftRlView, mineFeedRlView;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
@@ -824,6 +824,9 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             uidTv = (TextView) findViewById(R.id.uid_tv);
             mineGamesRlView = findViewById(R.id.mine_games_rl_view);
             mineSittersRlView = findViewById(R.id.mine_sitters_rl_view);
+            mineRechargeRlView = findViewById(R.id.mine_recharge_rl_view);
+            mineGiftRlView = findViewById(R.id.mine_gift_rl_view);
+            mineFeedRlView = findViewById(R.id.mine_feed_rl_view);
             
             final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
             final HashMap user = dbHandler.getUserDetails();
@@ -875,6 +878,31 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 				@Override
 				public void onClick(View v) {
 					startActivity(new Intent(MainActivity.this, SittersActivity.class));
+				}
+            	
+            });
+            mineRechargeRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, RechargeActivity.class));
+				}
+            	
+            });
+            mineGiftRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, GiftActivity.class));
+				}
+            	
+            });
+            mineFeedRlView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(MainActivity.this, NewsFeedActivity.class);
+					startActivity(intent);
 				}
             	
             });
