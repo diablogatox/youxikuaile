@@ -69,7 +69,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
 		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl, mineGamesRlView,
-		mineSittersRlView, mineRechargeRlView, mineGiftRlView, mineFeedRlView;
+		mineSittersRlView, mineRechargeRlView, mineGiftRlView, mineFeedRlView, gameLauncher;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
@@ -812,6 +812,17 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 
         } else if (index == 3) {
 
+        	gameLauncher = findViewById(R.id.game_laucher);
+        	
+        	gameLauncher.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, ScoreGameActivity.class));
+				}
+        		
+        	});
+        	
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
 
         } else if (index == 4) { // 我的

@@ -7,5 +7,6 @@
     <string name="no_games_yet">没有游戏</string>
     <string name="add_games_now">马上添加</string>
     <string name="no_players_yet">还没有玩家</string>
+    <string name="hayou_center_chongzhi_net_erro">网络异常，请重试！</string>
 
 </resources>

@@ -154,6 +154,13 @@
         <activity
             android:name=".GiftActivity">
         </activity>
+        <activity
+            android:name=".ScoreGameActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
+ 		</activity>
     </application>
 
 </manifest>

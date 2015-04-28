@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/global_bg_color"
     android:orientation="vertical" >
     
     <RelativeLayout 
@@ -18,5 +19,44 @@
 	      	android:text="更多"	
 			android:textColor="#ffffff" /> 
 	</RelativeLayout>
+	
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp">
+        <RelativeLayout
+            android:id="@+id/game_laucher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_item"
+            android:padding="10dp">
+	        <ImageView
+	            android:id="@+id/game_icon"
+	            android:layout_width="200dp"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:src="@drawable/jfgc" />
+	        <LinearLayout
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_toLeftOf="@id/game_icon"
+	            android:layout_centerVertical="true"
+	            android:orientation="vertical">
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:textSize="16sp"
+	                android:textStyle="bold"
+	                android:textColor="@color/black"
+	                android:paddingBottom="10dp"
+	                android:text="积分工厂" />
+	            <TextView
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:paddingRight="10dp"
+	                android:text="招员工帮您打工获得积分, 就可以兑换各种游戏稀有礼包" />
+	        </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>
