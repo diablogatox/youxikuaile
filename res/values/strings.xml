@@ -8,5 +8,7 @@
     <string name="add_games_now">马上添加</string>
     <string name="no_players_yet">还没有玩家</string>
     <string name="hayou_center_chongzhi_net_erro">网络异常，请重试！</string>
+    <string name="hayou_score_game_1_emplyee_top">雇佣好友</string>
+    <string name="hayou_score_game_1_recommend_top">推荐好友</string>
 
 </resources>

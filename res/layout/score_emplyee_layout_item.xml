@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/hayou_game_1_emolyee_item_layout"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/score_game_1_work_factroy_background"
+        android:padding="2px" >
+
+        <com.orfid.youxikuaile.widget.CircularImageView
+            android:id="@+id/hayou_game_1_emolyee_item_user_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/loding" />
+
+        <TextView
+            android:id="@+id/hayou_game_1_emolyee_item_user_name"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hayou_game_1_emolyee_item_user_icon"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="你好"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/hayou_game_1_emolyee_item_user_choice"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/check_gou_2"
+            android:gravity="center"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

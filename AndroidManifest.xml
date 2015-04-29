@@ -161,6 +161,16 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
  		</activity>
+ 		<activity
+            android:name=".EmplyeeActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:hardwareAccelerated="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity android:name=".SysNotifyActivity" >
+        </activity>
     </application>
 
 </manifest>

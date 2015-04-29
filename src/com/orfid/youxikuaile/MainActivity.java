@@ -68,14 +68,14 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
-		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl, mineGamesRlView,
+		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl, mineGamesRlView, sysnotifyRlView,
 		mineSittersRlView, mineRechargeRlView, mineGiftRlView, mineFeedRlView, gameLauncher;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv, userSearchLv, msgSessionLv;
 	private TextView nameTv, uidTv, emptyTv, hotEmptyTv, userSearchEmptyTv, titleTv;
-	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn;
+	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn, sysnotifyCountBtn;
 	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
     private Handler handler = new Handler();
@@ -762,7 +762,9 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			
             feedRlView = findViewById(R.id.rl_feed);
             newFansRlView = findViewById(R.id.rl_new_fans);
+            sysnotifyRlView = findViewById(R.id.sysnotify_rl_view);
             newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
+            sysnotifyCountBtn = (Button) findViewById(R.id.sysnotify_count_btn);
             newFeedMsgCountBtn = (Button) findViewById(R.id.newfeed_count_btn);
             mPbar = (ProgressBar) findViewById(R.id.progress_bar);
             latestFeedFl = findViewById(R.id.latest_feed_fl);
@@ -774,18 +776,20 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);
+            sysnotifyRlView.setOnClickListener(this);
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
             
             totalMsgCountBtn.setText("");
             totalMsgCountBtn.setVisibility(View.GONE);
      
-            String feedUnreadMsgCount = null, newFansUnreadMsgCount = null, unreadMsgCount;
+            String feedUnreadMsgCount = null, newFansUnreadMsgCount = null, unreadMsgCount, sysnotifyMsgCount;
 
             if (msgCountdata != null && msgCountdata.size() > 0) {
 				feedUnreadMsgCount = msgCountdata.get(1).toString();
 				newFansUnreadMsgCount = msgCountdata.get(2).toString();
 	            unreadMsgCount = msgCountdata.get(3).toString();
+	            sysnotifyMsgCount = msgCountdata.get(4).toString();
 	            
 	            if (!newFansUnreadMsgCount.equals("0")) {
 	            	newFansCountBtn.setText(newFansUnreadMsgCount);
@@ -794,6 +798,10 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	            if (!feedUnreadMsgCount.equals("0")) {
 	            	newFeedMsgCountBtn.setText(feedUnreadMsgCount);
 	            	newFeedMsgCountBtn.setVisibility(View.VISIBLE);
+	            }
+	            if (!sysnotifyMsgCount.equals("0")) {
+	            	sysnotifyCountBtn.setText(sysnotifyMsgCount);
+	            	sysnotifyCountBtn.setVisibility(View.VISIBLE);
 	            }
             }
             
@@ -1012,6 +1020,12 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
         	if (msgCountdata != null && msgCountdata.size() > 0) msgCountdata.set(2, "0");
 
             break;
+            
+        case R.id.sysnotify_rl_view:
+        	
+        	startActivity(new Intent(this, SysNotifyActivity.class));
+        	break;
+        	
 		}
 		
 	}

@@ -208,6 +208,50 @@
 		                android:clickable="false" />
 		        </RelativeLayout>
 		        
+		        <RelativeLayout
+				    android:id="@+id/sysnotify_rl_view"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_marginBottom="10dp"
+		            android:background="@drawable/bg_item"
+		            android:paddingLeft="18dp"
+		            android:paddingRight="18dp"
+		            android:paddingTop="10dp"
+		            android:paddingBottom="10dp">
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentLeft="true"
+		                android:drawableLeft="@drawable/icon_system_news"
+		                android:drawablePadding="5dp"
+		                android:layout_centerVertical="true"
+		                android:gravity="center"
+		                android:textColor="#000"
+		                android:textSize="18sp"
+		                android:text="系统消息" />
+		            
+		            <ImageView
+		                android:id="@+id/sysnotify_arrow_iv"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:layout_alignParentRight="true"
+		                android:layout_centerVertical="true"
+		                android:src="@drawable/icon_arrow_right_gray" />
+		            
+		            <Button
+		                android:id="@+id/sysnotify_count_btn"
+		                android:layout_width="25dp"
+		                android:layout_height="25dp"
+		                android:layout_toLeftOf="@id/sysnotify_arrow_iv"
+		                android:layout_centerVertical="true"
+		                android:layout_marginRight="10dp"
+		                android:background="@drawable/icon_news_red"
+		                android:padding="3dp"
+		                android:textColor="@color/white"
+		                android:visibility="gone"
+		                android:clickable="false" />
+		        </RelativeLayout>
+		        
 		        <ListView
 		            android:id="@+id/msg_session_lv"
 		            android:layout_width="match_parent"

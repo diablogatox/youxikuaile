@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/score_port_background"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/hayou_score_game_1_emplyee_friends_exit"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/score_back_button_selector" />
+
+    <Button
+        android:id="@+id/hayou_score_game_1_emplyee_friends_sure"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_above="@id/hayou_score_game_1_emplyee_friends_exit"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/sure_button_selector"
+        android:text="确 定"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/hayou_score_game_1_emplyee_friends_sure"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/score_dialog_background"
+        android:padding="6dp" >
+
+        <TextView
+            android:id="@+id/hayou_score_emplyee_dialog_top"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/score_dialog_top"
+            android:gravity="center"
+            android:padding="1dp"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/hayou_score_emplyee_dialog_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/score_dialog_bottom" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/hayou_score_emplyee_dialog_bottom"
+            android:layout_below="@id/hayou_score_emplyee_dialog_top" >
+
+            <RelativeLayout
+                android:id="@+id/hayou_score_emplyee_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:id="@+id/hayou_score_game_1_emplyee_button_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:id="@+id/hayou_score_game_1_emplyee_previous_button_relative"
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1" >
+
+                        <Button
+                            android:id="@+id/hayou_score_game_1_emplyee_previous_button"
+                            android:layout_width="90dp"
+                            android:layout_height="42dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/previous_page_button_selector" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="42dp"
+                        android:layout_weight="1" >
+
+                        <Button
+                            android:id="@+id/hayou_game_1_emplyee_rank_next_pagn"
+                            android:layout_width="90dp"
+                            android:layout_height="42dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/next_page_button_selector" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <GridView
+                    android:id="@+id/game_box_score_game_1_emplyee_grid_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_above="@id/hayou_score_game_1_emplyee_button_layout"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="5dp"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="5dp" >
+                </GridView>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

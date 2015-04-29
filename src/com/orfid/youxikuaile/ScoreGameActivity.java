@@ -13,6 +13,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -20,12 +22,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.orfid.youxikuaile.model.HttpRequstModel;
 import com.orfid.youxikuaile.pojo.DiceData;
+import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.pojo.RankUser;
 import com.orfid.youxikuaile.pojo.User;
 import com.orfid.youxikuaile.pojo.UserIcon;
@@ -108,7 +113,7 @@ public class ScoreGameActivity extends Activity {
 	private String staffID, fuid;
 	private TimerTask timerTask;
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
-	/*
+/*
 	private Handler scoreGameHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -348,7 +353,10 @@ public class ScoreGameActivity extends Activity {
 		}
 
 	};
-*/
+	*/
+	DatabaseHandler dbHandler;
+	HashMap user;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -363,9 +371,11 @@ public class ScoreGameActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
 		setContentView(R.layout.score_game_1);
+		dbHandler = MainApplication.getInstance().getDbHandler();
+	    user = dbHandler.getUserDetails();
 		initView();
-//		getUserData();
-//		addListener();
+		getUserData();
+		addListener();
 	}
 
 	private void initView() {
@@ -385,17 +395,16 @@ public class ScoreGameActivity extends Activity {
 		userIcon = (CircularImageView) findViewById(R.id.center_score_game_1_user_icon);
 		userName = (TextView) findViewById(R.id.center_score_game_1_user_name);
 		userScore = (TextView) findViewById(R.id.center_score_game_1_user_score_num);
-		userName.setText("lalala");
-//		if (ApplicationData.getInstance().getPhoto() != null) {
-//			if (!ApplicationData.getInstance().getPhoto().equals("")) {
-//				ImageLoader.getInstance().displayImage(
-//						ApplicationData.getInstance().getPhoto(), userIcon,
-//						options);
-//			}
-//		}
+		userName.setText(user.get("username").toString());
+		if (user.get("photo") != null) {
+			if (!user.get("photo").toString().equals("")) {
+				ImageLoader.getInstance().displayImage(
+						user.get("photo").toString(), userIcon);
+			}
+		}
 
 	}
-/*
+
 	private void addListener() {
 		// TODO Auto-generated method stub
 		employeeFriendsBtn.setOnClickListener(new OnClickListener() {
@@ -410,85 +419,85 @@ public class ScoreGameActivity extends Activity {
 
 			}
 		});
-		workFactoryBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				tag = 1;
-				getData();
-			}
-		});
-		employeeBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent ii = new Intent(ScoreGameActivity.this,
-						GameFriendRankActiviy.class);
-				ii.putExtra("tag", 1);
-				ScoreGameActivity.this.startActivity(ii);
-			}
-		});
-		friendsFactBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent ii = new Intent(ScoreGameActivity.this,
-						GameFriendRankActiviy.class);
-				ii.putExtra("tag", 0);
-				ScoreGameActivity.this.startActivity(ii);
-			}
-		});
-		reCommendBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent ii = new Intent(ScoreGameActivity.this,
-						EmplyeeActivity.class);
-				ii.putExtra("tag", 2);
-				ScoreGameActivity.this.startActivity(ii);
-			}
-		});
-		helpBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent ii = new Intent(ScoreGameActivity.this,
-						ScoreHelpActivity.class);
-				ScoreGameActivity.this.startActivity(ii);
-			}
-		});
-		oneClickBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				tag = 3;
-				getData();
-			}
-		});
-		exitBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				ScoreGameActivity.this.finish();
-			}
-		});
-		shareBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				getShareDialog();
-			}
-		});
+//		workFactoryBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				tag = 1;
+//				getData();
+//			}
+//		});
+//		employeeBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent ii = new Intent(ScoreGameActivity.this,
+//						GameFriendRankActiviy.class);
+//				ii.putExtra("tag", 1);
+//				ScoreGameActivity.this.startActivity(ii);
+//			}
+//		});
+//		friendsFactBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent ii = new Intent(ScoreGameActivity.this,
+//						GameFriendRankActiviy.class);
+//				ii.putExtra("tag", 0);
+//				ScoreGameActivity.this.startActivity(ii);
+//			}
+//		});
+//		reCommendBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent ii = new Intent(ScoreGameActivity.this,
+//						EmplyeeActivity.class);
+//				ii.putExtra("tag", 2);
+//				ScoreGameActivity.this.startActivity(ii);
+//			}
+//		});
+//		helpBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent ii = new Intent(ScoreGameActivity.this,
+//						ScoreHelpActivity.class);
+//				ScoreGameActivity.this.startActivity(ii);
+//			}
+//		});
+//		oneClickBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				tag = 3;
+//				getData();
+//			}
+//		});
+//		exitBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				ScoreGameActivity.this.finish();
+//			}
+//		});
+//		shareBtn.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				getShareDialog();
+//			}
+//		});
 	}
-
+/*
 	private void getDialog() {
 		if (builder != null) {
 			if (builder.isShowing()) {
@@ -610,19 +619,15 @@ public class ScoreGameActivity extends Activity {
 		}
 
 	}
-
+*/
 	private void getUserData() {
-		if (requstModel == null) {
-			requstModel = new HttpRequstModel();
+		try {
+			doGetAllInfoAction();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("token", ApplicationData.token));
-		params.add(new BasicNameValuePair("uid", ApplicationData.getInstance()
-				.getUid()));
-		requstModel.setRqquestHandler(ScoreGameActivity.this, scoreGameHandler,
-				params, 0, getAllInfoUrl);
 	}
-
+/*
 	private void chacked() {
 		if (isRun) {
 
@@ -901,4 +906,30 @@ public class ScoreGameActivity extends Activity {
 
 	}
 	*/
+	
+	private void doGetAllInfoAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("uid", user.get("uid").toString());
+        HttpRestClient.post("apps/jfgc", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                      
+                    } else if (status == 0) {
+                        Toast.makeText(ScoreGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+
+        });
+    }
 }
