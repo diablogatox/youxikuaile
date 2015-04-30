@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/score_port_background"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/score_dialog_background"
+        android:padding="6dp" >
+
+        <TextView
+            android:id="@+id/hayou_score_help_dialog_top"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/score_dialog_top"
+            android:gravity="center"
+            android:padding="1dp"
+            android:text="工厂帮助"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/hayou_score_help_dialog_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/score_dialog_bottom" />
+
+        <WebView
+            android:id="@+id/hayou_score_help_dialog_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/hayou_score_help_dialog_bottom"
+            android:layout_below="@id/hayou_score_help_dialog_top"
+            android:gravity="center|left"
+            android:padding="1dp"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/score_help_back_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/score_back_button_selector" />
+
+</LinearLayout>

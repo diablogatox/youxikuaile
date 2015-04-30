@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,31 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.orfid.youxikuaile.model.HttpRequstModel;
-import com.orfid.youxikuaile.parser.GameItemsParser;
-import com.orfid.youxikuaile.pojo.DiceData;
-import com.orfid.youxikuaile.pojo.GameItem;
-import com.orfid.youxikuaile.pojo.RankUser;
-import com.orfid.youxikuaile.pojo.User;
-import com.orfid.youxikuaile.pojo.UserIcon;
-import com.orfid.youxikuaile.widget.CircularImageView;
-import com.orfid.youxikuaile.widget.ScoreView;
-
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -63,6 +43,25 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.model.HttpRequstModel;
+import com.orfid.youxikuaile.pojo.DiceData;
+import com.orfid.youxikuaile.pojo.RankUser;
+import com.orfid.youxikuaile.pojo.User;
+import com.orfid.youxikuaile.pojo.UserIcon;
+import com.orfid.youxikuaile.widget.CircularImageView;
+import com.orfid.youxikuaile.widget.ScoreView;
+import com.tencent.connect.auth.QQAuth;
+import com.tencent.connect.share.QzoneShare;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 /**
  * 此activity,是个积分工厂游戏activity。 这个界面主要由自定义ScoreView 来绘制游戏区。
@@ -90,11 +89,9 @@ public class ScoreGameActivity extends Activity {
 	private List<RankUser> factoryList;
 	private User userData;
 	private boolean weixinChecked = false, qqChecked = false;
-	/*******************************/
-	/*public static QQAuth mQQAuth;
-	/*private IWXAPI api;
-	/*private Tencent mTencent;
-	/**************************/
+	public static QQAuth mQQAuth;
+//	private IWXAPI api;
+	private Tencent mTencent;
 	private boolean isRun = true;
 	private String APP_ID = "1101639686";
 	private String APP_KEY_SEC = "j5TYxVnijyFBM8mK";
@@ -467,38 +464,38 @@ public class ScoreGameActivity extends Activity {
 				ScoreGameActivity.this.startActivity(ii);
 			}
 		});
-//		friendsFactBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				Intent ii = new Intent(ScoreGameActivity.this,
-//						GameFriendRankActiviy.class);
-//				ii.putExtra("tag", 0);
-//				ScoreGameActivity.this.startActivity(ii);
-//			}
-//		});
-//		reCommendBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				Intent ii = new Intent(ScoreGameActivity.this,
-//						EmplyeeActivity.class);
-//				ii.putExtra("tag", 2);
-//				ScoreGameActivity.this.startActivity(ii);
-//			}
-//		});
-//		helpBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				Intent ii = new Intent(ScoreGameActivity.this,
-//						ScoreHelpActivity.class);
-//				ScoreGameActivity.this.startActivity(ii);
-//			}
-//		});
+		friendsFactBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent ii = new Intent(ScoreGameActivity.this,
+						GameFriendRankActiviy.class);
+				ii.putExtra("tag", 0);
+				ScoreGameActivity.this.startActivity(ii);
+			}
+		});
+		reCommendBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent ii = new Intent(ScoreGameActivity.this,
+						EmplyeeActivity.class);
+				ii.putExtra("tag", 2);
+				ScoreGameActivity.this.startActivity(ii);
+			}
+		});
+		helpBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent ii = new Intent(ScoreGameActivity.this,
+						ScoreHelpActivity.class);
+				ScoreGameActivity.this.startActivity(ii);
+			}
+		});
 //		oneClickBtn.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -508,22 +505,22 @@ public class ScoreGameActivity extends Activity {
 //				getData();
 //			}
 //		});
-//		exitBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				ScoreGameActivity.this.finish();
-//			}
-//		});
-//		shareBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				getShareDialog();
-//			}
-//		});
+		exitBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ScoreGameActivity.this.finish();
+			}
+		});
+		shareBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				getShareDialog();
+			}
+		});
 	}
 /*
 	private void getDialog() {
@@ -773,7 +770,7 @@ public class ScoreGameActivity extends Activity {
 		}
 
 	}
-
+*/
 	private void getShareDialog() {
 		builder = new Dialog(this, R.style.my_dialog);
 		builder.show();
@@ -842,24 +839,24 @@ public class ScoreGameActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (weixinChecked) {
-					WXWebpageObject webpage = new WXWebpageObject();
-					webpage.webpageUrl = "http://www.yxkuaile.com/share/wx_jfgc.html";
-					WXMediaMessage msg = new WXMediaMessage(webpage);
-					msg.title = getResources().getString(
-							R.string.share_title_txt_game_score);
-					// msg.description =
-					// getResources().getString(R.string.share_title_txt_game_score);
-					Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-							R.drawable.x152);
-					Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 90, 90,
-							true);
-					msg.thumbData = BitmapUtil.bmpToByteArray(thumbBmp, true);
-					SendMessageToWX.Req req = new SendMessageToWX.Req();
-					req.transaction = String.valueOf(System.currentTimeMillis());
-					req.message = msg;
-					req.scene = SendMessageToWX.Req.WXSceneTimeline;
-					api.sendReq(req);
-					builder.dismiss();
+//					WXWebpageObject webpage = new WXWebpageObject();
+//					webpage.webpageUrl = "http://www.yxkuaile.com/share/wx_jfgc.html";
+//					WXMediaMessage msg = new WXMediaMessage(webpage);
+//					msg.title = getResources().getString(
+//							R.string.share_title_txt_game_score);
+//					// msg.description =
+//					// getResources().getString(R.string.share_title_txt_game_score);
+//					Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+//							R.drawable.x152);
+//					Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 90, 90,
+//							true);
+//					msg.thumbData = BitmapUtil.bmpToByteArray(thumbBmp, true);
+//					SendMessageToWX.Req req = new SendMessageToWX.Req();
+//					req.transaction = String.valueOf(System.currentTimeMillis());
+//					req.message = msg;
+//					req.scene = SendMessageToWX.Req.WXSceneTimeline;
+//					api.sendReq(req);
+//					builder.dismiss();
 				} else if (qqChecked) {
 					mQQAuth = QQAuth.createInstance(APP_ID,
 							getApplicationContext());
@@ -907,19 +904,19 @@ public class ScoreGameActivity extends Activity {
 		}
 
 		@Override
-		public void onError(UiError e) {
-			// Util.toastMessage(IndexActivity.this, "onError: " +
-			// e.errorDetail);
-			// Util.dismissDialog();
+		public void onCancel() {
+			// TODO Auto-generated method stub
+			
 		}
 
 		@Override
-		public void onCancel() {
-			// Util.toastMessage(IndexActivity.this, "onCancel: ");
-			// Util.dismissDialog();
+		public void onError(UiError arg0) {
+			// TODO Auto-generated method stub
+			
 		}
-	}
 
+	}
+/*
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

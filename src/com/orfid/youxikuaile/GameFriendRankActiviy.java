@@ -348,7 +348,7 @@ public class GameFriendRankActiviy extends Activity {
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
         params.put("type", tag);
-        HttpRestClient.post("jfgc/sortlist", params, new JsonHttpResponseHandler() {
+        HttpRestClient.post("apps/jfgc/sortlist", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Log.d("response====(jfgc/sortlist)==>", response.toString());

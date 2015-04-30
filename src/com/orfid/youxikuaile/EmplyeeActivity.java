@@ -301,10 +301,18 @@ public class EmplyeeActivity extends Activity implements ListItemClickHelp {
 //					params, 1, recommendUrl);
 //		}
 		
-		try {
-			doFetchFriendEmplyeeAction();
-		} catch (JSONException e) {
-			e.printStackTrace();
+		if (tag == 1) {
+			try {
+				doFetchFriendEmplyeeAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		} else if (tag == 2) {
+			try {
+				doFetchFriendEmplyeeAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -381,6 +389,46 @@ public class EmplyeeActivity extends Activity implements ListItemClickHelp {
 	}
 	
 	private void doFetchFriendEmplyeeAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("uid", user.get("uid").toString());
+        HttpRestClient.post("apps/jfgc/recommendUsers", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	JSONObject data= response.getJSONObject("data");
+                    	JSONArray array = data.getJSONArray("items");
+                    	Type listType = new TypeToken<List<GameUser>>() {
+						}.getType();
+						Gson gson = new Gson();
+						gameUserList = gson.fromJson(array.toString(),
+								listType);
+//						lastPage = response.getBoolean("lastPage");
+
+						if (gameUserList != null) {
+							if (gameUserList.size() > 0) {
+
+								setData();
+							}
+						}
+                    } else if (status == 0) {
+                        Toast.makeText(EmplyeeActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+
+        });
+    }
+	
+	private void doFetchRecommendEmplyeeAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();

@@ -15,5 +15,8 @@
     <string name="hayou_score_game_1_rank_friends_top">好友积分排行</string>
     <string name="hayou_score_game_1_rank_emplyee_top">员工积分排行</string>
     <string name="ha_score_game_2_lastpage_true">已经是最后一页</string>
+    <string name="ha_user_info_area_cancel">取消</string>
+    <string name="ha_user_info_area_positive">确定</string>
+    <string name="share_title_txt_game_score">快来我的积分工厂一起赚取积分吧！</string>
 
 </resources>
