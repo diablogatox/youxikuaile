@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="10dp">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_toLeftOf="@+id/action_panel">
+	    <!-- 用户头像 -->
+	    <ImageView
+	        android:id="@+id/user_photo_iv"
+	        android:layout_width="50dp"
+	        android:layout_height="50dp"
+			android:src="@drawable/system_pic" />
+	    
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="5dp"
+	        android:orientation="vertical">
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textColor="@color/black"
+	            android:text="系统消息"
+	            android:textSize="15sp" />
+	        <TextView
+	            android:id="@+id/sysnotify_msg"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:textColor="@color/grey"
+	            android:singleLine="true"
+	            android:paddingTop="5dp" />
+	    </LinearLayout>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/action_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal">
+        <Button
+	        android:id="@+id/btn_deny"
+	        android:layout_width="50dp"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="end"
+	        android:background="@drawable/btn_fans1"
+	        android:textSize="12sp"
+	        android:focusable="false"
+	        android:textColor="@color/white"
+	        android:layout_marginRight="5dp"
+	        android:text="拒绝" />
+        <Button
+	        android:id="@+id/btn_accept"
+	        android:layout_width="50dp"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="end"
+	        android:background="@drawable/btn_fans2"
+	        android:textSize="12sp"
+	        android:focusable="false"
+	        android:textColor="@color/white"
+	        android:text="同意" />
+    </LinearLayout>
+    <Button
+	    android:id="@+id/btn_processed"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:visibility="gone"
+	    android:layout_gravity="end"
+	    android:focusable="false"
+	    android:clickable="false"
+	    android:background="@drawable/btn_fans2"
+	    android:textColor="@color/white"
+	    android:text="已同意" />
+
+</RelativeLayout>

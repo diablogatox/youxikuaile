@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,13 +14,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.http.Header;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -29,6 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.orfid.youxikuaile.model.HttpRequstModel;
+import com.orfid.youxikuaile.parser.GameItemsParser;
 import com.orfid.youxikuaile.pojo.DiceData;
 import com.orfid.youxikuaile.pojo.GameItem;
 import com.orfid.youxikuaile.pojo.RankUser;
@@ -113,6 +112,32 @@ public class ScoreGameActivity extends Activity {
 	private String staffID, fuid;
 	private TimerTask timerTask;
 	private ExecutorService executorService = Executors.newFixedThreadPool(10);
+	
+	private Handler scoreGameHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 11:
+
+				if (gameInfoIcon.size() == userIconList.size()) {
+					Log.i("info", "gameInfoIcon.size() == userIconList.size()");
+					mView.setData(gameInfoIcon, userIconList);
+					timer = new Timer();
+					timerTask = new TimerTask() {
+
+						@Override
+						public void run() {
+//							getUserData();
+						}
+					};
+					timer.schedule(timerTask, 12000);
+				}
+				break;
+			}
+		}
+
+	};
 /*
 	private Handler scoreGameHandler = new Handler() {
 		@Override
@@ -419,26 +444,29 @@ public class ScoreGameActivity extends Activity {
 
 			}
 		});
-//		workFactoryBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				tag = 1;
-//				getData();
-//			}
-//		});
-//		employeeBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				Intent ii = new Intent(ScoreGameActivity.this,
-//						GameFriendRankActiviy.class);
-//				ii.putExtra("tag", 1);
-//				ScoreGameActivity.this.startActivity(ii);
-//			}
-//		});
+		workFactoryBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				tag = 1;
+				try {
+					doFetchWorkfactoryAction();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		employeeBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent ii = new Intent(ScoreGameActivity.this,
+						GameFriendRankActiviy.class);
+				ii.putExtra("tag", 1);
+				ScoreGameActivity.this.startActivity(ii);
+			}
+		});
 //		friendsFactBtn.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -920,7 +948,30 @@ public class ScoreGameActivity extends Activity {
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-                      
+                    	JSONObject data = response.getJSONObject("data");
+                    	JSONArray jArr = data.getJSONArray("staff");
+                    	if (jArr != null && jArr.length() > 0) {
+                    		Type listType = new TypeToken<List<UserIcon>>() {
+							}.getType();
+	                    	Gson gson = new Gson();
+							userIconList = gson.fromJson(jArr.toString(),
+									listType);
+							Log.d("userIconList=========>", userIconList.size()+"");
+//							ddData = gson.fromJson(jt.toString(),
+//									DiceData.class);
+//							if (ddData != null) {
+//								userScore.setText(String.valueOf(ddData
+//										.getIntegral()));
+//							}
+	
+							if (userIconList != null) {
+								if (userIconList.size() > 0) {
+									chacked();
+	
+								}
+							}
+                    	}
+                   
                     } else if (status == 0) {
                         Toast.makeText(ScoreGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
@@ -932,4 +983,186 @@ public class ScoreGameActivity extends Activity {
 
         });
     }
+	
+	
+	private void chacked() {
+		if (isRun) {
+
+			Iterator iter = gameInfoIcon.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				String key = (String) entry.getKey();
+
+				for (int i = 0; i < userIconList.size(); i++) {
+					if (userIconList.get(i).getId().equals(key)) {
+						break;
+					} else if (i == userIconList.size() - 1
+							&& !userIconList.get(i).getId().equals(key)) {
+						gameInfoIcon.remove(key);
+					}
+				}
+
+			}
+
+			for (final UserIcon item : userIconList) {
+				if (!gameInfoIcon.containsKey(item.getId())) {
+					executorService.submit(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								Bitmap bm;
+								String path = item.getPhoto();
+								if (path != null) {
+									if (!path.equals("")) {
+										path = path.replaceAll("files",
+												"files/50");
+										URL url = new URL(path);
+										HttpURLConnection conn = (HttpURLConnection) url
+												.openConnection();
+										conn.setDoInput(true);
+										conn.connect();
+										InputStream inputStream = conn
+												.getInputStream();
+										bm = BitmapFactory
+												.decodeStream(inputStream);
+									} else {
+										Drawable d = getResources()
+												.getDrawable(
+														R.drawable.forum_icon);
+
+										BitmapDrawable bd = (BitmapDrawable) d;
+
+										bm = bd.getBitmap();
+									}
+								} else {
+									Drawable d = getResources().getDrawable(
+											R.drawable.forum_icon);
+
+									BitmapDrawable bd = (BitmapDrawable) d;
+
+									bm = bd.getBitmap();
+								}
+
+								gameInfoIcon.put(item.getId(), bm);
+								bm = null;
+								scoreGameHandler.sendEmptyMessage(11);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+			}
+		}
+	}
+	
+	
+	private void doFetchWorkfactoryAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("apps/jfgc/workfactory", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response===(apps/jfgc/workfactory)====>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	JSONArray jsArray = response.getJSONArray("data");
+						Type listType = new TypeToken<List<RankUser>>() {
+						}.getType();
+						Gson gson = new Gson();
+						factoryList = gson.fromJson(jsArray.toString(),
+								listType);
+						if (factoryList != null) {
+							if (factoryList.size() > 0) {
+								getDialog();
+							} else {
+								Toast.makeText(
+										getApplicationContext(),
+										getResources().getString(
+												R.string.ha_factory_no_sit),
+										Toast.LENGTH_SHORT).show();
+							}
+						}
+                    } else if (status == 0) {
+                        Toast.makeText(ScoreGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+	
+	private void getDialog() {
+		if (builder != null) {
+			if (builder.isShowing()) {
+				builder.dismiss();
+			}
+		}
+		builder = new Dialog(ScoreGameActivity.this, R.style.my_dialog);
+		builder.show();
+		View contentview = LayoutInflater.from(ScoreGameActivity.this).inflate(
+				R.layout.score_game_1_work_factory_dialog, null);
+		builder.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+		builder.getWindow().setContentView(
+				R.layout.score_game_1_work_factory_dialog);
+		builder.getWindow().setGravity(Gravity.CENTER);
+		layout = (LinearLayout) builder
+				.findViewById(R.id.hayou_score_2_content_layout);
+		if (factoryList.size() > 0) {
+			layout.removeAllViews();
+			int n = factoryList.size();
+			if (n > 5) {
+				n = 5;
+			}
+
+			for (int i = 0; i < n; i++) {
+				View content = LayoutInflater.from(ScoreGameActivity.this)
+						.inflate(R.layout.score_game_1_work_factory_item, null);
+				CircularImageView icon = (CircularImageView) content
+						.findViewById(R.id.hayou_game_1_work_factroy_user_icon_1);
+				TextView userName = (TextView) content
+						.findViewById(R.id.hayou_game_1_work_factroy_user_score_name_1);
+				TextView scoreNum = (TextView) content
+						.findViewById(R.id.hayou_game_1_work_factroy_user_score_num_1);
+				Button exitButton = (Button) content
+						.findViewById(R.id.hayou_game_1_work_factroy_score_exit_1);
+				ImageLoader.getInstance().displayImage(
+						Constants.BASE_URL+factoryList.get(i).getPhoto(), icon);
+				scoreNum.setText("" + factoryList.get(i).getIntegral());
+				userName.setText(factoryList.get(i).getUsername());
+				final int j = i;
+				exitButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						tag = 2;
+						fuid = factoryList.get(j).getUid();
+						factoryIndex = j;
+						try {
+							doFetchWorkfactoryAction();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						builder.dismiss();
+					}
+				});
+				layout.addView(content);
+
+			}
+
+		} else {
+			layout.removeAllViews();
+			View content = loadInflater.inflate(
+					R.layout.score_game_1_work_factory_text_item, null);
+			layout.addView(content);
+		}
+	}
+	
+	
+	
 }

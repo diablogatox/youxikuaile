@@ -10,5 +10,10 @@
     <string name="hayou_center_chongzhi_net_erro">网络异常，请重试！</string>
     <string name="hayou_score_game_1_emplyee_top">雇佣好友</string>
     <string name="hayou_score_game_1_recommend_top">推荐好友</string>
+    <string name="ha_factory_no_sit">您目前不在好友工厂工作</string>
+    <string name="hayou_score_game_text_work_factory">你暂时没有工作工厂</string>
+    <string name="hayou_score_game_1_rank_friends_top">好友积分排行</string>
+    <string name="hayou_score_game_1_rank_emplyee_top">员工积分排行</string>
+    <string name="ha_score_game_2_lastpage_true">已经是最后一页</string>
 
 </resources>

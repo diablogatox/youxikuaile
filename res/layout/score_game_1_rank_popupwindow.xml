@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="56dp" >
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="56dp"
+        android:background="#666666"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/score_game_1_score_pass_button"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/pass_button_selector"
+            android:gravity="center" />
+
+        <RelativeLayout
+            android:id="@+id/score_game_1_score_pass_pb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

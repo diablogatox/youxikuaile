@@ -31,5 +31,15 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    
+	<style name="my_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/egame_fillbox</item>
+    </style>
+    
+	<style name="anim_menu_rightbar">
+        <item name="android:windowEnterAnimation">@anim/admin_menu_rightbar_in</item>
+        <item name="android:windowExitAnimation">@anim/admin_rightbar_out</item>
+    </style>
 
 </resources>

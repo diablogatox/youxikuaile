@@ -4,5 +4,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="hayou_image_border_width">3dp</dimen>
+    <dimen name="hayou_user_score_popupweindow_item_x">1.5dp</dimen>
+    <dimen name="hayou_score_game_1popupwindow">56dp</dimen>
 
 </resources>

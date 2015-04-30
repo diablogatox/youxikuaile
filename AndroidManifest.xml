@@ -171,6 +171,13 @@
         </activity>
         <activity android:name=".SysNotifyActivity" >
         </activity>
+        <activity
+            android:name=".GameFriendRankActiviy"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>
