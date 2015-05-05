@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <TextView
+    android:layout_height="match_parent" >
+
+    <ProgressBar
+        android:id="@+id/chongzhi_recorde_layout_progress1"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test tab2" />
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
 
-</LinearLayout>
+    <ListView
+        android:id="@+id/hayou_chongzhi_recorde_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/center_mygift_item_background"
+        android:divider="#b0CCCCCC"
+        android:dividerHeight="1dp"
+        android:padding="1px"
+        android:visibility="gone" >
+    </ListView>
+    
+    <TextView
+        android:id="@+id/no_data_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:text="没有记录" />
+
+</RelativeLayout>

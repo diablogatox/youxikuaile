@@ -2,57 +2,98 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp"
+    android:background="@color/white"
     android:orientation="vertical" >
-    
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="25dp" >
+
         <TextView
+            android:id="@+id/user_recharge_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="账户余额 : " />
+            android:textColor="#333333"
+            android:text="账户余额: "
+            android:textSize="15sp" />
+
         <TextView
+            android:id="@+id/score_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="210个金币" />
+            android:layout_marginLeft="4dp"
+            android:textColor="#333333"
+            android:textSize="15sp" />
     </LinearLayout>
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/hayou_center_chongzhi_what"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/hayou_center_chongzhi_change_tip"
+        android:textColor="#333333"
+        android:textSize="15sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal" >
+
         <TextView
+            android:id="@+id/hayou_center_chongzhi_sail_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="兑换比例 : " />
+            android:layout_height="36dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/hayou_center_chongzhi_online_chong"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
         <TextView
+            android:id="@+id/hayou_center_chongzhi_jinbi_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="1金币 = 10个积分" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="我要充" />
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="金币"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
         <EditText
-            android:layout_width="wrap_content"
-            android:minWidth="150dp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="金币" />
-    </LinearLayout>
+            android:id="@+id/hayou_chongzhi_money_num"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@id/hayou_center_chongzhi_jinbi_text"
+            android:layout_toRightOf="@id/hayou_center_chongzhi_sail_text"
+            android:background="@drawable/eidt_background"
+            android:inputType="number"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/hayou_chongzhi_ok_button"
+        android:layout_width="120dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/queding_button_selector"
+        android:text="确定"
+        android:textColor="#ffffff"
+        android:textSize="16sp" />
 
 </LinearLayout>

@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
  */
 public class ViewPagerIndicatorView extends LinearLayout implements OnIndicateChangeListener, OnPageChangeListener {
 	private TabIndicatorView tabIndicatorView;
-	private ViewPager viewPager;
+	public ViewPager viewPager;
 
 	public ViewPagerIndicatorView(Context context, AttributeSet attrs) {
 		super(context, attrs);

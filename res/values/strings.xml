@@ -18,5 +18,16 @@
     <string name="ha_user_info_area_cancel">取消</string>
     <string name="ha_user_info_area_positive">确定</string>
     <string name="share_title_txt_game_score">快来我的积分工厂一起赚取积分吧！</string>
+    <string name="hayou_center_chongzhi_online_tip">兑换比率：￥1人民币 = 10个金币</string>
+    <string name="hayou_center_chongzhi_online_chong">我要充</string>
+    <string name="hayou_center_chongzhi_online_text">元人民币</string>
+    <string name="hayou_center_chongzhi_online_tips">哈游戏金币是哈游戏网站的交易虚拟货币，可以用来：</string>
+    <string name="hayou_center_chongzhi_online_tips_1">1.参与商家或者哈多网站的抽奖活动，赢取各种大奖</string>
+    <string name="hayou_center_chongzhi_change_tip">兑换比率：￥1金币 = 10个积分</string>
+    <string name="number_error">数字填写不合法</string>
+    <string name="remote_call_failed">Failure calling remote service</string>
+    <string name="hayou_center_remote_call_alipay_tips">购买金币</string>
+    <string name="hayou_center_remote_call_alipay_body_top">在哈游交易平台购买了</string>
+    <string name="hayou_center_remote_call_alipay_body_bottom">个金币</string>
 
 </resources>
