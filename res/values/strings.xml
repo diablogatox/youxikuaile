@@ -29,5 +29,16 @@
     <string name="hayou_center_remote_call_alipay_tips">购买金币</string>
     <string name="hayou_center_remote_call_alipay_body_top">在哈游交易平台购买了</string>
     <string name="hayou_center_remote_call_alipay_body_bottom">个金币</string>
+     <string name="hayou_center_chongzhi_change_one">恭喜您，已成功兑换</string>
+     <string name="hayou_center_chongzhi_online_two">个积分</string>
+     <string name="hayou_center_chongzhi_title">充值</string>
+     <string name="hayou_center_chongzhi_online">在线充值</string>
+     <string name="hayou_center_chongzhi_recorde">充值记录</string>
+     <string name="hayou_center_chongzhi_online_gold_left">账户金币余额:</string>
+     <string name="hayou_center_mygift_sail_price_jinbi">金币</string>
+     <string name="hayou_center_chongzhi_online_integral_left">账户积分余额:</string>
+     <string name="hayou_center_guanzhu_create_group_name">分组名称:</string>
+     <string name="hayou_center_guanzhu_create_group">创建分组</string>
+     <string name="exchange_score">兑换积分</string>
 
 </resources>

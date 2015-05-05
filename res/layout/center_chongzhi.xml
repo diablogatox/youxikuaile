@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f2f3"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="45dp"
+	    android:background="#ffb400"
+	    android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/alipay_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_back"
+            android:paddingLeft="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/hayou_center_chongzhi_title"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/hayou_chongzhi_online_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/background_tab_line2"
+            android:text="@string/hayou_center_chongzhi_online"
+            android:textColor="#3399ff"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/line_chongzhi" />
+	<!--
+        <Button
+            android:id="@+id/hayou_chongzhi_vip_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/center_chongzhi_1"
+            android:text="@string/hayou_score_chongzhi_vip"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+        -->
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/line_chongzhi" />
+
+        <Button
+            android:id="@+id/hayou_chongzhi_recorde_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/center_chongzhi_1"
+            android:text="@string/hayou_center_chongzhi_recorde"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/line_chongzhi" />
+
+        <Button
+            android:id="@+id/hayou_chongzhi_change_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/center_chongzhi_1"
+            android:text="@string/exchange_score"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hayou_chongzhi_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</LinearLayout>

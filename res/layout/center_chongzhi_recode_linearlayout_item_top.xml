@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <TextView
+      
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="#5C5C5C"
+        android:text="充值时间"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#b0CCCCCC" />
+
+    <TextView
+       
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="支付宝交易号"
+        android:textColor="#5C5C5C"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#b0CCCCCC" />
+
+    <TextView
+      
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_weight="1"
+        android:gravity="center"
+         android:text="金币数量"
+        android:textColor="#5C5C5C"
+        android:textSize="15sp" />
+
+</LinearLayout>

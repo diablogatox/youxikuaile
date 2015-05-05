@@ -1,6 +1,8 @@
 package com.orfid.youxikuaile;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
+
 import com.alipay.android.app.sdk.AliPay;
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 
 public class OnlinePay {
 	private final String returnUrl = Constants.BASE_URL + "useraccount/recharge";
+	final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+    HashMap user = dbHandler.getUserDetails();
 
 	public void payMoney(final Context context, String money,
 			final Handler onLineHandler, String no) {
@@ -52,7 +56,7 @@ public class OnlinePay {
 		sb.append(Keys.DEFAULT_PARTNER);
 		sb.append("\"&out_trade_no=\"");
 		sb.append(String.valueOf(number) + "-"
-				+ 5);
+				+ user.get("uid").toString());
 		sb.append("\"&subject=\"");
 		sb.append(context.getResources().getString(
 				R.string.hayou_center_remote_call_alipay_tips));

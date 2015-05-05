@@ -191,6 +191,14 @@
             android:name="com.alipay.android.app.sdk.WapPayActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".RechageActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:hardwareAccelerated="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
 </manifest>

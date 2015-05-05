@@ -904,7 +904,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 
 				@Override
 				public void onClick(View v) {
-					startActivity(new Intent(MainActivity.this, RechargeActivity.class));
+					startActivity(new Intent(MainActivity.this, RechageActivity.class));
 				}
             	
             });
