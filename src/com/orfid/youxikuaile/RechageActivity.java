@@ -113,7 +113,7 @@ public class RechageActivity extends Activity implements OnClickListener {
 				if (f.equals("true") && n.equals("9000")) {
 					// 回调地址
 					// getData();
-					czHandler.sendEmptyMessageDelayed(6, 500);
+//					czHandler.sendEmptyMessageDelayed(6, 500);
 
 				}
 				break;
