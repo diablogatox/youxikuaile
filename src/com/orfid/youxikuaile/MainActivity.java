@@ -63,18 +63,19 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	public static MainActivity instance = null;
 	private ViewPager mTabPager;
 	private ImageView mTab1, mTab2, mTab3, mTab4, mTab5;
-	private ImageView userPicture, mPhotoIv;
+	private ImageView userPicture, mPhotoIv, feedItemFileIv;
 	private int currIndex = 0;
 	private EditText searchInput;
 	private ImageButton searchBtn, addBtn, backBtn, nearbyPlayersBtn, nearbyOrganizationsBtn, nearbySittersBtn;
 	private View view, titleBar, edittextBottomLine, searchOverlay, settingBtnView, userInfoTv, 
 		feedRlView, newFansRlView, myFollowListRlView, fansListRl, latestFeedFl, mineGamesRlView, sysnotifyRlView,
-		mineSittersRlView, mineRechargeRlView, mineGiftRlView, mineFeedRlView, gameLauncher;
+		mineSittersRlView, mineRechargeRlView, mineGiftRlView, mineFeedRlView, gameLauncher, feedItemLl;
 	private ArrayList<View> views = new ArrayList<View>();
 	private InputMethodManager imm;
 	private TitlePopup titlePopup;
 	private ListView hotRecommendLv, followedPublicLv, userSearchLv, msgSessionLv;
-	private TextView nameTv, uidTv, emptyTv, hotEmptyTv, userSearchEmptyTv, titleTv;
+	private TextView nameTv, uidTv, emptyTv, hotEmptyTv, userSearchEmptyTv, titleTv, goldNumTv, scoreNumTv,
+		followNumTv, fansNumTv, feedItemTextTv, sitterDescTv;
 	private Button newFansCountBtn, totalMsgCountBtn, newFeedMsgCountBtn, sysnotifyCountBtn;
 	private ProgressBar mPbar;
 	private List<String> msgCountdata = new ArrayList<String>();
@@ -846,6 +847,11 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             mineRechargeRlView = findViewById(R.id.mine_recharge_rl_view);
             mineGiftRlView = findViewById(R.id.mine_gift_rl_view);
             mineFeedRlView = findViewById(R.id.mine_feed_rl_view);
+            goldNumTv = (TextView) findViewById(R.id.gold_num_tv);
+            scoreNumTv = (TextView) findViewById(R.id.score_num_tv);
+            followNumTv = (TextView) findViewById(R.id.follow_num_tv);
+            fansNumTv = (TextView) findViewById(R.id.fans_num_tv);
+            sitterDescTv = (TextView) findViewById(R.id.sitter_desc_tv);
             
             final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
             final HashMap user = dbHandler.getUserDetails();
@@ -856,6 +862,15 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             if (username != null) nameTv.setText(username);
             uidTv.setText(uid);
             
+            try {
+            	// 获取用户金币和积分
+				doFetchUserAccountAction();
+				// 获取用户首页信息
+				doFetchUserInfoAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
             settingBtnView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1823,6 +1838,111 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                     e.printStackTrace();
                 }
             }
+
+        });
+    }
+	
+	private void doFetchUserAccountAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("useraccount", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	JSONObject data = response.getJSONObject("data");
+                    	goldNumTv.setText(data.getString("gold"));
+                    	scoreNumTv.setText(data.getString("score"));
+//                    	score = data.getString("score");
+//                    	gold = data.getString("gold");
+//                    	
+//                    	runOnUiThread(new Runnable() {
+//                    	    @Override
+//                    	    public void run() {
+//                    	    	czOnline.performClick();
+//                    	    }
+//                    	});
+                    	
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+	
+	private void doFetchUserInfoAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+//        params.put("uid", uid);
+        HttpRestClient.post("home", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	JSONObject data = response.getJSONObject("data");
+                    	JSONObject user = data.getJSONObject("user");
+                    	fansNumTv.setText(user.getString("fans"));
+                    	followNumTv.setText(user.getString("follow"));
+                    	feedItemLl = findViewById(R.id.feed_item_ll);
+                    	feedItemTextTv = (TextView) findViewById(R.id.feed_item_text_tv);
+                    	feedItemFileIv = (ImageView) findViewById(R.id.feed_item_file_iv);
+
+                    	if (!data.isNull("feed")) {
+                    		JSONObject jFeed = data.getJSONObject("feed");
+                    		if (jFeed.has("files")) {
+                    			if (!jFeed.isNull("files") && !jFeed.getString("files").equals("[]")) {
+                    				JSONArray files = jFeed.getJSONArray("files");
+                    				JSONObject jObj = files.getJSONObject(0);
+                    				String url = jObj.getString("url");
+                    				ImageLoader.getInstance().displayImage(url, feedItemFileIv);
+                    			}
+                    		}
+                    		String text = jFeed.getString("text");
+                    		feedItemTextTv.setText(text);
+                    		feedItemLl.setVisibility(View.VISIBLE);
+                    	}
+                    	if (!data.isNull("peiwan")) {
+                    		JSONObject jSitter = data.getJSONObject("peiwan");
+                    		sitterDescTv.setText(jSitter.getString("desc"));
+                    	}
+//                    	if (!data.isNull("games")) {
+//                    		JSONArray games = data.getJSONArray("games");
+//                    		JSONObject jObj = games.getJSONObject(0);
+//                    		String img = jObj.isNull("img")?null:jObj.getString("img");
+//                    		String name = jObj.getString("name");
+//                    		if (img != null) ImageLoader.getInstance().displayImage(img, gameItemIconIv);
+//                    		gameItemNameTv.setText(name);
+//                    		gameItemLl.setVisibility(View.VISIBLE);
+//                    	}
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+//			@Override
+//			public void onFinish() {
+//
+//			}
+//
+//			@Override
+//			public void onStart() {
+//
+//			}
+            
 
         });
     }
