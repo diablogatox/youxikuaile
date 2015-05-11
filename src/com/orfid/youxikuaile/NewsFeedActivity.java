@@ -73,7 +73,9 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
     private boolean isButtonSent = false;
     private long feedId;
     private int pos;
+    private String uid = null;
     private int messageFeedCount = 0;
+    private TextView titleText;
     private Handler handler = new Handler();
 
     @Override
@@ -105,6 +107,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         publishBtn = (Button) findViewById(R.id.btn_publish);
         commentEt = (EditText) findViewById(R.id.newsfeedpublish_et);
         editboxLlView = findViewById(R.id.editbox_ll_view);
+        titleText = (TextView) findViewById(R.id.tv_title);
         mImageView = (ImageView) findViewById(R.id.newsfeedpublish_img);
         
         msgHintView = findViewById(R.id.ll_header_view);
@@ -265,6 +268,21 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 //        Bundle data = intent.getExtras();
 //        List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
 //        new FeedItem(0, new UserItem(), "lalalla", );
+        
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        
+        boolean isPublicAccount = getIntent().getBooleanExtra("isPublicAccount", false);
+        uid = getIntent().getStringExtra("uid");
+        if (isPublicAccount) {
+        	titleText.setText("公共号动态");
+        }
+        if (!uid.equals(user.get("uid").toString())) {
+        	composeAddBtn.setVisibility(View.GONE);
+        }
+        
+        
+        
     }
 
     @Override
@@ -626,6 +644,8 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
+        if (uid != null)
+        	params.put("uid", uid);
 //        params.put("page", 1);
         HttpRestClient.post("feed", params, new JsonHttpResponseHandler() {
             @Override

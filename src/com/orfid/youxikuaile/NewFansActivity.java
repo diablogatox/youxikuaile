@@ -8,29 +8,29 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.orfid.youxikuaile.parser.FansItemsParser;
-import com.orfid.youxikuaile.parser.FollowItemsParser;
-import com.orfid.youxikuaile.pojo.UserItem;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.orfid.youxikuaile.parser.FansItemsParser;
+import com.orfid.youxikuaile.pojo.UserItem;
 
 public class NewFansActivity extends Activity implements OnClickListener {
 
@@ -94,7 +94,7 @@ public class NewFansActivity extends Activity implements OnClickListener {
                         FansItemsParser parser = new FansItemsParser(true);
                         fansItems = parser.parse(response);
                         Log.d("fansItems count=====>", fansItems.size()+"");
-                        adapter = new MyAdapter(NewFansActivity.this, R.layout.fans_item, fansItems);
+                        adapter = new MyAdapter();
                         mListView.setAdapter(adapter);
 //                        if (feedItems.size() <= 0) {
 //                            emptyViewLl.setVisibility(View.VISIBLE);
@@ -122,70 +122,121 @@ public class NewFansActivity extends Activity implements OnClickListener {
         });
     }
 	
-	private class MyAdapter extends ArrayAdapter<UserItem> {
+	private class MyAdapter extends BaseAdapter {
 		
-		private Context context;
-		private List<UserItem> items;
-		private int resource;
-		private UserItem objBean;
-
-		public MyAdapter(Context context, int resource, List<UserItem> items) {
-			super(context, resource, items);
-			this.context = context;
-			this.items = items;
-			this.resource = resource;
-		}
-
-		@Override
-		public int getCount() {
-			return items == null ? 0 : items.size();
-		}
-
-		@Override
-		public UserItem getItem(int position) {
-			return items.get(position);
-		}
 		
-		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
-
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			
-			ViewHolder viewHolder = null;
-            if (lmap.get(position)==null) {
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(context).inflate(
-                        resource, parent, false);
-                viewHolder.userPhotoIv = (ImageView) convertView.findViewById(R.id.user_photo_iv);
-                viewHolder.userNameTv = (TextView) convertView.findViewById(R.id.user_name_tv);
-                viewHolder.actionBtn = (Button) convertView.findViewById(R.id.action_btn);
-                lmap.put(position, convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                convertView = lmap.get(position);
-                viewHolder = (ViewHolder) convertView.getTag();
+        public int getCount() {
+//            return fansItems.size();
+            return fansItems == null ? 0 : fansItems.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+        	ViewHolder holder = null;
+
+//            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.fans_item, parent, false);
+
+                holder = new ViewHolder();
+                
+                holder.userPhotoIv = (ImageView) convertView.findViewById(R.id.user_photo_iv);
+                holder.userNameTv = (TextView) convertView.findViewById(R.id.user_name_tv);
+                holder.actionBtn = (Button) convertView.findViewById(R.id.action_btn);
+
+//                holder.actionBtn.setOnClickListener(mBuyButtonClickListener);
+
+                convertView.setTag(holder);
+//            } else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
+            
+            final UserItem item = fansItems.get(position);
+            
+            if (item.getPhoto() != null && !item.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(item.getPhoto(), holder.userPhotoIv);
+            if (item.getUsername() != null) holder.userNameTv.setText(item.getUsername());
+            if (item.isFollow() == false) {
+            	holder.actionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_fans2));
+            	holder.actionBtn.setText("加关注");
+            	holder.actionBtn.setClickable(true);
+//            	holder.actionBtn.setOnClickListener(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						Log.d("ddddd======>", item.getUid());
+//					}
+//            		
+//            	});
             }
             
-            objBean = items.get(position);
-            if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
-            if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
-            if (objBean.isFollow() == false) {
-            	viewHolder.actionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_fans2));
-            	viewHolder.actionBtn.setText("加关注");
-            	viewHolder.actionBtn.setClickable(true);
-            }
-            
+            holder.actionBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Log.d("ddddd======>", item.getUid());
+					if (!item.isFollow()) {
+						item.setFollow(true);
+						notifyDataSetChanged();
+						try {
+							doFollowUserAction(item.getUid());
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					} else {
+						Log.d("already followed======>", "followed");
+					}
+				}
+        		
+        	});
+
             return convertView;
 
 		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 		
-		public class ViewHolder {
+		private  class ViewHolder {
 			ImageView userPhotoIv;
 			TextView userNameTv;
 			Button actionBtn;
 		}
 		
 	}
+		
+	private void doFollowUserAction(String uid) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("followUid", uid);
+        HttpRestClient.post("follow/addFollow", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	Toast.makeText(NewFansActivity.this, "关注成功", Toast.LENGTH_SHORT).show();
+                    } else if (status == 0) {
+                        Toast.makeText(NewFansActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
 
     
 }

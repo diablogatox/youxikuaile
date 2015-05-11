@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:clickable="true"
     android:background="@drawable/bg_item"
+    android:descendantFocusability="blocksDescendants"  
     android:padding="10dp">
     
     <!-- 用户头像 -->

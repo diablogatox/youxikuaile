@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -329,7 +330,9 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
                     			}
                     		}
                     		String text = jFeed.getString("text");
-                    		feedItemTextTv.setText(text);
+                    		SpannableStringBuilder s = Utils.handlerFaceInContent(FriendHomeActivity.this, feedItemTextTv,
+                        			text);
+                    		feedItemTextTv.setText(s);
                     		feedItemLl.setVisibility(View.VISIBLE);
                     	}
                     	if (!data.isNull("peiwan")) {

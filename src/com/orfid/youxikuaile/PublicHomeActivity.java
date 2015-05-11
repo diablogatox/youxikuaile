@@ -32,7 +32,7 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
     private TextView uidTv, publicName, followActionHintTv, distanceInfoTv, 
     		fansCountTv, descTv, feedItemTextTv, activityContentTv;
     private ImageButton backBtn;
-    private View followBtnView, feedItemLl, chatBtnView;
+    private View followBtnView, feedItemLl, chatBtnView, rl_edit_age;
     private boolean isFollowed;
 
     @Override
@@ -67,10 +67,12 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
         feedItemFileIv = (ImageView) findViewById(R.id.feed_item_file_iv);
         feedItemTextTv = (TextView) findViewById(R.id.feed_item_text_tv);
         chatBtnView = findViewById(R.id.btn_chat);
+        rl_edit_age = findViewById(R.id.rl_edit_age);
 
         backBtn.setOnClickListener(this);
         followBtnView.setOnClickListener(this);
         chatBtnView.setOnClickListener(this);
+        rl_edit_age.setOnClickListener(this);
 
         uidTv.setText(uid);
         if (username != null && !username.equals("null")) publicName.setText(username);
@@ -129,6 +131,14 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
             	Intent i = new Intent(PublicHomeActivity.this, ChattingActivity.class);
             	i.putExtra("uid", uid);
             	startActivity(i);
+            	break;
+            	
+            case R.id.rl_edit_age:
+//            	Intent intent = new Intent(this, NewsFeedActivity.class);
+//            	intent.putExtra("isPublicAccount", true);
+//            	intent.putExtra("uid", uid);
+//            	startActivity(intent);
+//            	finish();
             	break;
         }
     }
