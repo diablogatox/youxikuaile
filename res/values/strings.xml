@@ -40,5 +40,29 @@
      <string name="hayou_center_guanzhu_create_group_name">分组名称:</string>
      <string name="hayou_center_guanzhu_create_group">创建分组</string>
      <string name="exchange_score">兑换积分</string>
+     <string name="orders_for_the_arrest_edit">编辑通缉令</string>
+     <string name="ha_you_tizi_share">分享</string>
+     <string name="arrast_user_name_hint">5个字以内</string>
+     <string name="ha_user_info_sex_male">男</string>
+     <string name="arrast_user_info_job_hint">弹药师</string>
+     <string name="arrast_info_hint">70个字以内</string>
+     <string name="arrast_user_address_hint">25个字以内</string>
+     <string name="arrast_name_null">姓名不能为空</string>
+    <string name="arrast_sex_null">性别不能为空</string>
+    <string name="arrast_job_null">职业不能为空</string>
+    <string name="arrast_error_null">罪行描述不能为空</string>
+    <string name="arrast_postname_null">发布者不能为空</string>
+    <string name="arrast_address_null">所在地不能为空</string>
+    <string name="arrast_icon_null">请设置头像</string>
+    <string name="arrast_name_error">姓名不能超过15个字节，一个中文3个字节</string>
+    <string name="arrast_sex_error">性别不能超过3个字节，一个中文3个字节</string>
+    <string name="arrast_job_error">职业不能超过18个字节，一个中文3个字节</string>
+    <string name="arrast_error_error">罪行不能超过210个字节，一个中文3个字节</string>
+    <string name="arrast_postname_error">发布者不能超过15个字节，一个中文3个字节</string>
+    <string name="arrast_address_error">所在地不能超过75个字节，一个中文3个字节</string>
+    <string name="orders_for_the_arrest">通缉令</string>
+    <string name="hayou_center_guanzhu_selected_group_save">保存</string>
+    <string name="msg_pic_no_exit">图片文件不存在，请保存图片</string>
+    <string name="share_title_txt">快来一起玩转盘，赢取任意游戏充值啦！</string>
 
 </resources>

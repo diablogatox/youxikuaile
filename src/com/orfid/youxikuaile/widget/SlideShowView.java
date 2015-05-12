@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
@@ -14,6 +15,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
+import com.orfid.youxikuaile.ArrastActivity;
 import com.orfid.youxikuaile.R;
 
 public class SlideShowView extends FrameLayout {
@@ -132,9 +135,22 @@ public class SlideShowView extends FrameLayout {
         }
 
         @Override
-        public Object instantiateItem(View container, int position) {
+        public Object instantiateItem(View container, final int position) {
         	ImageView imageView = imageViewsList.get(position);
+        	imageView.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					Log.d("position======>", position+"");
+					Log.d("clicked======>", "true");
+					if (position == 0) {
+						
+					} else if (position == 1) {
+						context.startActivity(new Intent(context, ArrastActivity.class));
+					}
+				}
+        		
+        	});
         	imageView.setBackgroundResource((Integer) imageView.getTag());
         	
             ((ViewPager)container).addView(imageViewsList.get(position));
