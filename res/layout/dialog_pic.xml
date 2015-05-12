@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dialog_pic_camera"
+        android:layout_width="280dp"
+        android:layout_height="48dp"
+        android:background="@drawable/dialog_pic_button_selector"
+        android:clickable="true"
+        android:gravity="left|center"
+        android:paddingLeft="10dp"
+        android:text="相机"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="280dp"
+        android:layout_height="1.5px"
+        android:background="#dedede" />
+
+    <TextView
+        android:id="@+id/dialog_pic_pic"
+        android:layout_width="280dp"
+        android:layout_height="48dp"
+        android:background="@drawable/dialog_pic_button_selector"
+        android:clickable="true"
+        android:gravity="left|center"
+        android:paddingLeft="10dp"
+        android:text="图库"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
