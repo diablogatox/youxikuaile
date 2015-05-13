@@ -84,6 +84,7 @@ public class MyGamesActivity extends Activity implements OnClickListener {
 			Intent intent = new Intent(this, AddGameActivity.class);
 			intent.putExtra("games", games);
 			startActivity(intent);
+			finish();
 			break;
 		}
 	}

@@ -42,8 +42,10 @@ public class AddGameActivity extends Activity implements OnClickListener {
 	private ImageButton backBtn;
 	private Button saveGameBtn;
 	private ProgressDialog pDialog;
+	private TextView chooseGame;
 	List<GameItem> gameItems = new ArrayList<GameItem>();
 	List<GameItem> newAddedGames = new ArrayList<GameItem>();
+	private static final int CHOOSE_GAME = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class AddGameActivity extends Activity implements OnClickListener {
 		backBtn.setOnClickListener(this);
 		gameAddConfirmBtn.setOnClickListener(this);
 		saveGameBtn.setOnClickListener(this);
+		chooseGame.setOnClickListener(this);
 	}
 
 	private void initView() {
@@ -66,6 +69,7 @@ public class AddGameActivity extends Activity implements OnClickListener {
 		backBtn = (ImageButton) findViewById(R.id.back_btn);
 		gameAddConfirmBtn = (Button) findViewById(R.id.btn_add_games_sure);
 		saveGameBtn = (Button) findViewById(R.id.save_game_btn);
+		chooseGame = (TextView) findViewById(R.id.choose_game);
 	}
 
 	private void obtainData() {
@@ -229,9 +233,35 @@ public class AddGameActivity extends Activity implements OnClickListener {
 
 			}
 			break;
+			
+		case R.id.choose_game:
+			Intent intent = new Intent(this, GamesPickerActivity.class);
+			startActivityForResult(intent, CHOOSE_GAME);
+			break;
+			
 		}
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case CHOOSE_GAME:
+			String gameId = data.getStringExtra("gameId");
+			String gameName = data.getStringExtra("gameName");
+			gameItems.add(new GameItem(gameId, gameName, null));
+			newAddedGames.add(new GameItem(gameId, gameName, null));
+			adapter.notifyDataSetChanged();
+			gamesGv.smoothScrollToPosition(gameItems.size() - 1);
+			gameInput.setText("");
+			saveGameBtn.setEnabled(true);
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+		
+	}
+
 	private void doAddGameAction(final int index, GameItem item) throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
@@ -249,6 +279,9 @@ public class AddGameActivity extends Activity implements OnClickListener {
                     	   newAddedGames.clear();
 	           				pDialog.dismiss();
 	           				Toast.makeText(AddGameActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+	           				Intent intent = new Intent(AddGameActivity.this, MyGamesActivity.class);
+	           				startActivity(intent);
+	           				finish();
                        }
                     } else if (status == 0) {
                         Toast.makeText(AddGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();

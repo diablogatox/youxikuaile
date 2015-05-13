@@ -134,10 +134,10 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
             	break;
             	
             case R.id.rl_edit_age:
-//            	Intent intent = new Intent(this, NewsFeedActivity.class);
-//            	intent.putExtra("isPublicAccount", true);
-//            	intent.putExtra("uid", uid);
-//            	startActivity(intent);
+            	Intent intent = new Intent(this, NewsFeedActivity.class);
+            	intent.putExtra("isPublicAccount", true);
+            	intent.putExtra("uid", uid);
+            	startActivity(intent);
 //            	finish();
             	break;
         }

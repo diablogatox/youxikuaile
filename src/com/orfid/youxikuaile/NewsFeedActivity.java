@@ -277,7 +277,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
         if (isPublicAccount) {
         	titleText.setText("公共号动态");
         }
-        if (!uid.equals(user.get("uid").toString())) {
+        if (uid !=null && !uid.equals(user.get("uid").toString())) {
         	composeAddBtn.setVisibility(View.GONE);
         }
         

@@ -65,6 +65,7 @@
 	                android:textColor="@color/black"
 	                android:text="游戏" />
 	            <TextView
+	                android:id="@+id/choose_game"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_alignParentRight="true"

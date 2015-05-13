@@ -76,6 +76,7 @@ public class NewsFeedReplyActivity extends Activity implements View.OnClickListe
     	
     	Intent intent = getIntent();
     	feedId = intent.getLongExtra("feedId", 0);
+    	Log.d("feedId======>", feedId+"");
     	
         backBtn = (ImageButton) findViewById(R.id.btn_back);
         contentEt = (EditText) findViewById(R.id.et_content);
@@ -136,10 +137,11 @@ public class NewsFeedReplyActivity extends Activity implements View.OnClickListe
                     Toast.makeText(NewsFeedReplyActivity.this, "内容不能为空", Toast.LENGTH_SHORT)
                             .show();
                 } else {
+                	Log.d("entered=======>", "true");
                     try {
                         doFeedReplyAction();
-//                        setResult(RESULT_OK, null);// TODO
-//                        finish();
+                        setResult(RESULT_OK, null);// TODO
+                        finish();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

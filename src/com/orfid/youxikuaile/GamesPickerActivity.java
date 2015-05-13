@@ -113,8 +113,12 @@ public class GamesPickerActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.tv_ok:
             	String gameId = ids.get(currentIndex);
+            	String gameName = names.get(currentIndex);
             	Log.d("gameId======>", gameId);
-				setResult(RESULT_OK, new Intent().putExtra("gameId", gameId));
+            	Intent intent = new Intent();
+            	intent.putExtra("gameName", gameName);
+            	intent.putExtra("gameId", gameId);
+				setResult(RESULT_OK, intent);
 				finish();
 				overridePendingTransition(0, 0);
                 break;
