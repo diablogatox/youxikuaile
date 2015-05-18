@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
+import com.orfid.youxikuaile.AdverThreeActivity;
 import com.orfid.youxikuaile.ArrastActivity;
 import com.orfid.youxikuaile.R;
 
@@ -144,7 +145,7 @@ public class SlideShowView extends FrameLayout {
 					Log.d("position======>", position+"");
 					Log.d("clicked======>", "true");
 					if (position == 0) {
-						
+						context.startActivity(new Intent(context, AdverThreeActivity.class));
 					} else if (position == 1) {
 						context.startActivity(new Intent(context, ArrastActivity.class));
 					}

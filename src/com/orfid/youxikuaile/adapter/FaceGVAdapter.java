@@ -1,5 +1,8 @@
 package com.orfid.youxikuaile.adapter;
 
+import java.io.IOException;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +12,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.orfid.youxikuaile.R;
 
-import java.io.IOException;
-import java.util.List;
+import com.orfid.youxikuaile.R;
 
 public class FaceGVAdapter extends BaseAdapter {
 	private static final String TAG = "FaceGVAdapter";

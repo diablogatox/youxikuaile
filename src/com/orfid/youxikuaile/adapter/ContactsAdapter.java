@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.orfid.youxikuaile.Constants;
 import com.orfid.youxikuaile.PinyinUtils;
 import com.orfid.youxikuaile.R;
 

@@ -64,5 +64,12 @@
     <string name="hayou_center_guanzhu_selected_group_save">保存</string>
     <string name="msg_pic_no_exit">图片文件不存在，请保存图片</string>
     <string name="share_title_txt">快来一起玩转盘，赢取任意游戏充值啦！</string>
+    <string name="game_box_activity_three_title">招聘信息</string>
+    <string name="game_box_category_0">发表了说说</string>
+    <string name="game_box_category_1">转发了说说</string>
+    <string name="game_box_category_2">发表了评论</string>
+    <string name="game_box_slider_list_bottom_notify">已经到底，没有数据了</string>
+      <string name="game_box_lodding_data">数据加载中...</string>
+       <string name="game_box_activity_three_title_detailitem">招聘详情</string>
 
 </resources>

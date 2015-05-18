@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f2f3"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/hayou_center_advertthree_title_detailitem"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/hatitle" >
+
+        <Button
+            android:id="@+id/hayou_center_advertthree_back_button_detailitem"
+            android:layout_width="42dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:drawableLeft="@drawable/back_button_selector"
+            android:paddingLeft="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/game_box_activity_three_title_detailitem"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/center_fans_user_name_advertthree_detailitem"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end" 
+                android:singleLine="true"
+                android:text="公司名字"
+                android:textColor="#666666"
+                android:textSize="16sp" />
+        </LinearLayout>
+        
+        <ScrollView 
+            android:id="@+id/hot_advertthree_sv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/advert_three_item_bj"
+            android:scrollbars="none"
+            >
+
+        <TextView
+            android:id="@+id/center_fans_user_signture_advertthree_detailitem"
+            android:layout_width="match_parent"
+            android:layout_height="20000dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="公司招聘的内容"
+            android:textColor="#999999"
+            android:textSize="15sp" />
+        </ScrollView>
+        
+    </LinearLayout>
+
+</LinearLayout>

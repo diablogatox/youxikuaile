@@ -231,11 +231,12 @@
 							</LinearLayout>
 						</RelativeLayout>
 						<RelativeLayout
-								android:id="@+id/rl_edit_area"
+								android:id="@+id/event_rl"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginBottom="12dp"
-								android:background="#fff"
+								android:clickable="true"
+								android:background="@drawable/bg_item"
 								android:paddingLeft="14dp"
 								android:paddingRight="14dp"
 								android:paddingTop="8dp"

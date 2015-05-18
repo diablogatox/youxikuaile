@@ -2,17 +2,16 @@ package com.orfid.youxikuaile.adapter;
 
 import java.util.List;
 
-import com.orfid.youxikuaile.R;
-import com.orfid.youxikuaile.model.LogInfo;
-import com.orfid.youxikuaile.util.TimeUtils;
-
 import android.app.Activity;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.orfid.youxikuaile.R;
+import com.orfid.youxikuaile.model.LogInfo;
+import com.orfid.youxikuaile.util.TimeUtils;
 /**
  * 此adapter,日志信息listview的adapter
 

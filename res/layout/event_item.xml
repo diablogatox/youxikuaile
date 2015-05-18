@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="20dp"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/event_ctime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/grey"
+            android:paddingTop="5sp"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/event_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_toLeftOf="@id/event_ctime"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textStyle="bold" />
+    </RelativeLayout>
+	
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp">
+        <TextView
+	        android:id="@+id/forward_pointer"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_centerVertical="true"
+	        android:gravity="center_vertical"
+	        android:paddingTop="5dp"
+	        android:drawableRight="@drawable/icon_arrow_right_gray" />
+        <TextView
+            android:id="@+id/event_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/forward_pointer"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:gravity="left"
+    		android:maxLines="3"
+    		android:ellipsize="end" />
+    </RelativeLayout>
+    
+</LinearLayout>

@@ -3,7 +3,6 @@ package com.orfid.youxikuaile.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,10 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.orfid.youxikuaile.ListItemClickHelp;
 import com.orfid.youxikuaile.R;
 import com.orfid.youxikuaile.pojo.GameUser;

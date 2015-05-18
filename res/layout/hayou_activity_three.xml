@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f1f2f3"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/hayou_center_advertthree_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#ffb400" >
+
+        <Button
+            android:id="@+id/hayou_center_advertthree_back_button"
+            android:layout_width="42dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="#00000000"
+            android:onClick="stepBack"
+            android:drawableLeft="@drawable/icon_back"
+            android:paddingLeft="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/game_box_activity_three_title"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/hot_advert_3_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:src="@drawable/advertising_three" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/hayou_center_advertthree_list_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/center_mygift_item_background"
+        android:cacheColorHint="#00000000"
+        android:divider="#E0E0E0"
+        android:dividerHeight="1dp"
+        android:padding="1px" >
+    </ListView>
+
+
+</LinearLayout>
