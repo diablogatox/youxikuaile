@@ -404,7 +404,7 @@ public class ScoreGameActivity extends Activity {
 		// TODO Auto-generated method stub
 		mView = (ScoreView) findViewById(R.id.hayou_game_1_zone);
 //		getUserData();
-//		mView.setHandler(scoreGameHandler);
+		mView.setHandler(scoreGameHandler);
 		shareBtn = (Button) findViewById(R.id.center_score_game_1_invite_btn);
 		workFactoryBtn = (Button) findViewById(R.id.center_score_game_1_work_factroy);
 		employeeFriendsBtn = (Button) findViewById(R.id.center_score_game_1_employee_friends);
@@ -496,15 +496,19 @@ public class ScoreGameActivity extends Activity {
 				ScoreGameActivity.this.startActivity(ii);
 			}
 		});
-//		oneClickBtn.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				tag = 3;
-//				getData();
-//			}
-//		});
+		oneClickBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				tag = 3;
+				try {
+					doHarvestAction();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		exitBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -1092,6 +1096,81 @@ public class ScoreGameActivity extends Activity {
             }
         });
     }
+	
+	private void doHarvestAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("apps/jfgc/harvest", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response===(apps/jfgc/harvest)====>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	if (response.getJSONArray("data").length() <= 0) {
+                    		Toast.makeText(ScoreGameActivity.this, "没有积分", Toast.LENGTH_SHORT).show();
+                    		return;
+                    	}
+                    	JSONObject jt = response.getJSONObject("userAccount");
+
+						Gson gson = new Gson();
+						ddData = gson.fromJson(jt.toString(),
+								DiceData.class);
+
+						// 一键收积分弹层
+						getScoreDialog();
+						if (ddData != null) {
+							userScore.setText(String.valueOf(ddData
+									.getIntegral()));
+						}
+                    } else if (status == 0) {
+                        Toast.makeText(ScoreGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+	
+	
+	private void getScoreDialog() {
+		if (builder != null) {
+			if (builder.isShowing()) {
+				builder.dismiss();
+			}
+		}
+		builder = new Dialog(ScoreGameActivity.this, R.style.my_dialog);
+		builder.show();
+		View contentview = LayoutInflater.from(ScoreGameActivity.this).inflate(
+				R.layout.get_score, null);
+		builder.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+		builder.getWindow().setContentView(R.layout.get_score);
+		builder.getWindow().setGravity(Gravity.CENTER);
+		TextView topText = (TextView) builder.findViewById(R.id.get_score_top);
+		TextView contentText = (TextView) builder
+				.findViewById(R.id.get_score_text);
+		StringBuilder sb = new StringBuilder();
+		if (tag == 4) {
+			topText.setVisibility(View.GONE);
+			sb.append("收取").append(String.valueOf(scoreNum)).append("积分");
+			contentText.setText(sb.toString());
+		} else if (tag == 3) {
+			topText.setVisibility(View.VISIBLE);
+			sb.append("一共收取").append(String.valueOf(scoreNum)).append("积分");
+			contentText.setText(sb.toString());
+		}
+		scoreGameHandler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				scoreGameHandler.sendEmptyMessage(7);
+			}
+		}, 2000);
+	}
 	
 	private void getDialog() {
 		if (builder != null) {
