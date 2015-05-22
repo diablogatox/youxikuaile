@@ -172,7 +172,8 @@ public class CommonListFragment extends Fragment {
             viewHolder.commentMsgTv.setText(objBean.getCommentMsg());
             viewHolder.commentTimeTv.setText(
             		Utils.covertTimestampToDate(
-            				Long.parseLong(objBean.getCommentTime()) * 1000
+            				Long.parseLong(objBean.getCommentTime()) * 1000,
+            				false
             		)
             );
             

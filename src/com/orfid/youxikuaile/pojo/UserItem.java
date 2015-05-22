@@ -14,6 +14,7 @@ public class UserItem {
     private String distance;
     private String utime;
     private String type;
+    private String latestEvent;
     
     public String getType() {
 		return type;
@@ -131,5 +132,13 @@ public class UserItem {
 
 	public void setFollow(boolean isFollow) {
 		this.isFollow = isFollow;
+	}
+
+	public String getLatestEvent() {
+		return latestEvent;
+	}
+
+	public void setLatestEvent(String latestEvent) {
+		this.latestEvent = latestEvent;
 	}
 }

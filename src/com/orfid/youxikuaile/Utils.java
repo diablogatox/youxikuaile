@@ -173,11 +173,13 @@ public class Utils {
         return (int) (dp * scale + 0.5f);
     }
 
-    public static String covertTimestampToDate(long timeStamp){
+    public static String covertTimestampToDate(long timeStamp, boolean needHour){
 
         String dateStr = null;
         try{
-            DateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm");
+        	String formatPattern = "yy-MM-dd HH:mm";
+        	if (needHour) formatPattern = "yy/MM/dd";
+            DateFormat sdf = new SimpleDateFormat(formatPattern);
             Date netDate = (new Date(timeStamp));
             dateStr = sdf.format(netDate);
         }

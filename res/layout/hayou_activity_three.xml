@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
+            android:scaleType="fitStart"
             android:src="@drawable/advertising_three" />
     </LinearLayout>
 
@@ -50,9 +51,9 @@
         android:id="@+id/hayou_center_advertthree_list_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
         android:background="@drawable/center_mygift_item_background"
         android:cacheColorHint="#00000000"
         android:divider="#E0E0E0"

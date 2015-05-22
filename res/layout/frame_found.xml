@@ -153,9 +153,9 @@
 			        android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
 			        android:layout_marginTop="12dp"
-			        android:divider="@android:color/transparent"
+			        android:divider="#dcdcdc"
 			        android:cacheColorHint="@android:color/transparent"
-			        android:dividerHeight="0dp"
+			        android:dividerHeight="1dp"
 			        android:fadingEdge="none"
 			        android:fastScrollEnabled="true" />
 		        <TextView

@@ -160,7 +160,7 @@ public class MessageFeedActivity extends Activity {
             }
            viewHolder.msg_uname_tv.setText(user.getUsername());
            viewHolder.msg_content_tv.setText(objBean.getContent());
-           viewHolder.msg_time_tv.setText( Utils.covertTimestampToDate( Long.parseLong(objBean.getPubTime()) * 1000 ) );
+           viewHolder.msg_time_tv.setText( Utils.covertTimestampToDate( Long.parseLong(objBean.getPubTime()) * 1000 , false) );
             
             return convertView;
 

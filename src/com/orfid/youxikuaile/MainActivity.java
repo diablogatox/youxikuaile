@@ -1162,6 +1162,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                         resource, parent, false);
                 viewHolder.userPhotoIv = (ImageView) convertView.findViewById(R.id.public_photo_iv);
                 viewHolder.userNameTv = (TextView) convertView.findViewById(R.id.public_name_tv);
+                viewHolder.public_sig_tv = (TextView) convertView.findViewById(R.id.public_sig_tv);
                 lmap.put(position, convertView);
                 convertView.setTag(viewHolder);
             } else {
@@ -1172,6 +1173,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             objBean = items.get(position);
             if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
             if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
+            if (objBean.getLatestEvent() != null && !objBean.getLatestEvent().equals("null"))
+            	viewHolder.public_sig_tv.setText(objBean.getLatestEvent());
             
             return convertView;
 		}
@@ -1179,6 +1182,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 		public class ViewHolder {
 			ImageView userPhotoIv;
 			TextView userNameTv;
+			TextView public_sig_tv;
 		}
 		
 	}
@@ -1738,7 +1742,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             			ImageLoader.getInstance().displayImage(u.getPhoto(), viewHolder.msgIcon);
             		if (u.getUsername() != null && !u.getPhoto().equals("null"))
             			viewHolder.sessionName.setText(u.getUsername());
-            		viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000 ));
+            		viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000, false ));
             	} else if (objBean.getType().equals("2")) {
             		
             		UserItem[] users = objBean.getUsers();
@@ -1768,7 +1772,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                     	viewHolder.groupIcon.setVisibility(View.VISIBLE);
                 	}
                 	
-                	viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000 ));
+                	viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000, false ));
             	}
             	
             	viewHolder.msgContent.setText(msg.getText());

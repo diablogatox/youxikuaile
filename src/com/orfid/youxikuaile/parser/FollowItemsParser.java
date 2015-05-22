@@ -50,7 +50,7 @@ public class FollowItemsParser {
 
         UserItem followItem = new UserItem();
         
-        String uid = null, photo = null, username = null;
+        String uid = null, photo = null, username = null, latestEvent = "";
         
         try {
 	        uid = jFollowItem.getString("uid");
@@ -58,6 +58,7 @@ public class FollowItemsParser {
 	        	photo = jFollowItem.getString("photo");
 	        }
 	        username = jFollowItem.getString("username");
+	        latestEvent = jFollowItem.getString("signature");
         } catch (Exception e) {
         	e.printStackTrace();
         }
@@ -65,6 +66,7 @@ public class FollowItemsParser {
         followItem.setUid(uid);
         followItem.setPhoto(photo);
         followItem.setUsername(username);
+        followItem.setLatestEvent(latestEvent);
 
         return followItem;
     }

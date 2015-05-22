@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:baselineAligned="false"
     android:layout_width="match_parent"
     android:orientation="horizontal"
@@ -14,12 +15,14 @@
         android:layout_width="120dp"
         android:layout_height="80dp">
 
-        <ImageView
+        <com.orfid.youxikuaile.widget.RoundedAngleImageView
             android:id="@+id/img_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:focusable="false"
+            app:roundWidth="0dp"
+            app:roundHeight="0dp"
             android:background="@color/grey" />
     </LinearLayout>
 
@@ -35,9 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textSize="19sp"
-            android:textColor="#000"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textColor="#333" />
         <TextView
             android:id="@+id/content_tv"
             android:layout_width="match_parent"
@@ -45,6 +47,7 @@
             android:paddingTop="10dp"
             android:lines="2"
             android:ellipsize="end"
+            android:textColor="#999"
             android:textSize="15sp" />
         
     </LinearLayout>

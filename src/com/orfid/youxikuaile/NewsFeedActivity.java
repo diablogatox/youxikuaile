@@ -510,7 +510,7 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
 			
             if (objBean.getUser().getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getUser().getPhoto(), viewHolder.userAvatarIv);
             viewHolder.usernameTv.setText(objBean.getUser().getUsername());
-            viewHolder.publishTimeTv.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getPublishTime()) * 1000));
+            viewHolder.publishTimeTv.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getPublishTime()) * 1000, false));
             SpannableStringBuilder sb = Utils.handlerFaceInContent(context, viewHolder.contentTextTv,
                     objBean.getContentText());
             viewHolder.contentTextTv.setText(sb);

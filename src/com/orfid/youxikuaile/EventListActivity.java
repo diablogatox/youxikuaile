@@ -141,7 +141,7 @@ public class EventListActivity extends Activity {
             objBean = items.get(position);
             
             viewHolder.eventTitle.setText(objBean.getTitle());
-            viewHolder.eventCtime.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getCtmie()) * 1000));
+            viewHolder.eventCtime.setText(Utils.covertTimestampToDate(Long.parseLong(objBean.getCtmie()) * 1000, false));
             viewHolder.eventContent.setText(objBean.getContent());
             
             return convertView;
