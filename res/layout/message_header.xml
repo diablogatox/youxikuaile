@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f4f9"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+                    android:id="@+id/rl_feed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_item"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+                    <TextView
+                        android:id="@+id/feed_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:drawableLeft="@drawable/icon_news1"
+                        android:drawablePadding="5dp"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:text="动态" />
+                    
+                    <Button
+                        android:id="@+id/newfeed_count_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@id/feed_title_tv"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/icon_news_red"
+                        android:padding="3dp"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:clickable="false" />
+                    
+                    <ImageView
+                        android:id="@+id/arrow_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_arrow_right_gray" />
+                    
+                    <FrameLayout
+                        android:id="@+id/latest_feed_fl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        android:visibility="gone"
+                        android:layout_toLeftOf="@id/arrow_right">
+                        <ImageView
+                            android:id="@+id/user_photo_iv"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="3dp"
+                            android:background="@color/grey" />
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_marginLeft="25dp"
+                            android:src="@drawable/icon_news_red" />
+                    </FrameLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rl_new_fans"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_item"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:drawableLeft="@drawable/icon_news3"
+                        android:drawablePadding="5dp"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:text="新粉丝" />
+                    
+                    <ImageView
+                        android:id="@+id/jump_arrow_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_arrow_right_gray" />
+                    
+                    <Button
+                        android:id="@+id/newfans_count_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_toLeftOf="@id/jump_arrow_iv"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/icon_news_red"
+                        android:padding="3dp"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:clickable="false" />
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:id="@+id/sysnotify_rl_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_item"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:drawableLeft="@drawable/icon_system_news"
+                        android:drawablePadding="5dp"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:textColor="#000"
+                        android:textSize="18sp"
+                        android:text="系统消息" />
+                    
+                    <ImageView
+                        android:id="@+id/sysnotify_arrow_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_arrow_right_gray" />
+                    
+                    <Button
+                        android:id="@+id/sysnotify_count_btn"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_toLeftOf="@id/sysnotify_arrow_iv"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/icon_news_red"
+                        android:padding="3dp"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:clickable="false" />
+                </RelativeLayout>
+
+</LinearLayout>

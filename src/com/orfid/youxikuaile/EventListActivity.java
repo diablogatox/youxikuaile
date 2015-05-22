@@ -43,6 +43,10 @@ public class EventListActivity extends Activity {
 		obtainData();
 	}
 
+	public void stepBack(View v) {
+		finish();
+	}
+	
 	private void initView() {
 		uid = getIntent().getStringExtra("uid");
 		

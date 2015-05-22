@@ -761,19 +761,24 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 			
 //			myAdapter3 = new MyAdapter3(this, R.layout.session_message_item, sessionMessageItems);
 			
+            
+            
+            
+            mPbar = (ProgressBar) findViewById(R.id.progress_bar);
+            titleTv = (TextView) view.findViewById(R.id.tv_title);
+            msgSessionLv = (ListView) view.findViewById(R.id.msg_session_lv);
+            
+            View header = getLayoutInflater().inflate(R.layout.message_header, null);
+            if (msgSessionLv.getHeaderViewsCount() <=0) msgSessionLv.addHeaderView(header);
+            
             feedRlView = findViewById(R.id.rl_feed);
+            newFeedMsgCountBtn = (Button) findViewById(R.id.newfeed_count_btn);
             newFansRlView = findViewById(R.id.rl_new_fans);
             sysnotifyRlView = findViewById(R.id.sysnotify_rl_view);
             newFansCountBtn = (Button) findViewById(R.id.newfans_count_btn);
             sysnotifyCountBtn = (Button) findViewById(R.id.sysnotify_count_btn);
-            newFeedMsgCountBtn = (Button) findViewById(R.id.newfeed_count_btn);
-            mPbar = (ProgressBar) findViewById(R.id.progress_bar);
             latestFeedFl = findViewById(R.id.latest_feed_fl);
             mPhotoIv = (ImageView) findViewById(R.id.user_photo_iv);
-            titleTv = (TextView) view.findViewById(R.id.tv_title);
-            msgSessionLv = (ListView) view.findViewById(R.id.msg_session_lv);
-            
-//            msgSessionLv.setAdapter(myAdapter3);
 
             feedRlView.setOnClickListener(this);
             newFansRlView.setOnClickListener(this);

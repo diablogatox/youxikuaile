@@ -27,6 +27,7 @@
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true"
 				android:src="@drawable/icon_back"
+				android:onClick="stepBack"
 				android:background="@null" />
 
 	</RelativeLayout>

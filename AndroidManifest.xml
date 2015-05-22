@@ -175,6 +175,8 @@
         </activity>
         <activity android:name=".SysNotifyActivity" >
         </activity>
+        <activity android:name=".UserDescActivity" >
+        </activity>
         <activity
             android:name=".GameFriendRankActiviy"
             android:configChanges="keyboard|keyboardHidden|orientation"

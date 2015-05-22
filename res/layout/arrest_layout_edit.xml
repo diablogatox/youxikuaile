@@ -174,7 +174,7 @@
                             android:layout_toRightOf="@id/arrast_user_sex"
                             android:background="@drawable/arrast_text_no_selected_bg"
                             android:gravity="center|left"
-                            android:hint="@string/ha_user_info_sex_male"
+                            android:hint="请填写性别"
                             android:paddingBottom="0px"
                             android:paddingLeft="5dp"
                             android:paddingRight="5dp"
@@ -210,7 +210,7 @@
                             android:layout_toRightOf="@id/arrast_user_job"
                             android:background="@drawable/arrast_text_no_selected_bg"
                             android:gravity="center|left"
-                            android:hint="@string/arrast_user_info_job_hint"
+                            android:hint="游戏职业"
                             android:paddingBottom="0px"
                             android:paddingLeft="5dp"
                             android:paddingRight="5dp"
@@ -307,6 +307,7 @@
                         android:paddingRight="5dp"
                         android:paddingTop="0px"
                         android:singleLine="true"
+                        android:hint="发布人名字"
                         android:textColor="#CC0000"
                         android:textSize="14sp" />
                 </RelativeLayout>

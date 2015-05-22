@@ -146,11 +146,11 @@
 									android:text="4.88km | 7小时前"/>
 						</RelativeLayout>
 						<RelativeLayout
-								android:id="@+id/rl_edit_gender"
+								android:id="@+id/rl_desc"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginBottom="12dp"
-								android:background="#fff"
+								android:background="@drawable/bg_item"
 								android:paddingLeft="14dp"
 								android:paddingRight="14dp"
 								android:paddingTop="8dp"
