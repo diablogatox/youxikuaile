@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2010 The MobileSecurePay Project
  * All right reserved.
  * author: shiqun.shi@alipay.com
