@@ -92,6 +92,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 	private MyAdapter2 listAdapter;
 	private MyAdapter3 myAdapter3;
 	private Handler mHandler = new Handler();
+	private boolean ind1 = false, ind2 = false, ind3 = false, ind4 = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -533,18 +534,20 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
             
-            handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						doFetchHotRecommendListAction();
-					} catch (JSONException e) {
-						e.printStackTrace();
+            if (ind1 == false) {
+	            handler.postDelayed(new Runnable() {
+	
+					@Override
+					public void run() {
+						try {
+							doFetchHotRecommendListAction();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-            	
-            }, 500);
+	            	
+	            }, 500);
+            }
 			
 		} else if (index == 1) {
 			
@@ -662,18 +665,20 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
             
-            handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						doFetchPublicFollowListAction();
-					} catch (JSONException e) {
-						e.printStackTrace();
+            if (ind2 == false) {
+	            handler.postDelayed(new Runnable() {
+	
+					@Override
+					public void run() {
+						try {
+							doFetchPublicFollowListAction();
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-            	
-            }, 500);
+	            	
+	            }, 500);
+            }
 			
 		} else if (index == 2) { // 消息
 
@@ -817,7 +822,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                 public void run() {
 		            try {
 						doFetchLatestFeedAction();
-						doFetchMessageSessionsAction();
+						if (ind3 == false)
+							doFetchMessageSessionsAction();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -1299,6 +1305,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                         if (emptyTv.isShown() && userItems.size() > 0) {
                         	emptyTv.setVisibility(View.GONE);
                         }
+                        ind2 = true;
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
@@ -1350,6 +1357,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                         if (hotEmptyTv.isShown() && recommendItems.size() > 0) {
                         	hotEmptyTv.setVisibility(View.GONE);
                         }
+                        ind1 = true;
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
@@ -1420,6 +1428,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 							}
                     		
                     	});
+                    	ind3 = true;
                     } else if (status == 0) {
                         Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
