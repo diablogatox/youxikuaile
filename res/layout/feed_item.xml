@@ -108,7 +108,7 @@
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
-		android:background="#ffe7e7e7" />
+		android:background="@drawable/line" />
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -128,6 +128,7 @@
 				android:drawableLeft="@drawable/feed_forward_gray"
 				android:drawablePadding="10dp"
 				android:textSize="15sp"
+				android:text="转发"
 				android:textColor="#666666" />
 		</RelativeLayout>
 		<View
@@ -147,6 +148,7 @@
 					android:drawableLeft="@drawable/feed_comment_gray"
 					android:drawablePadding="10dp"
 					android:textSize="15sp"
+					android:text="评论"
 					android:textColor="#666666" />
 		</RelativeLayout>
 		<View
@@ -166,7 +168,12 @@
 				android:drawableLeft="@drawable/feed_praise_gray"
 				android:drawablePadding="10dp"
 				android:textSize="15sp"
+				android:text="赞"
 				android:textColor="#666666" />
 		</RelativeLayout>
 	</LinearLayout>
+	<View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/line" />
 </LinearLayout>

@@ -115,6 +115,22 @@ public class ScoreGameActivity extends Activity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
+			case 5:
+				Log.d("555555======>", "true");
+				break;
+			case 6:
+				Log.d("666666======>", "true");
+				JSONObject jObj = (JSONObject) msg.obj;
+				try {
+					int position = jObj.getInt("position");
+					String staffID = jObj.getString("uid");
+					Log.d("position=====>", position+"");
+					Log.d("uid======>", staffID);
+					doSaveScoreGameUserPositionAction(position, staffID);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				break;
 			case 11:
 
 				if (gameInfoIcon.size() == userIconList.size()) {
@@ -985,6 +1001,33 @@ public class ScoreGameActivity extends Activity {
         });
     }
 	
+	
+	private void doSaveScoreGameUserPositionAction(int position, String staffID) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("staffID", staffID);
+        params.put("position", position);
+        HttpRestClient.post("apps/jfgc/position", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                   
+                    } else if (status == 0) {
+                        Toast.makeText(ScoreGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+
+        });
+    }
 	
 	private void chacked() {
 		if (isRun) {
