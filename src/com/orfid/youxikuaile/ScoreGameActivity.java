@@ -117,6 +117,13 @@ public class ScoreGameActivity extends Activity {
 			switch (msg.what) {
 			case 5:
 				Log.d("555555======>", "true");
+				//收集积分
+				staffID = (String) msg.obj;
+				try {
+					doHarvestAction();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				break;
 			case 6:
 				Log.d("666666======>", "true");
@@ -1145,6 +1152,7 @@ public class ScoreGameActivity extends Activity {
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
+        params.put("staffID", staffID);
         HttpRestClient.post("apps/jfgc/harvest", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

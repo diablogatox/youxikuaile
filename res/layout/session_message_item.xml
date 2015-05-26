@@ -27,8 +27,8 @@
 	        android:visibility="gone">
 	        <com.orfid.youxikuaile.widget.CircleImageView
 	        	android:id="@+id/top_center"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
+	            android:layout_width="28dp"
+	            android:layout_height="28dp"
 	            android:layout_centerHorizontal="true"
 	        	android:scaleType="centerCrop"
 	        	app:border_color="#e0e0e0"
@@ -36,8 +36,8 @@
 	            android:src="@drawable/no_portrait_circle" />
 	        <com.orfid.youxikuaile.widget.CircleImageView
 	            android:id="@+id/bottom_left"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
+	            android:layout_width="28dp"
+	            android:layout_height="28dp"
 	        	android:scaleType="centerCrop"
 	        	app:border_color="#e0e0e0"
 	        	app:border_width="1dp"
@@ -47,15 +47,15 @@
 				android:layout_marginLeft="-1dp"/>
 	        <com.orfid.youxikuaile.widget.CircleImageView
 	            android:id="@+id/bottom_right"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
+	            android:layout_width="28dp"
+	            android:layout_height="28dp"
 				android:scaleType="centerCrop"
 	        	app:border_color="#e0e0e0"
 	        	app:border_width="1dp"
 	            android:src="@drawable/no_portrait_circle"
 				android:layout_alignTop="@+id/bottom_left" android:layout_toRightOf="@+id/bottom_left"
 				android:layout_toEndOf="@+id/bottom_left" android:layout_marginLeft="-7dp"
-				android:layout_marginTop="-2dp"/>
+				android:layout_marginTop="0dp"/>
 	    </RelativeLayout>
 	</FrameLayout>
     <Button

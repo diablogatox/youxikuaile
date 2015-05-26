@@ -152,6 +152,10 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
                     if (status == 1) { // success
                         Toast.makeText(UserInfoActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                         saveBtn.setEnabled(false);
+                        JSONObject data = response.getJSONObject("data");
+                        String uid = data.getString("uid");
+                        String photo = data.getString("photo");
+                        dbHandler.updateUser(uid, Constants.KEY_PHOTO, photo);
                     } else if (status == 0) {
                         Toast.makeText(UserInfoActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

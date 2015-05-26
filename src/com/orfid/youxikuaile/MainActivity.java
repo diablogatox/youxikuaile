@@ -869,7 +869,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             String photo = user.get("photo").toString();
             String username = user.get("username").toString();
             String uid = user.get("uid").toString();
-            if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(user.get("photo").toString(), userPicture);
+            if (photo != null && !photo.equals("null")) 
+            	ImageLoader.getInstance().displayImage(user.get("photo").toString(), userPicture);
             if (username != null) nameTv.setText(username);
             uidTv.setText(uid);
             

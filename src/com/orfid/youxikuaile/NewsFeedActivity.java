@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -432,6 +433,21 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             }
             
             objBean = getItem(position);
+            
+            viewHolder.imagesGv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Log.d("position========>", position+"");
+					Log.d("id=======>", id+"");
+					Log.d("url=============>", gvAdapter.getItem(position).getUrl());
+					Intent intent = new Intent(NewsFeedActivity.this, PhotoDetailActivity.class);
+					intent.putExtra("url", gvAdapter.getItem(position).getUrl());
+					startActivity(intent);
+				}
+            	
+            });
             
             viewHolder.userAvatarIv.setOnClickListener(new View.OnClickListener() {
                 @Override
