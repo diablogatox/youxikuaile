@@ -98,7 +98,6 @@
                         android:id="@+id/rl_edit_nickname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
                         android:background="#fff"
                         android:paddingLeft="14dp"
                         android:paddingRight="14dp"
@@ -123,11 +122,14 @@
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />
                 </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line" />
                 <RelativeLayout
 		                android:id="@+id/rl_edit_gender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
                         android:background="#fff"
                         android:paddingLeft="14dp"
                         android:paddingRight="14dp"
@@ -152,11 +154,14 @@
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />
                 </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line" />
                 <RelativeLayout
 		                android:id="@+id/rl_edit_age"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
                         android:background="#fff"
                         android:paddingLeft="14dp"
                         android:paddingRight="14dp"
@@ -181,11 +186,14 @@
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />
                 </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line" />
                 <RelativeLayout
 		                android:id="@+id/rl_edit_area"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
                         android:background="#fff"
                         android:paddingLeft="14dp"
                         android:paddingRight="14dp"
@@ -210,7 +218,10 @@
                             android:drawablePadding="5dp"
                             android:drawableRight="@drawable/icon_arrow_right_gray" />
                 </RelativeLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/line" />
                 <RelativeLayout
 		                android:id="@+id/rl_edit_college"
                         android:layout_width="match_parent"

@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:orientation="vertical"
     android:paddingBottom="5dp"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res/com.orfid.youxikuaile">
 
     <!--
     <TextView
@@ -31,6 +31,8 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            app:border_width="1dp"
+            app:border_color="#e0e0e0"
             android:background="@drawable/no_portrait_circle"
             android:focusable="false" />
 

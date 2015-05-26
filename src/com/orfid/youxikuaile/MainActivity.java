@@ -1408,7 +1408,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 							public void onItemClick(AdapterView<?> parent,
 									View view, int position, long id) {
 								Log.d("enter here======>", "true");
-								MessageSession item = myAdapter3.getItem(position);
+								MessageSession item = (MessageSession) parent.getAdapter().getItem(position);
 								String sid = null;
 //								if (item.getUsers().length <= 2) {
 //									for(int i=0; i<item.getUsers().length; i++) {

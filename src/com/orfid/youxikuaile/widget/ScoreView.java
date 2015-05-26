@@ -178,6 +178,7 @@ public class ScoreView extends View {
 								intNum = -1;
 								if (item.getOnline().equals("1")) {
 									if (hammerIndex % 67 != 0) {
+										Log.d("test1====>", "test1");
 										Rect srcs6 = new Rect();// 图片
 										srcs6.left = 0; // 0,0
 										srcs6.top = 0;
@@ -232,6 +233,7 @@ public class ScoreView extends View {
 												srcs7, dsts7, paint);
 
 									} else if (hammerIndex % 67 == 0) {
+										Log.d("test2====>", "test2");
 										Rect srcs8 = new Rect();// 图片
 										srcs8.left = 0; // 0,0
 										srcs8.top = 0;

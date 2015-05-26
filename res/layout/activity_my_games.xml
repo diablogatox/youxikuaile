@@ -59,9 +59,8 @@
 			    android:id="@+id/my_games_lv"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:divider="#f3f4f9"
-			    android:cacheColorHint="@android:color/transparent"
-			    android:dividerHeight="10dp" />
+			    android:divider="@drawable/line"
+			    android:cacheColorHint="@android:color/transparent" />
 		</LinearLayout>
 		<TextView
 		    android:id="@+id/loading_hint_tv"

@@ -14,7 +14,7 @@
 	        <com.orfid.youxikuaile.widget.SlideShowView
 		        android:id="@+id/slide_show_view"
 		        android:layout_width="match_parent"
-		        android:layout_height="180dp"
+		        android:layout_height="200dp"
 		        android:layout_gravity="center_horizontal" 
 		        android:onClick="test"/>
 	        

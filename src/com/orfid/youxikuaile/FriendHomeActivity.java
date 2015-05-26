@@ -95,6 +95,9 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
         if (isFollowed == true) {
         	followActionHintTv.setText("取消关注");
         	followActionHintIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.iv_unfollow_selector));
+        } else {
+        	followActionHintTv.setText("关注");
+        	followActionHintIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.iv_follow_selector));
         }
         
         try {

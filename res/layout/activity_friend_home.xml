@@ -380,8 +380,7 @@
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
 					    android:focusable="false"
-					    android:focusableInTouchMode="false"
-					    android:src="@drawable/iv_follow_selector" />
+					    android:focusableInTouchMode="false" />
 					<TextView
 					    android:id="@+id/follow_action_hint_tv"
 					    android:layout_width="wrap_content"
