@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 public class ChatEntity {
 
+	private String id;
 	private String userId;
 	private String userName;
 	private String userImage;
@@ -94,5 +95,11 @@ public class ChatEntity {
 	}
 	public void setFollowed(boolean isFollowed) {
 		this.isFollowed = isFollowed;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 }

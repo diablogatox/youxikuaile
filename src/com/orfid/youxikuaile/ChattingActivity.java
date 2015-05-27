@@ -19,12 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,12 +45,14 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,7 +65,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChattingActivity extends Activity implements OnClickListener {
 
@@ -621,6 +624,32 @@ public class ChattingActivity extends Activity implements OnClickListener {
  				chatHolder = (ChatHolder)convertView.getTag();
  			}
 
+ 			chatHolder.contentTextView.setOnLongClickListener(new OnLongClickListener() {
+
+				@Override
+				public boolean onLongClick(View v) {
+					new AlertDialog.Builder(ChattingActivity.this)
+					.setMessage("确定删除吗?")
+					.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							//　删除消息
+							String messageId = chatList.get(position).getId();
+							try {
+								doRemoveMessageAction(messageId, position);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+						
+					})
+					.setNegativeButton("否", null)
+					.show();
+					return false;
+				}
+ 				
+ 			});
  			chatHolder.userImageView.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -1156,6 +1185,30 @@ public class ChattingActivity extends Activity implements OnClickListener {
         });
     }
 	
+	private void doRemoveMessageAction(String messageId, final int pos) throws JSONException {
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", messageId);
+        HttpRestClient.post("message/remove", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	Toast.makeText(ChattingActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    	chatList.remove(pos);
+                     	chatAdapter.notifyDataSetChanged();
+                    } else if (status == 0) {
+                        Toast.makeText(ChattingActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+	
 	/** 
      * do some action 
      */  
@@ -1385,6 +1438,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	    								for (int i=0; i<jArr.length(); i++) {
 	    									String attachImgUrl = null, attachRcdUrl = null;
 	    									JSONObject jsonObj = (JSONObject) jArr.get(i); 
+	    									String id = jsonObj.getString("id");
 	    									JSONObject jUser = jsonObj.getJSONObject("user");
 	    									if (!jsonObj.getJSONArray("files").equals("[]")) {
 	    										JSONArray jFiles = jsonObj.getJSONArray("files");
@@ -1404,6 +1458,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	    										isComeMsg = true;
 	    									}
 	    									ChatEntity chatEntity = new ChatEntity();
+	    									chatEntity.setId(id);
 	    							      	chatEntity.setChatTime(jsonObj.getString("sendtime"));
 	    							      	chatEntity.setContent(jsonObj.getString("text"));
 	    							      	chatEntity.setUserId(jUser.getString("uid"));
