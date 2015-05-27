@@ -10,12 +10,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -98,6 +101,25 @@ public class FollowListActivity extends Activity implements OnClickListener {
                         Log.d("userItems count=====>", userItems.size()+"");
                         adapter = new MyAdapter(FollowListActivity.this, R.layout.follow_item, userItems);
                         mListView.setAdapter(adapter);
+                        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+							@Override
+							public void onItemClick(AdapterView<?> parent,
+									View view, int position, long id) {
+								final UserItem item = adapter.getItem(position);
+								Intent intent = new Intent(FollowListActivity.this, FriendHomeActivity.class);
+								String uid = item.getUid();
+								String username = item.getUsername();
+								String photo = item.getPhoto();
+								boolean isFollowed = item.isFollow();
+								intent.putExtra("uid", uid);
+				                intent.putExtra("username", username);
+				                intent.putExtra("photo", photo);
+				                intent.putExtra("isFollowed", isFollowed);
+								startActivity(intent);
+							}
+                        	
+                        });
 //                        if (feedItems.size() <= 0) {
 //                            emptyViewLl.setVisibility(View.VISIBLE);
 //                        }
@@ -167,6 +189,7 @@ public class FollowListActivity extends Activity implements OnClickListener {
             }
             
             objBean = items.get(position);
+
             if (objBean.getPhoto() != null) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
             if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
             

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -153,7 +154,7 @@ public class FansListActivity extends Activity implements OnClickListener {
 		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			
 			ViewHolder viewHolder = null;
             if (lmap.get(position)==null) {
@@ -171,6 +172,25 @@ public class FansListActivity extends Activity implements OnClickListener {
             }
             
             objBean = items.get(position);
+            
+            viewHolder.userPhotoIv.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(FansListActivity.this, FriendHomeActivity.class);
+					String uid = getItem(position).getUid();
+					String username = getItem(position).getUsername();
+					String photo = getItem(position).getPhoto();
+					boolean isFollowed = getItem(position).isFollow();
+					intent.putExtra("uid", uid);
+	                intent.putExtra("username", username);
+	                intent.putExtra("photo", photo);
+	                intent.putExtra("isFollowed", isFollowed);
+					startActivity(intent);
+				}
+            	
+            });
+            
             if (objBean.getPhoto() != null && !objBean.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.userPhotoIv);
             if (objBean.getUsername() != null) viewHolder.userNameTv.setText(objBean.getUsername());
             if (objBean.isFollow() == false) {

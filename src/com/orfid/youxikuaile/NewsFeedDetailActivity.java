@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -61,6 +63,8 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
     private String content, ct, icon;
     private boolean hasForward, forwardHasImg;
     private int wh;
+    private String uid, name, photo;
+    private boolean isFollowed;
     
     List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
     private GridViewAdapter gvAdapter;
@@ -79,8 +83,10 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		feedId = intent.getLongExtra("feedId", 0);
 		forwardNum = intent.getIntExtra("forwardNum", 0);
 		commentNum = intent.getIntExtra("commentNum", 0);
-		String photo = intent.getStringExtra("photo");
-		String name = intent.getStringExtra("name");
+		photo = intent.getStringExtra("photo");
+		name = intent.getStringExtra("name");
+		uid = intent.getStringExtra("uid");
+		isFollowed = intent.getBooleanExtra("isFollowed", false);
 		String time = intent.getStringExtra("time");
 		content = intent.getStringExtra("content");
 		String imgs = intent.getStringExtra("imgs");
@@ -138,6 +144,32 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 		forward_rl_view.setOnClickListener(this);
 		reply_rl_view.setOnClickListener(this);
 		praise_rl_view.setOnClickListener(this);
+		imagesGv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(NewsFeedDetailActivity.this, PhotoDetailActivity.class);
+				intent.putExtra("url", gvAdapter.getItem(position).getUrl());
+				startActivity(intent);
+				
+			}
+			
+		});
+		
+		photoIv.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(NewsFeedDetailActivity.this, FriendHomeActivity.class);
+				intent.putExtra("uid", uid);
+                intent.putExtra("username", name);
+                intent.putExtra("photo", photo);
+                intent.putExtra("isFollowed", isFollowed);
+				startActivity(intent);
+			}
+			
+		});
 	}
 
 	private void init() {

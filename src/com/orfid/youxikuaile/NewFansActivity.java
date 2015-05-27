@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -159,6 +160,23 @@ public class NewFansActivity extends Activity implements OnClickListener {
             
             final UserItem item = fansItems.get(position);
             
+            holder.userPhotoIv.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(NewFansActivity.this, FriendHomeActivity.class);
+					String uid = item.getUid();
+					String username = item.getUsername();
+					String photo = item.getPhoto();
+					boolean isFollowed = item.isFollow();
+					intent.putExtra("uid", uid);
+	                intent.putExtra("username", username);
+	                intent.putExtra("photo", photo);
+	                intent.putExtra("isFollowed", isFollowed);
+					startActivity(intent);
+				}
+            	
+            });
             if (item.getPhoto() != null && !item.getPhoto().equals("null")) ImageLoader.getInstance().displayImage(item.getPhoto(), holder.userPhotoIv);
             if (item.getUsername() != null) holder.userNameTv.setText(item.getUsername());
             if (item.isFollow() == false) {

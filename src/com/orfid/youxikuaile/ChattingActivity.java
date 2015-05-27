@@ -593,7 +593,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
  		}
 
  		@Override
- 		public View getView(int position, View convertView, ViewGroup parent) {
+ 		public View getView(final int position, View convertView, ViewGroup parent) {
  			
  			if (convertView == null) {
  				chatHolder = new ChatHolder();
@@ -621,6 +621,24 @@ public class ChattingActivity extends Activity implements OnClickListener {
  				chatHolder = (ChatHolder)convertView.getTag();
  			}
 
+ 			chatHolder.userImageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(ChattingActivity.this, FriendHomeActivity.class);
+					String uid = chatList.get(position).getUserId();
+					String username = chatList.get(position).getUserName();
+					String photo = chatList.get(position).getUserImage();
+					boolean isFollowed = chatList.get(position).isFollowed();
+					intent.putExtra("uid", uid);
+	                intent.putExtra("username", username);
+	                intent.putExtra("photo", photo);
+	                intent.putExtra("isFollowed", isFollowed);
+					startActivity(intent);
+				}
+ 				
+ 			});
+ 			
  			ImageLoader.getInstance().displayImage(chatList.get(position).getUserImage(), chatHolder.userImageView);
 // 			if (!chatList.get(position).isNofityMsg()) {
 //	 			chatHolder.timeTextView.setText(chatList.get(position).getChatTime());
@@ -1388,6 +1406,9 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	    									ChatEntity chatEntity = new ChatEntity();
 	    							      	chatEntity.setChatTime(jsonObj.getString("sendtime"));
 	    							      	chatEntity.setContent(jsonObj.getString("text"));
+	    							      	chatEntity.setUserId(jUser.getString("uid"));
+	    							      	chatEntity.setUserName(jUser.getString("username"));
+//	    							      	chatEntity.setFollowed(jUser.getBoolean("isFollow"));
 	    							      	chatEntity.setUserImage(jUser.getString("photo"));
 	    							      	chatEntity.setComeMsg(isComeMsg);
 	    							      	chatEntity.setRecordTime("");

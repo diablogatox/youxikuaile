@@ -4,11 +4,13 @@ import android.graphics.Bitmap;
 
 public class ChatEntity {
 
+	private String userId;
 	private String userName;
 	private String userImage;
 	private String content;
 	private String chatTime;
 	private boolean isComeMsg;
+	private boolean isFollowed;
 	private String recordTime;
 	private String recordUrl;
 	private String imgAttachmentUrl;
@@ -80,5 +82,17 @@ public class ChatEntity {
 	}
 	public void setRecordUrl(String recordUrl) {
 		this.recordUrl = recordUrl;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public boolean isFollowed() {
+		return isFollowed;
+	}
+	public void setFollowed(boolean isFollowed) {
+		this.isFollowed = isFollowed;
 	}
 }

@@ -129,6 +129,8 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             	FeedItem item = adapter.getItem(position);
             	Intent intent = new Intent(NewsFeedActivity.this, NewsFeedDetailActivity.class);
             	intent.putExtra("feedId", id);
+            	intent.putExtra("uid", item.getUser().getUid());
+            	intent.putExtra("isFollowed", item.getUser().isFollow());
             	intent.putExtra("photo", item.getUser().getPhoto());
             	intent.putExtra("name", item.getUser().getUsername());
             	intent.putExtra("time", item.getPublishTime());
@@ -454,6 +456,16 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
                 public void onClick(View v) {
                     //Toast.makeText(context, v.getId()+"", Toast.LENGTH_SHORT).show();
                 	Log.d("avatar clicked =====> ", "true");
+                	Intent intent = new Intent(NewsFeedActivity.this, FriendHomeActivity.class);
+					String uid = getItem(position).getUser().getUid();
+					String username = getItem(position).getUser().getUsername();
+					String photo = getItem(position).getUser().getPhoto();
+					boolean isFollowed = getItem(position).getUser().isFollow();
+					intent.putExtra("uid", uid);
+	                intent.putExtra("username", username);
+	                intent.putExtra("photo", photo);
+	                intent.putExtra("isFollowed", isFollowed);
+					startActivity(intent);
                 }
             });
             viewHolder.forwardRlView.setOnClickListener(new OnClickListener() {
