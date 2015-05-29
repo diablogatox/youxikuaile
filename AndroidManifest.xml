@@ -33,6 +33,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -231,6 +232,8 @@
         <activity android:name=".EventDetailActivity" >
         </activity>
         <activity android:name=".ChattingUsersActivity" >
+        </activity>
+        <activity android:name=".EventDetailUsersActivity" >
         </activity>
     </application>
 

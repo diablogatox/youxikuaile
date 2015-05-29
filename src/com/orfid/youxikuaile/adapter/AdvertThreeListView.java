@@ -192,7 +192,7 @@ public class AdvertThreeListView extends BaseAdapter {
 							AdvertThreeListView.this.fansList.get(arg0)
 									.getContent());
 
-					AdvertThreeListView.this.context.startActivity(ii);
+//					AdvertThreeListView.this.context.startActivity(ii);
 				}
 			}
 		});

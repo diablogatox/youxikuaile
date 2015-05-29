@@ -298,22 +298,22 @@ public class AdverThreeActivity extends Activity implements ListItemClickHelp {
 //
 //	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			// 监控返回键
-//			if (ApplicationData.getInstance().getUid().equals(id)) {
-//				Intent it = new Intent(AdverThreeActivity.this, IndexActivity.class);
-//				it.putExtra("tag", 3);
-//				AdverThreeActivity.this.startActivity(it);
-//				AdverThreeActivity.this.finish();
-//			} else {
-//				AdverThreeActivity.this.finish();
-//			}
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			// 监控返回键
+////			if (ApplicationData.getInstance().getUid().equals(id)) {
+////				Intent it = new Intent(AdverThreeActivity.this, IndexActivity.class);
+////				it.putExtra("tag", 3);
+////				AdverThreeActivity.this.startActivity(it);
+////				AdverThreeActivity.this.finish();
+////			} else {
+////				AdverThreeActivity.this.finish();
+////			}
+//			return false;
+//		}
+//		return super.onKeyDown(keyCode, event);
+//	}
 
 	@Override
 	protected void onDestroy() {

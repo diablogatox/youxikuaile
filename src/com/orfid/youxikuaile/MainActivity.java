@@ -409,6 +409,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 		
 		view = views.get(index);
 		
+		if (view != null) {
+		
 		if (index == 0) {
 			
 			listAdapter = new MyAdapter2(this, R.layout.fans_item, friendUserItems);
@@ -833,15 +835,16 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
         } else if (index == 3) {
 
         	gameLauncher = findViewById(R.id.game_laucher);
-        	
-        	gameLauncher.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					startActivity(new Intent(MainActivity.this, ScoreGameActivity.class));
-				}
-        		
-        	});
+        	if (gameLauncher != null) {
+	        	gameLauncher.setOnClickListener(new OnClickListener() {
+	
+					@Override
+					public void onClick(View v) {
+						startActivity(new Intent(MainActivity.this, ScoreGameActivity.class));
+					}
+	        		
+	        	});
+        	}
         	
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
 
@@ -956,6 +959,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             handler.removeCallbacksAndMessages(null); // 防止出现无意义的频繁访问接口的动作
         }
 		
+		}
 	}
 
 	@Override

@@ -52,6 +52,7 @@
 	            android:layout_height="wrap_content"
 	            android:orientation="vertical">
 		        <LinearLayout
+		            android:id="@+id/event_users_ll"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:padding="15dp"
