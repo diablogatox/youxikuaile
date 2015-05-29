@@ -27,7 +27,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class PublicHomeActivity extends Activity implements View.OnClickListener {
 
-    private String uid;
+    private String uid, username;
     private ImageView userPhoto, followActionHintIv, feedItemFileIv;
     private TextView uidTv, publicName, followActionHintTv, distanceInfoTv, 
     		fansCountTv, descTv, feedItemTextTv, activityContentTv;
@@ -46,7 +46,7 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
         isFollowed = intent.getBooleanExtra("isFollowed", false);
-        String username = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
         String photo = intent.getStringExtra("photo");
         
         Log.d("uid>>>>>>+++++++", uid);
@@ -152,6 +152,7 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
             	
             	Intent intent2 = new Intent(this, EventListActivity.class);
             	intent2.putExtra("uid", uid);
+            	intent2.putExtra("username", username);
             	startActivity(intent2);
             	
             	break;

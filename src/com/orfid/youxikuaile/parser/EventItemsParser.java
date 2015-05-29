@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.orfid.youxikuaile.pojo.EventItem;
+import com.orfid.youxikuaile.pojo.UserItem;
 
 /**
  * Created by Administrator on 2015/3/5.
@@ -50,11 +51,20 @@ public class EventItemsParser {
         EventItem eventItem = new EventItem();
         
         String id = null, title = null, ctmie = null, content = null;
+        List<UserItem> users = new ArrayList<UserItem>();
         try {
 	        id = jEventItem.getString("id");
 	        title = jEventItem.getString("title");
 	        ctmie = jEventItem.getString("ctime");
 	        content = jEventItem.getString("content");
+	        JSONArray jUsers = jEventItem.getJSONArray("joins");
+	        if (jUsers.length() > 0) {
+				for (int i=0; i<jUsers.length(); i++) {
+					JSONObject jUser = jUsers.getJSONObject(i);
+					users.add(new UserItem(jUser.getString("uid"), jUser.getString("username"), jUser.getString("photo"), 
+							jUser.getString("signature"), jUser.getString("type")));
+				}
+			}
         } catch (Exception e) {
         	e.printStackTrace();
         }
@@ -63,6 +73,7 @@ public class EventItemsParser {
         eventItem.setTitle(title);
         eventItem.setCtmie(ctmie);
         eventItem.setContent(content);
+        eventItem.setUsers(users.toArray(new UserItem[users.size()]));
 
         return eventItem;
     }

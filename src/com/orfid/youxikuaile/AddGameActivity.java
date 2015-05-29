@@ -10,21 +10,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +64,37 @@ public class AddGameActivity extends Activity implements OnClickListener {
 		gameAddConfirmBtn.setOnClickListener(this);
 		saveGameBtn.setOnClickListener(this);
 		chooseGame.setOnClickListener(this);
+//		gamesGv.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+////				Log.d("ddddd=====>", "dddd");
+//				view.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
+//				view.setOnClickListener(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						new AlertDialog.Builder(AddGameActivity.this)
+//						.setMessage("确定删除?")
+//						.setPositiveButton("是", new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface dialog,
+//									int which) {
+//								
+//							}
+//							
+//						})
+//						.setNegativeButton("否", null)
+//						.show();
+//					}
+//					
+//				});
+//				return false;
+//			}
+//			
+//		});
 	}
 
 	private void initView() {
@@ -120,24 +154,69 @@ public class AddGameActivity extends Activity implements OnClickListener {
 
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			PictureViewHolder viewHolder = null;
 			if (convertView == null) {
 				viewHolder = new PictureViewHolder();
 				convertView = LayoutInflater.from(AddGameActivity.this).inflate(
 						R.layout.game_item_tag_style, parent, false);
-				viewHolder.tv_game_bg = (TextView) convertView.findViewById(R.id.game_item_tag_btn);
+				viewHolder.tv_game_bg = (Button) convertView.findViewById(R.id.game_item_tag_btn);
+				viewHolder.delete_iv = (ImageView) convertView.findViewById(R.id.delete_iv);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (PictureViewHolder) convertView.getTag();
 			}
 			
 			objBean = items.get(position);
+			viewHolder.tv_game_bg.setOnLongClickListener(new OnLongClickListener() {
+
+				@Override
+				public boolean onLongClick(View v) {
+					View parentView = (View) v.getParent();
+					parentView.findViewById(R.id.delete_iv).setVisibility(View.VISIBLE);
+					
+					return false;
+				}
+				
+			});
+			viewHolder.delete_iv.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(final View v) {
+					new AlertDialog.Builder(AddGameActivity.this)
+					.setMessage("确定删除?")
+					.setPositiveButton("是", new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							Log.d("gameId======>", objBean.getId());
+							try {
+								v.setVisibility(View.GONE);
+								doRemoveGameAction(position, objBean.getId());
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+						
+					})
+					.setNegativeButton("否", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							v.setVisibility(View.GONE);
+						}
+					})
+					.show();
+				}
+				
+			});
 			viewHolder.tv_game_bg.setText(objBean.getName());
 			return convertView;
 		}
 		public class PictureViewHolder {
-			TextView tv_game_bg;
+			Button tv_game_bg;
+			ImageView delete_iv;
 		}
 		
 	}
@@ -283,6 +362,33 @@ public class AddGameActivity extends Activity implements OnClickListener {
 	           				startActivity(intent);
 	           				finish();
                        }
+                    } else if (status == 0) {
+                        Toast.makeText(AddGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+
+        });
+    }
+	
+	private void doRemoveGameAction(final int pos, final String gameId) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", gameId);
+        HttpRestClient.post("game/remove", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	gameItems.remove(pos);
+                    	adapter.notifyDataSetChanged();
                     } else if (status == 0) {
                         Toast.makeText(AddGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/global_bg_color"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:id="@+id/title"
+            android:background="#ffb400"
+            android:gravity="center_vertical"  >
+	        <TextView
+	                android:id="@+id/tv_title"
+	                android:layout_width="180dp"
+	                android:layout_height="wrap_content"
+	                android:layout_centerInParent="true"
+	                android:textSize="20sp"
+	                android:ellipsize="end"
+	                android:singleLine="true"
+	                android:textColor="#ffffff" />
+	
+	        <Button
+	                android:id="@+id/join_btn"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_alignParentRight="true"
+	                android:layout_centerVertical="true"
+	                android:layout_marginRight="8dp"
+	                android:textSize="20sp"
+	                android:textColor="#ffffff"
+	                android:background="@drawable/header_right_save_selector"
+	                android:text="报名" />
+	        <ImageButton
+	            android:id="@+id/back_btn"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_centerVertical="true"
+	            android:src="@drawable/icon_back"
+	            android:onClick="stepBack"
+	            android:background="@null" />
+	
+	    </RelativeLayout>
+    
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical">
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:padding="15dp"
+		            android:layout_marginTop="10dp"
+		            android:background="@color/white"
+		            android:orientation="vertical">
+			        <TextView
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textColor="@color/black"
+			            android:textSize="15sp"
+			            android:text="参与用户" />
+		            <RelativeLayout
+		                android:layout_width="match_parent"
+		                android:layout_height="wrap_content">
+		                <ImageView
+		                    android:id="@+id/arrow_hinter"
+		                    android:layout_width="wrap_content"
+		                    android:layout_height="wrap_content"
+		                    android:layout_alignParentRight="true"
+		                    android:src="@drawable/icon_arrow_right_gray" />
+		                <com.orfid.youxikuaile.widget.MyGridView
+			                android:id="@+id/event_users_gv"
+			                android:layout_width="wrap_content"
+			                android:layout_height="wrap_content"
+			                android:horizontalSpacing="2dp"
+			                android:listSelector="@null"
+			                android:numColumns="5"
+			                android:stretchMode="columnWidth"
+			                android:verticalSpacing="2dp" />
+		            </RelativeLayout>
+		                
+		        </LinearLayout>
+        
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="match_parent"
+		            android:background="@color/white"
+		            android:layout_marginTop="10dp"
+		            android:orientation="vertical">
+		            <TextView
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textColor="@color/black"
+		                android:textSize="15sp"
+		                android:paddingTop="15dp"
+		                android:paddingLeft="15dp"
+		                android:paddingBottom="5dp"
+		                android:text="活动介绍" />
+		            <View
+		                android:layout_width="match_parent"
+		                android:layout_height="1dp"
+		                android:background="@drawable/line" />
+		            
+		            <LinearLayout
+		                android:layout_width="match_parent"
+		                android:layout_height="wrap_content"
+		                android:padding="5dp"
+		                android:orientation="vertical">
+		                <ImageView
+		                    android:id="@+id/event_poster"
+		                    android:layout_width="match_parent"
+		                    android:layout_height="wrap_content"
+		                    android:scaleType="centerCrop" />
+		                <LinearLayout
+		                    android:layout_width="match_parent"
+		                    android:layout_height="wrap_content"
+		                    android:orientation="vertical">
+		                    <TextView
+		                        android:id="@+id/event_title"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:layout_gravity="center_horizontal"
+		                        android:textSize="18sp"
+		                        android:textColor="@color/black"
+		                        android:paddingBottom="10dp" />
+		                    <TextView
+		                        android:id="@+id/event_msg"
+		                        android:layout_width="wrap_content"
+		                        android:layout_height="wrap_content"
+		                        android:textColor="#333" />
+		                </LinearLayout>
+		            </LinearLayout>
+                
+                </LinearLayout>
+              </LinearLayout>
+            </ScrollView>
+            
+</LinearLayout>

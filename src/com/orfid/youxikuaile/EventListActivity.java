@@ -10,14 +10,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +27,12 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.orfid.youxikuaile.parser.EventItemsParser;
 import com.orfid.youxikuaile.pojo.EventItem;
+import com.orfid.youxikuaile.pojo.UserItem;
 
 public class EventListActivity extends Activity {
 
 	private ListView eventListView;
-	private String uid;
+	private String uid, username;
 	private List<EventItem> eventItems = new ArrayList<EventItem>();
     private MyAdapter adapter;
 	
@@ -49,12 +51,40 @@ public class EventListActivity extends Activity {
 	
 	private void initView() {
 		uid = getIntent().getStringExtra("uid");
-		
+		username = getIntent().getStringExtra("username");
 		eventListView = (ListView) findViewById(R.id.event_list_lv);
 	}
 
 	private void setListener() {
+		eventListView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				EventItem item = adapter.getItem(position);
+				UserItem[] userItems = item.getUsers();
+				String users = "[";
+				for (int i=0; i<userItems.length; i++) {
+					String username = userItems[i].getUsername();
+					String uid = userItems[i].getUid();
+					String photo = userItems[i].getPhoto();
+					String userItem = "{\"uid\":" + uid + ",\"username\":\"" + username + "\",\"photo\":\"" + photo + "\"}";
+					users += userItem;
+					if (i != userItems.length - 1) users += ",";
+				}
+				users += "]";
+				Log.d("users==============>", users);
+				Intent intent = new Intent(EventListActivity.this, EventDetailActivity.class);
+				intent.putExtra("uid", uid);
+				intent.putExtra("event_id", item.getId());
+				intent.putExtra("event_title", item.getTitle());
+				intent.putExtra("event_msg", item.getContent());
+				intent.putExtra("username", username);
+				intent.putExtra("users", users);
+				startActivity(intent);
+			}
+			
+		});
 	}
 
 	private void obtainData() {
@@ -82,7 +112,6 @@ public class EventListActivity extends Activity {
                         eventItems = parser.parse(response.getJSONObject("data"));
                         adapter = new MyAdapter(EventListActivity.this, R.layout.event_item, eventItems);
                         eventListView.setAdapter(adapter);
-                    	 
 
                     } else if (status == 0) {
                         Toast.makeText(EventListActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();

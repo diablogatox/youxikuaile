@@ -122,7 +122,7 @@ public class ChattingActivity extends Activity implements OnClickListener {
 	private int rows = 4;
 	private List<View> views = new ArrayList<View>();
 	private float tmpRecTime;
-	private String photoPath;
+	private String photoPath, users;
 	
 	final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
     HashMap user = dbHandler.getUserDetails();
@@ -137,8 +137,11 @@ public class ChattingActivity extends Activity implements OnClickListener {
 			Bundle bundle = intent.getExtras();
 			uid = bundle.getString("uid");
 			sid = bundle.getString("sid");
+			users = bundle.getString("users");
 			isGroup = bundle.getBoolean("isGroup");
 		//}
+			
+			Log.d("users=========>", users);
 		chatList = new ArrayList<ChatEntity>(); 
         chatAdapter = new ChatAdapter(this, chatList);
         
@@ -510,7 +513,10 @@ public class ChattingActivity extends Activity implements OnClickListener {
 			rl_chatting_picturek.setVisibility(View.GONE);//“相册”布局(隐藏)
 			break;
 		case R.id.icon_title_right://群聊图标
-//			startActivity(new Intent(ChattingActivity.this,ChattingMessageActivity.class));
+			Intent intent = new Intent(ChattingActivity.this,ChattingUsersActivity.class);
+			intent.putExtra("users", users);
+			intent.putExtra("sid", sid);
+			startActivity(intent);
 			break;
 		case R.id.iv_chatting_picturek://
 			startActivityForResult(new Intent(ChattingActivity.this,SelectPicActivity.class), 0);

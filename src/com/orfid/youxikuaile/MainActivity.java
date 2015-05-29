@@ -1421,9 +1421,23 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 //								}
 //								Log.d("uid=====xxxx======>", uid);
 								Log.d("sid=====xxxx=======>", sid);
+								
+								UserItem[] userItems = item.getUsers();
+								String users = "[";
+								for (int i=0; i<userItems.length; i++) {
+									String username = userItems[i].getUsername();
+									String uid = userItems[i].getUid();
+									String photo = userItems[i].getPhoto();
+									String userItem = "{\"uid\":" + uid + ",\"username\":\"" + username + "\",\"photo\":\"" + photo + "\"}";
+									users += userItem;
+									if (i != userItems.length - 1) users += ",";
+								}
+								users += "]";
+								Log.d("users==============>", users);
 								Intent i = new Intent();
 	    						i.setClass(MainActivity.this, ChattingActivity.class);
 	    						i.putExtra("sid", sid);
+	    						i.putExtra("users", users);
 //	    						i.putExtra("uid", uid);
 	    						startActivity(i);
 							}

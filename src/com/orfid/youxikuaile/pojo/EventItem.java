@@ -5,6 +5,7 @@ public class EventItem {
 	String id;
 	String title;
 	String ctmie;
+	UserItem[] users;
 	
 	public EventItem(String content, String id, String title, String ctmie) {
 		super();
@@ -44,6 +45,14 @@ public class EventItem {
 	}
 	public void setCtmie(String ctmie) {
 		this.ctmie = ctmie;
+	}
+	
+	public UserItem[] getUsers() {
+		return users;
+	}
+
+	public void setUsers(UserItem[] users) {
+		this.users = users;
 	}
 	
 }

@@ -10,12 +10,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,6 +57,19 @@ public class NearbyOrganizationsActivity extends Activity implements OnClickList
 
 	private void setListener() {
 		backBtn.setOnClickListener(this);
+		nearbyOrganizationsLv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				OrganizationItem item = adapter.getItem(position);
+				Intent intent = new Intent(NearbyOrganizationsActivity.this, EventDetailActivity.class);
+				intent.putExtra("event_title", item.getLastEvent().getTitle());
+//				intent.putExtra("user_title", item.getName());
+				startActivity(intent);
+			}
+			
+		});
 	}
 
 	private void obtainData() {
