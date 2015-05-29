@@ -2,10 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="10dp"
+    android:orientation="vertical"
     android:descendantFocusability="blocksDescendants"
     android:background="@color/white" >
+    
+    <TextView
+        android:id="@+id/catalogTv1"
+        style="@style/MMListCatalog"
+        android:layout_height="wrap_content" />
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="horizontal"
+	    android:padding="10dp"
+	    android:background="@color/white" >
     
     <!-- 用户头像 -->
     <ImageView
@@ -43,5 +54,7 @@
         android:textColor="@color/white"
         android:clickable="false"
         android:text="已关注" />
+    
+    </LinearLayout>
 
 </LinearLayout>

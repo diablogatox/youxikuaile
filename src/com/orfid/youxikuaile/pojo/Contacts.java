@@ -11,6 +11,14 @@ public class Contacts {
 		this.py = py;
 		this.check = check;
 	}
+	
+	public Contacts(String uid, String icon, String name, String py, boolean isFollow) {
+		this.uid = uid;
+		this.icon = icon;
+		this.name = name;
+		this.py = py;
+		this.isFollow = isFollow;
+	}
 
 	public String getUid() {
 		return uid;
@@ -60,11 +68,21 @@ public class Contacts {
 		this.check = check;
 	}
 
+	public boolean isFollow() {
+		return isFollow;
+	}
+
+	public void setFollow(boolean isFollow) {
+		this.isFollow = isFollow;
+	}
+
 	private String uid;
 	private String name;
 	private String info;
 	private String icon;
 	private String py; //首字母拼音
+	@SuppressWarnings("unused")
+	private boolean isFollow;
 	@SuppressWarnings("unused")
 	private boolean check;
 }
