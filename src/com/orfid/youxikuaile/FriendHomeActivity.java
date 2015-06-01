@@ -32,7 +32,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  */
 public class FriendHomeActivity extends Activity implements View.OnClickListener {
 
-    private String uid;
+    private String uid, username, photo;
     private ProgressBar mPbar;
     private ImageView userPhoto, followActionHintIv, feedItemFileIv, gameItemIconIv;
     private TextView titleTv, uidTv, collegeTv, 
@@ -41,6 +41,7 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
     private ImageButton backBtn;
     private View followBtnView, chatBtnView, feedItemLl, gameItemLl;
     private boolean isFollowed;
+    private HashMap user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,11 +56,15 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
     }
 
     private void init() {
+    	
+    	final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        user = dbHandler.getUserDetails();
+        
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
         isFollowed = intent.getBooleanExtra("isFollowed", false);
-        String username = intent.getStringExtra("username");
-        String photo = intent.getStringExtra("photo");
+        username = intent.getStringExtra("username");
+        photo = intent.getStringExtra("photo");
         
         Log.d("uid>>>>>>+++++++", uid);
 
@@ -148,8 +153,14 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
             	
                 break;
             case R.id.btn_chat:
+            	String users = "[{\"uid\":\""+uid+"\",\"username\":\""+username+"\",\"photo\":\""+photo+"\"},"
+            			+ "{\"uid\":\""+user.get("uid").toString()+"\",\"username\":\""+user.get("username").toString()+"\",\"photo\":\""+user.get("photo").toString()+"\"}]";
+            	Log.d("users===========>", users);
+            	
+                
             	Intent i = new Intent(FriendHomeActivity.this, ChattingActivity.class);
             	i.putExtra("uid", uid);
+            	i.putExtra("users", users);
             	startActivity(i);
             	break;
         }

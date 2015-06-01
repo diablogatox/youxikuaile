@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.orfid.youxikuaile.pojo.Event;
+import com.orfid.youxikuaile.pojo.EventItem;
 import com.orfid.youxikuaile.pojo.OrganizationItem;
 
 /**
@@ -51,7 +52,7 @@ public class OrganizationItemsParser {
 
         OrganizationItem feedItem = new OrganizationItem();
         String uid = null, utime = null, distance = null, name = null, type = null, photo = null;
-        Event lastEvent = null;
+        EventItem lastEvent = null;
         try {
 			uid = jFeedItem.getString("uid");
 			name = jFeedItem.getString("username");
@@ -61,7 +62,7 @@ public class OrganizationItemsParser {
 			photo = jFeedItem.getString("photo");
 			if (!jFeedItem.isNull("info")) {
 				JSONObject event = jFeedItem.getJSONObject("info");
-				lastEvent = new Event(event.getString("ctime"), event.getString("title"));
+				lastEvent = new EventItem(null, event.getString("id"), event.getString("title"), event.getString("ctime"));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

@@ -27,13 +27,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class PublicHomeActivity extends Activity implements View.OnClickListener {
 
-    private String uid, username;
+    private String uid, username, photo;
     private ImageView userPhoto, followActionHintIv, feedItemFileIv;
     private TextView uidTv, publicName, followActionHintTv, distanceInfoTv, 
     		fansCountTv, descTv, feedItemTextTv, activityContentTv;
     private ImageButton backBtn;
     private View followBtnView, feedItemLl, chatBtnView, rl_edit_age, rl_edit_area, event_rl, rl_desc;
     private boolean isFollowed;
+    private HashMap user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,11 +44,15 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
     }
 
     private void init() {
+    	
+    	final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        user = dbHandler.getUserDetails();
+        
         Intent intent = getIntent();
         uid = intent.getStringExtra("uid");
         isFollowed = intent.getBooleanExtra("isFollowed", false);
         username = intent.getStringExtra("username");
-        String photo = intent.getStringExtra("photo");
+        photo = intent.getStringExtra("photo");
         
         Log.d("uid>>>>>>+++++++", uid);
 
@@ -135,8 +140,13 @@ public class PublicHomeActivity extends Activity implements View.OnClickListener
                 break;
                 
             case R.id.btn_chat:
+            	String users = "[{\"uid\":\""+uid+"\",\"username\":\""+username+"\",\"photo\":\""+photo+"\"},"
+            			+ "{\"uid\":\""+user.get("uid").toString()+"\",\"username\":\""+user.get("username").toString()+"\",\"photo\":\""+user.get("photo").toString()+"\"}]";
+            	Log.d("users===========>", users);
+            	
             	Intent i = new Intent(PublicHomeActivity.this, ChattingActivity.class);
             	i.putExtra("uid", uid);
+            	i.putExtra("users", users);
             	startActivity(i);
             	break;
             	

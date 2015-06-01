@@ -64,8 +64,12 @@ public class NearbyOrganizationsActivity extends Activity implements OnClickList
 					int position, long id) {
 				OrganizationItem item = adapter.getItem(position);
 				Intent intent = new Intent(NearbyOrganizationsActivity.this, EventDetailActivity.class);
-				intent.putExtra("event_title", item.getLastEvent().getTitle());
-//				intent.putExtra("user_title", item.getName());
+				
+				intent.putExtra("uid", item.getUid());
+				intent.putExtra("doFetchEventInfo", true);
+				intent.putExtra("event_id",item.getLastEvent().getId());
+				intent.putExtra("username", item.getName());
+				
 				startActivity(intent);
 			}
 			

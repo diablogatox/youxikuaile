@@ -8,12 +8,12 @@ public class OrganizationItem {
 	private String distance;
 	private String utime;
 	private String type;
-	private Event lastEvent;
+	private EventItem lastEvent;
 
 	public OrganizationItem() {}
 	
 	public OrganizationItem(String uid, String name, String photo,
-			String distance, String utime, Event lastEvent) {
+			String distance, String utime, EventItem lastEvent) {
 		super();
 		this.uid = uid;
 		this.name = name;
@@ -39,11 +39,11 @@ public class OrganizationItem {
 		this.utime = utime;
 	}
 
-	public Event getLastEvent() {
+	public EventItem getLastEvent() {
 		return lastEvent;
 	}
 
-	public void setLastEvent(Event lastEvent) {
+	public void setLastEvent(EventItem lastEvent) {
 		this.lastEvent = lastEvent;
 	}
 

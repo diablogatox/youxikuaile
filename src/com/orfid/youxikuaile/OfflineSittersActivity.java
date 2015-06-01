@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -52,6 +54,32 @@ public class OfflineSittersActivity extends Activity implements View.OnClickList
 
         backBtn.setOnClickListener(this);
         sitterOnlineBtn.setOnClickListener(this);
+        offlineSittersLv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				UserItem item = adapter.getItem(position);
+				String type = item.getType();
+				String uid = item.getUid();
+				String username = item.getUsername();
+				String photo = item.getPhoto();
+				boolean isFollowed = item.isFollow();
+				Intent intent;
+            	if (type.equals("0")) {
+            		intent = new Intent(OfflineSittersActivity.this, FriendHomeActivity.class);
+            	} else {
+            		intent = new Intent(OfflineSittersActivity.this, PublicHomeActivity.class);
+            	}
+                intent.putExtra("uid", uid);
+                intent.putExtra("username", username);
+                intent.putExtra("photo", photo);
+                intent.putExtra("isFollowed", isFollowed);
+                
+                startActivity(intent);
+			}
+        	
+        });
 
         adapter = new MyAdapter(items);
         offlineSittersLv.setAdapter(adapter);

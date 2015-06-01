@@ -99,26 +99,34 @@ public class EventDetailActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		id = bundle.getString("event_id");
 		
-		usersStr = getIntent().getStringExtra("users");
-		JSONArray usersArr;
-		try {
-			usersArr = new JSONArray(usersStr);
-			for (int i=0; i<usersArr.length(); i++) {
-				JSONObject jObj = (JSONObject) usersArr.get(i);
-				String uid = jObj.getString("uid");
-				String username = jObj.getString("username");
-				String photo = jObj.getString("photo");
-				users.add(new UserItem(uid, username, photo, null, null));
+		if (bundle.getBoolean("doFetchEventInfo") == true) {
+			try {
+				doFetchEventInfoAction(id);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} else {
+			usersStr = getIntent().getStringExtra("users");
+			JSONArray usersArr;
+			try {
+				usersArr = new JSONArray(usersStr);
+				for (int i=0; i<usersArr.length(); i++) {
+					JSONObject jObj = (JSONObject) usersArr.get(i);
+					String uid = jObj.getString("uid");
+					String username = jObj.getString("username");
+					String photo = jObj.getString("photo");
+					users.add(new UserItem(uid, username, photo, null, null));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			adapter.notifyDataSetChanged();
+			
+			title_tv.setText(bundle.getString("username"));	
+			event_title.setText(bundle.getString("event_title"));
+			event_msg.setText(Html.fromHtml(bundle.getString("event_msg")));
 		}
-		
-		adapter.notifyDataSetChanged();
-		
-		title_tv.setText(bundle.getString("username"));	
-		event_title.setText(bundle.getString("event_title"));
-		event_msg.setText(Html.fromHtml(bundle.getString("event_msg")));
 	}
 	
 	private void doJoinEventAction(String id) throws JSONException {
@@ -135,6 +143,59 @@ public class EventDetailActivity extends Activity {
                     int status = response.getInt("status");
                     if (status == 1) { // success
                     	Toast.makeText(EventDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    } else if (status == 0) {
+                        Toast.makeText(EventDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+	}
+	
+	private void doFetchEventInfoAction(String id) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", id);
+        HttpRestClient.post("huodong/item", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	Toast.makeText(EventDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    	boolean joined = false;
+                    	JSONObject jObj = null;
+                    	try {
+                    		jObj = response.getJSONObject("data");
+                    		joined = jObj.getBoolean("joined");
+                    		JSONArray usersArr = jObj.getJSONArray("joins");
+                    		if (usersArr.length() > 0) {
+                    			for (int i=0; i<usersArr.length(); i++) {
+                					JSONObject obj = (JSONObject) usersArr.get(i);
+                					String uid = obj.getString("uid");
+                					String username = obj.getString("username");
+                					String photo = obj.getString("photo");
+                					users.add(new UserItem(uid, username, photo, null, null));
+                				}
+                    		}
+                    	} catch (Exception e) {
+                    		e.printStackTrace();
+                    	}
+                    	
+            			if (joined == true) {
+            				join_btn.setText("已参加");
+            				join_btn.setClickable(false);
+            			}
+            			adapter.notifyDataSetChanged();
+            			
+            			title_tv.setText(jObj.getJSONObject("user").getString("username"));	
+            			event_title.setText(jObj.getString("title"));
+            			event_msg.setText(Html.fromHtml(jObj.getString("content")));
+            			
                     } else if (status == 0) {
                         Toast.makeText(EventDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
