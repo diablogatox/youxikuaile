@@ -96,6 +96,7 @@ public class SelectFriendsActivity extends Activity implements OnClickListener {
 					item.put("uid", contact.get("uid").toString());
 					item.put("icon", contact.get("icon") == null?null:contact.get("icon").toString());
 					item.put("name", contact.get("name").toString());
+					item.put("info", contact.get("info").toString());
 					mapList2.add(item);
 					gvAdapter.notifyDataSetChanged();
 					
@@ -142,6 +143,8 @@ public class SelectFriendsActivity extends Activity implements OnClickListener {
 					for (int i=0; i<mapList2.size(); i++) {
 						inviteMap.put("uid", mapList2.get(i).get("uid"));
 						inviteMap.put("name", mapList2.get(i).get("name"));
+						inviteMap.put("icon", mapList2.get(i).get("icon"));
+						inviteMap.put("info", mapList2.get(i).get("info"));
 						
 						JSONObject obj1 = new JSONObject(inviteMap);
 						inviteeUnRegisteredUserList.add(obj1);
@@ -176,7 +179,9 @@ public class SelectFriendsActivity extends Activity implements OnClickListener {
 			String username = friends.get(i).getUsername();
 			String uid = friends.get(i).getUid();
 			String icon = friends.get(i).getPhoto();
-			mylist.add(new Contacts(uid, icon, username, null, PinyinUtils.getAlpha(username), false));
+			String type = friends.get(i).getType();
+			Log.d("type======>", type);
+			mylist.add(new Contacts(uid, icon, username, type, PinyinUtils.getAlpha(username), false));
 		}
 		
 		Contacts[] ContactsArray = mylist.toArray(new Contacts[mylist.size()]);

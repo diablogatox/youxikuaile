@@ -62,7 +62,7 @@ public class FansItemsParser {
 
         UserItem followItem = new UserItem();
         
-        String uid = null, photo = null, username = null;
+        String uid = null, photo = null, username = null, type = null;
         boolean isFollow = false;
         
         if (isNewFansNotify == true) {
@@ -72,6 +72,7 @@ public class FansItemsParser {
 		        photo = jUserObj.getString("photo");
 		        username = jUserObj.getString("username");
 		        isFollow = jUserObj.getBoolean("isFollow");
+		        type = jUserObj.getString("type");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -83,6 +84,7 @@ public class FansItemsParser {
 		        photo = jFollowItem.getString("photo");
 		        username = jFollowItem.getString("username");
 		        isFollow = jFollowItem.getBoolean("isFollow");
+		        type = jFollowItem.getString("type");
 	        } catch (Exception e) {
 	        	e.printStackTrace();
 	        }
@@ -92,6 +94,7 @@ public class FansItemsParser {
         followItem.setPhoto(photo);
         followItem.setUsername(username);
         followItem.setFollow(isFollow);
+        followItem.setType(type);
 
         return followItem;
     }

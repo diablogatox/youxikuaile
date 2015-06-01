@@ -79,6 +79,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="12dp"
 			android:layout_below="@id/main_area"
+			android:clickable="true"
 			android:visibility="gone">
 			<LinearLayout
 			    android:layout_width="match_parent"

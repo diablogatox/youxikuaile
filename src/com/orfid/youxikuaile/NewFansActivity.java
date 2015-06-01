@@ -143,7 +143,7 @@ public class NewFansActivity extends Activity implements OnClickListener {
         	ViewHolder holder = null;
 
 //            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.fans_item, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.fan_item, parent, false);
 
                 holder = new ViewHolder();
                 
@@ -164,16 +164,24 @@ public class NewFansActivity extends Activity implements OnClickListener {
 
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(NewFansActivity.this, FriendHomeActivity.class);
+//					Intent intent = new Intent(NewFansActivity.this, FriendHomeActivity.class);
+					String type = item.getType();
 					String uid = item.getUid();
 					String username = item.getUsername();
 					String photo = item.getPhoto();
 					boolean isFollowed = item.isFollow();
-					intent.putExtra("uid", uid);
+					Intent intent;
+	            	if (type.equals("0")) {
+	            		intent = new Intent(NewFansActivity.this, FriendHomeActivity.class);
+	            	} else {
+	            		intent = new Intent(NewFansActivity.this, PublicHomeActivity.class);
+	            	}
+	                intent.putExtra("uid", uid);
 	                intent.putExtra("username", username);
 	                intent.putExtra("photo", photo);
 	                intent.putExtra("isFollowed", isFollowed);
-					startActivity(intent);
+	                
+	                startActivity(intent);
 				}
             	
             });

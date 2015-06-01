@@ -3,7 +3,6 @@ package com.orfid.youxikuaile.pojo;
 public class Contacts {
 	
 	public Contacts(String uid, String icon, String name, String info, String py, boolean check) {
-		// TODO Auto-generated constructor stub
 		this.uid = uid;
 		this.icon = icon;
 		this.name = name;

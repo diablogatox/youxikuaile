@@ -48,10 +48,8 @@
 	        android:id="@+id/newfans_list_lv"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="12dp"
-	        android:divider="#f3f4f9"
+	        android:divider="@drawable/line"
 	        android:cacheColorHint="@android:color/transparent"
-	        android:dividerHeight="10dp"
 	        android:fadingEdge="none"
 	        android:fastScrollEnabled="true"
 	        android:scrollbars="none"/>

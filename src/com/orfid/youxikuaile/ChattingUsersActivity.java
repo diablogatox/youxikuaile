@@ -13,12 +13,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +43,8 @@ public class ChattingUsersActivity extends Activity {
 	private String sid;
 	private List<UserItem> users = new ArrayList<UserItem>();
 	private MyAdapter adapter;
+	private static final int ADD_CHAT_USER = 0;
+	private JSONArray jArr;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +63,48 @@ public class ChattingUsersActivity extends Activity {
 	private void initView() {
 		btn_quit = (Button) findViewById(R.id.btn_quit);
 		chat_users_gv = (MyGridView) findViewById(R.id.chat_users_gv);
+		
+		chat_users_gv.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		
 		adapter = new MyAdapter(this, R.layout.chat_user_item, users);
 		chat_users_gv.setAdapter(adapter);
 	}
 
 	private void setListener() {
-		// TODO Auto-generated method stub
+		
+		chat_users_gv.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				UserItem item = adapter.getItem(position);
+				if (!item.getUid().equals("0")) {
+					String type = item.getType();
+					String uid = item.getUid();
+					String username = item.getUsername();
+					String photo = item.getPhoto();
+					boolean isFollowed = item.isFollow();
+					Intent intent;
+	            	if (type.equals("0")) {
+	            		intent = new Intent(ChattingUsersActivity.this, FriendHomeActivity.class);
+	            	} else {
+	            		intent = new Intent(ChattingUsersActivity.this, PublicHomeActivity.class);
+	            	}
+	                intent.putExtra("uid", uid);
+	                intent.putExtra("username", username);
+	                intent.putExtra("photo", photo);
+	                intent.putExtra("isFollowed", isFollowed);
+	                
+	                startActivity(intent);
+				} else {
+					// add new user
+					Intent intent = new Intent(ChattingUsersActivity.this, SelectFriendsActivity.class);
+					startActivityForResult(intent, ADD_CHAT_USER);
+				}
+			}
+			
+		});
+		
 		btn_quit.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -86,6 +129,35 @@ public class ChattingUsersActivity extends Activity {
 			
 		});
 	}
+	
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode != RESULT_OK) return;
+		switch (requestCode) {
+		case ADD_CHAT_USER:
+			Log.d("selected users=========>", data.getStringExtra("selected_friends"));
+			List<String> members = new ArrayList<String>();
+			try {
+				jArr = new JSONArray(data.getStringExtra("selected_friends"));
+				Log.d("jArr length========>", jArr.length()+"");
+				for (int i=0; i<jArr.length(); i++) {
+					JSONObject jObj = (JSONObject) jArr.get(i);
+					Log.d("obj=====>", jObj.getString("uid"));
+					members.add(jObj.getString("uid"));
+				}
+				Log.d("members count========>", members.size()+"");
+				doJoinChatGroupAction(members);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			break;
+		default:
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 
 	private void obtainData() {
 		sid = getIntent().getStringExtra("sid");
@@ -98,8 +170,11 @@ public class ChattingUsersActivity extends Activity {
 				String uid = jObj.getString("uid");
 				String username = jObj.getString("username");
 				String photo = jObj.getString("photo");
-				users.add(new UserItem(uid, username, photo, null, null));
+				String type = jObj.getString("type");
+				users.add(new UserItem(uid, username, photo, null, type));
 			}
+			
+			users.add(new UserItem("0", null, null, "add_pic", null));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -150,9 +225,14 @@ public class ChattingUsersActivity extends Activity {
             }
             
             objBean = items.get(position);
+            
             if (objBean.getPhoto() != null) 
             	ImageLoader.getInstance().displayImage(objBean.getPhoto(), viewHolder.imgIv);
             viewHolder.titleTv.setText(objBean.getUsername());
+            
+            if (objBean.getUid().equals("0")) {
+        		viewHolder.imgIv.setImageDrawable(getResources().getDrawable(R.drawable.add_pic));
+        	}
             
             return convertView;
 		}
@@ -178,6 +258,46 @@ public class ChattingUsersActivity extends Activity {
                     int status = response.getInt("status");
                     if (status == 1) { // success
                     	 Toast.makeText(ChattingUsersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    } else if (status == 0) {
+                        Toast.makeText(ChattingUsersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
+	
+	private void doJoinChatGroupAction(List<String> members) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("sid", sid);
+        params.put("members", members);
+        HttpRestClient.post("message/joinGroup", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	 Toast.makeText(ChattingUsersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+//                    	if (jArr.length() > 0) {
+//                    		
+//	                    	for (int i=0; i < jArr.length(); i++) {
+//	                    	 	JSONObject jObj = (JSONObject) jArr.get(i);
+//	                    		adapter.insert(new UserItem(
+//	                    					jObj.getString("uid"),
+//	                    					jObj.getString("name"),
+//	                    					jObj.has("icon")?jObj.getString("icon"):null,
+//	                    					null,
+//	                    					jObj.has("icon")?jObj.getString("info"):null
+//	                    				), adapter.getCount() - 2);
+//	                    	}
+//                    	}
+//                    	adapter.notifyDataSetChanged();
                     } else if (status == 0) {
                         Toast.makeText(ChattingUsersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

@@ -10,7 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -869,13 +872,13 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
             
             final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
             final HashMap user = dbHandler.getUserDetails();
-            String photo = user.get("photo").toString();
-            String username = user.get("username").toString();
-            String uid = user.get("uid").toString();
-            if (photo != null && !photo.equals("null")) 
-            	ImageLoader.getInstance().displayImage(user.get("photo").toString(), userPicture);
-            if (username != null) nameTv.setText(username);
-            uidTv.setText(uid);
+//            String photo = user.get("photo").toString();
+//            String username = user.get("username").toString();
+//            String uid = user.get("uid").toString();
+//            if (photo != null && !photo.equals("null")) 
+//            	ImageLoader.getInstance().displayImage(user.get("photo").toString(), userPicture);
+//            if (username != null) nameTv.setText(username);
+//            uidTv.setText(uid);
             
             try {
             	// 获取用户金币和积分
@@ -1406,6 +1409,43 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                     	sessionMessageItems = parser.parse(response.getJSONObject("data"));
                     	myAdapter3 = new MyAdapter3(MainActivity.this, R.layout.session_message_item, sessionMessageItems);
                     	msgSessionLv.setAdapter(myAdapter3);
+                    	msgSessionLv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+							@Override
+							public boolean onItemLongClick(
+									final AdapterView<?> parent, View view,
+									final int position, long id) {
+								final String[] items = {"删除"};
+								new AlertDialog.Builder(MainActivity.this)
+								.setItems(items, new DialogInterface.OnClickListener() {
+									
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										Log.d("which========>", items[which]);
+										final MessageSession item = (MessageSession) parent.getAdapter().getItem(position);
+										Log.d("sid======>", item.getId());
+										new AlertDialog.Builder(MainActivity.this)
+											.setMessage("确定删除吗?")
+											.setPositiveButton("是", new DialogInterface.OnClickListener() {
+												
+												@Override
+												public void onClick(DialogInterface dialog, int which) {
+													try {
+														doRemoveSessionAction(item.getId());
+													} catch (JSONException e) {
+														e.printStackTrace();
+													}
+												}
+											})
+											.setNegativeButton("否", null)
+											.show();
+									}
+								})
+								.show();
+								return true;
+							}
+                    		
+                    	});
                     	msgSessionLv.setOnItemClickListener(new OnItemClickListener() {
 
 							@Override
@@ -1432,7 +1472,8 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 									String username = userItems[i].getUsername();
 									String uid = userItems[i].getUid();
 									String photo = userItems[i].getPhoto();
-									String userItem = "{\"uid\":" + uid + ",\"username\":\"" + username + "\",\"photo\":\"" + photo + "\"}";
+									String type = userItems[i].getType();
+									String userItem = "{\"uid\":" + uid + ",\"username\":\"" + username + "\",\"photo\":\"" + photo + "\",\"type\":\"" + type + "\"}";
 									users += userItem;
 									if (i != userItems.length - 1) users += ",";
 								}
@@ -1914,6 +1955,30 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
         });
     }
 	
+	private void doRemoveSessionAction(String sid) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("sid", sid);
+        HttpRestClient.post("message/sessionRemove", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	doFetchMessageSessionsAction();
+                    } else if (status == 0) {
+                        Toast.makeText(MainActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+	
 	private void doFetchUserInfoAction() throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
@@ -1935,6 +2000,13 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                     	feedItemTextTv = (TextView) findViewById(R.id.feed_item_text_tv);
                     	feedItemFileIv = (ImageView) findViewById(R.id.feed_item_file_iv);
 
+                    	String photo = user.get("photo").toString();
+                        String username = user.get("username").toString();
+                        String uid = user.get("uid").toString();
+                        if (photo != null && !photo.equals("null")) 
+                        	ImageLoader.getInstance().displayImage(user.get("photo").toString(), userPicture);
+                        if (username != null) nameTv.setText(username);
+                        
                     	if (!data.isNull("feed")) {
                     		JSONObject jFeed = data.getJSONObject("feed");
                     		if (jFeed.has("files")) {
