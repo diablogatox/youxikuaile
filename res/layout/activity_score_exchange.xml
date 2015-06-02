@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/global_bg_color"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:id="@+id/title"
+            android:background="#ffb400"
+            android:gravity="center_vertical"  >
+        <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:text="积分兑换"
+                android:textColor="#ffffff" />
+
+        
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_back"
+            android:background="@null" />
+
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal">
+            <EditText
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:background="@drawable/eidt_background"
+	            android:textColor="#333333"
+	            android:layout_marginRight="10dp"
+	            android:hint="上海一区dnf游戏码"
+	            android:singleLine="true"
+	            android:ellipsize="end"
+	            android:editable="false"
+	            android:textSize="15sp" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="查看"
+                android:textSize="15sp"
+                android:textColor="#333"
+                android:background="@drawable/integral_set_btn1" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="兑换"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/integral_set_btn2" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/eidt_background"
+                android:textColor="#333333"
+                android:hint="上海一区dnf游戏码"
+                android:singleLine="true"
+                android:ellipsize="end"
+                 android:editable="false"
+                android:layout_marginRight="10dp"
+                android:textSize="15sp" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="查看"
+                android:textSize="15sp"
+                android:textColor="#333"
+                android:background="@drawable/integral_set_btn1" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="兑换"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/integral_set_btn2" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/eidt_background"
+                android:textColor="#333333"
+                android:layout_marginRight="10dp"
+                android:hint="积分捐献"
+                android:singleLine="true"
+                 android:editable="false"
+                android:ellipsize="end"
+                android:textSize="15sp" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="查看"
+                android:textSize="15sp"
+                android:textColor="#333"
+                android:background="@drawable/integral_set_btn1" />
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="捐献"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/integral_set_btn2" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#333"
+            android:text="目前你有积分兑换一个游戏码，需1000积分。兑换成功后，你可以在礼包中查看" />
+    </LinearLayout>
+    
+</LinearLayout>

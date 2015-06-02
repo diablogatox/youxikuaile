@@ -75,6 +75,7 @@ public class EventDetailActivity extends Activity {
 				((TextView) v).setText("已参加");
 				v.setClickable(false);
 				try {
+					Log.d("id=======>", id);
 					doJoinEventAction(id);
 				} catch (JSONException e) {
 					e.printStackTrace();
