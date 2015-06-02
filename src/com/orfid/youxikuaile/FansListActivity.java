@@ -116,16 +116,20 @@ public class FansListActivity extends Activity implements OnClickListener {
 							@Override
 							public void onItemClick(AdapterView<?> parent,
 									View view, int position, long id) {
-								final UserItem item = (UserItem) adapter.getItem(position);
+								Map<String, Object> item = (Map<String, Object>) adapter.getItem(position);
+								Log.d("uid======>", item.get("uid").toString());
+								Log.d("name======>", item.get("name").toString());
+//								Log.d("photo======>", mapList.get(position).get("icon").toString());
+//								final UserItem item = (UserItem) adapter.getItem(position);
 								Intent intent = new Intent(FansListActivity.this, FriendHomeActivity.class);
-								String uid = item.getUid();
-								String username = item.getUsername();
-								String photo = item.getPhoto();
-								boolean isFollowed = item.isFollow();
+								String uid = item.get("uid").toString();
+								String username = item.get("name").toString();
+//								String photo = item.getPhoto();
+//								boolean isFollowed = item.isFollow();
 								intent.putExtra("uid", uid);
 				                intent.putExtra("username", username);
-				                intent.putExtra("photo", photo);
-				                intent.putExtra("isFollowed", isFollowed);
+//				                intent.putExtra("photo", photo);
+//				                intent.putExtra("isFollowed", isFollowed);
 								startActivity(intent);
 							}
                         	
