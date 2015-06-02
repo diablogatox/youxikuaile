@@ -12,7 +12,10 @@
         android:paddingBottom="4dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:minLines="2"
         android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="center"
         android:textColor="@color/black"
         android:textSize="10sp"
         android:background="@color/grey" />

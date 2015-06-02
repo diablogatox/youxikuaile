@@ -9,7 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -19,6 +21,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -91,6 +95,15 @@ public class SittersActivity extends Activity implements OnClickListener {
 //			}
 //			
 //		});
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Log.d("ddddd=====>", "ddddd");
+			}
+			
+		});
 	}
 	
 	@Override
@@ -105,6 +118,11 @@ public class SittersActivity extends Activity implements OnClickListener {
 			}
 			break;
 		case OFFLINE_SITTER_PUBLISH:
+			try {
+				doFetchSitterGameListAction();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			break;
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
@@ -170,6 +188,30 @@ public class SittersActivity extends Activity implements OnClickListener {
         });
     }
 	
+	private void doRemoveSitterAction(long id) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", id);
+        HttpRestClient.post("peiwan/remove", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success           	
+                    	doFetchSitterGameListAction();
+                    } else if (status == 0) {
+                        Toast.makeText(SittersActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+	
 	private class MyAdapter extends ArrayAdapter<GameSitterItem> {
 		
 		private List<GameSitterItem> items;
@@ -209,9 +251,9 @@ public class SittersActivity extends Activity implements OnClickListener {
 		HashMap<Integer,View> lmap = new HashMap<Integer,View>();
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			ViewHolder viewHolder = null;
-            if (lmap.get(position)==null) {
+//            if (convertView==null) {
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(context).inflate(
                         resource, parent, false);
@@ -221,16 +263,76 @@ public class SittersActivity extends Activity implements OnClickListener {
                 viewHolder.gameSitterUtimeTv = (TextView) convertView.findViewById(R.id.game_sitter_utime_tv);
                 viewHolder.gameSitterDescTv = (TextView) convertView.findViewById(R.id.game_sitter_desc_tv);
                 viewHolder.gameSitterAreaGv = (GridView) convertView.findViewById(R.id.game_sitter_area_gv);
+                viewHolder.main_content_rlview = convertView.findViewById(R.id.main_content_rlview);
                 viewHolder.overlayView = convertView.findViewById(R.id.overlay_rl);
                 viewHolder.sitterDeleteIv = (ImageView) convertView.findViewById(R.id.sitter_delete_iv);
-                lmap.put(position, convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                convertView = lmap.get(position);
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+                viewHolder.sitterModifyIv = (ImageView) convertView.findViewById(R.id.sitter_modify_iv);
+//                lmap.put(position, convertView);
+//                convertView.setTag(viewHolder);
+//            } else {
+//                convertView = lmap.get(position);
+//                viewHolder = (ViewHolder) convertView.getTag();
+//            }
             
             objBean = items.get(position);
+            
+            viewHolder.main_content_rlview.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					View overlayView = ((View) v.getParent()).findViewById(R.id.overlay_rl);
+					overlayView.setVisibility(View.VISIBLE);
+				}
+            	
+            });
+            
+            viewHolder.overlayView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					v.setVisibility(View.GONE);
+				}
+            	
+            });
+            
+            viewHolder.sitterModifyIv.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (getItem(position).getAreas().size() <= 0) {
+						Intent i = new Intent(SittersActivity.this, OfflineSitterPublishActivity.class);
+						i.putExtra("id", getItem(position).getId());
+						i.putExtra("desc", getItem(position).getDesc());
+						startActivityForResult(i, OFFLINE_SITTER_PUBLISH);
+					}
+				}
+            	
+            });
+            
+            viewHolder.sitterDeleteIv.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					Log.d("delete it======>", "id:"+getItemId(position));
+					new AlertDialog.Builder(context)
+						.setMessage("确定删除吗?")
+						.setPositiveButton("是", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								try {
+									doRemoveSitterAction(getItemId(position));
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+						})
+						.setNegativeButton("否", null)
+						.show();
+					
+				}
+            	
+            });
             
             GameItem game = objBean.getGame();
             if (game.getId().equals("") || game.getId().equals("null") || game.getId() == null) {
@@ -275,7 +377,7 @@ public class SittersActivity extends Activity implements OnClickListener {
 			TextView gameSitterUtimeTv;
 			TextView gameSitterDescTv;
 			GridView gameSitterAreaGv;
-			View overlayView;
+			View overlayView, main_content_rlview;
 			ImageView sitterModifyIv;
 			ImageView sitterDeleteIv;
 		}

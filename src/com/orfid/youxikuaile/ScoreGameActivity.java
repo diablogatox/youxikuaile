@@ -55,13 +55,22 @@ import com.orfid.youxikuaile.pojo.DiceData;
 import com.orfid.youxikuaile.pojo.RankUser;
 import com.orfid.youxikuaile.pojo.User;
 import com.orfid.youxikuaile.pojo.UserIcon;
+import com.orfid.youxikuaile.util.BitmapUtil;
 import com.orfid.youxikuaile.widget.CircularImageView;
 import com.orfid.youxikuaile.widget.ScoreView;
 import com.tencent.connect.auth.QQAuth;
 import com.tencent.connect.share.QzoneShare;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+
+import com.tencent.stat.StatConfig;
+import com.tencent.stat.StatService;
 
 /**
  * 此activity,是个积分工厂游戏activity。 这个界面主要由自定义ScoreView 来绘制游戏区。
@@ -90,7 +99,7 @@ public class ScoreGameActivity extends Activity {
 	private User userData;
 	private boolean weixinChecked = false, qqChecked = false;
 	public static QQAuth mQQAuth;
-//	private IWXAPI api;
+	private IWXAPI api;
 	private Tencent mTencent;
 	private boolean isRun = true;
 	private String APP_ID = "1101639686";
@@ -407,9 +416,9 @@ public class ScoreGameActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-//		api = WXAPIFactory.createWXAPI(getApplicationContext(),
-//				"wxea88f1583d4ec313", true);
-//		api.registerApp("wxea88f1583d4ec313");
+		api = WXAPIFactory.createWXAPI(getApplicationContext(),
+				"wxea88f1583d4ec313", true);
+		api.registerApp("wxea88f1583d4ec313");
 
 		loadInflater = LayoutInflater.from(this);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
@@ -866,24 +875,24 @@ public class ScoreGameActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (weixinChecked) {
-//					WXWebpageObject webpage = new WXWebpageObject();
-//					webpage.webpageUrl = "http://www.yxkuaile.com/share/wx_jfgc.html";
-//					WXMediaMessage msg = new WXMediaMessage(webpage);
-//					msg.title = getResources().getString(
-//							R.string.share_title_txt_game_score);
-//					// msg.description =
-//					// getResources().getString(R.string.share_title_txt_game_score);
-//					Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-//							R.drawable.x152);
-//					Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 90, 90,
-//							true);
-//					msg.thumbData = BitmapUtil.bmpToByteArray(thumbBmp, true);
-//					SendMessageToWX.Req req = new SendMessageToWX.Req();
-//					req.transaction = String.valueOf(System.currentTimeMillis());
-//					req.message = msg;
-//					req.scene = SendMessageToWX.Req.WXSceneTimeline;
-//					api.sendReq(req);
-//					builder.dismiss();
+					WXWebpageObject webpage = new WXWebpageObject();
+					webpage.webpageUrl = "http://www.yxkuaile.com/share/wx_jfgc.html";
+					WXMediaMessage msg = new WXMediaMessage(webpage);
+					msg.title = getResources().getString(
+							R.string.share_title_txt_game_score);
+					// msg.description =
+					// getResources().getString(R.string.share_title_txt_game_score);
+					Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+							R.drawable.x152);
+					Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 90, 90,
+							true);
+					msg.thumbData = BitmapUtil.bmpToByteArray(thumbBmp, true);
+					SendMessageToWX.Req req = new SendMessageToWX.Req();
+					req.transaction = String.valueOf(System.currentTimeMillis());
+					req.message = msg;
+					req.scene = SendMessageToWX.Req.WXSceneTimeline;
+					api.sendReq(req);
+					builder.dismiss();
 				} else if (qqChecked) {
 					mQQAuth = QQAuth.createInstance(APP_ID,
 							getApplicationContext());
@@ -939,6 +948,7 @@ public class ScoreGameActivity extends Activity {
 		@Override
 		public void onError(UiError arg0) {
 			// TODO Auto-generated method stub
+			Log.d("error", arg0.toString());
 			
 		}
 

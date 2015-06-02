@@ -25,6 +25,7 @@ public class OfflineSitterPublishActivity extends Activity implements OnClickLis
 	private EditText sitterDescEt;
 	private ImageButton backBtn;
 	private Button saveBtn;
+	private String id = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,8 @@ public class OfflineSitterPublishActivity extends Activity implements OnClickLis
 	}
 
 	private void obtainData() {
-		
+		sitterDescEt.setText(getIntent().getStringExtra("desc"));
+		id = getIntent().getStringExtra("id");
 	}
 
 	@Override
@@ -61,7 +63,7 @@ public class OfflineSitterPublishActivity extends Activity implements OnClickLis
 				Toast.makeText(this, "请先填写陪玩介绍", Toast.LENGTH_SHORT).show();
 			} else {
 				try {
-					doPublishOfflineSitterAction();
+					doPublishOfflineSitterAction(id);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -70,12 +72,14 @@ public class OfflineSitterPublishActivity extends Activity implements OnClickLis
 		}
 	}
 	
-	private void doPublishOfflineSitterAction() throws JSONException {
+	private void doPublishOfflineSitterAction(String id) throws JSONException {
         final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
         HashMap user = dbHandler.getUserDetails();
         RequestParams params = new RequestParams();
         params.put("token", user.get("token").toString());
         params.put("online", 0);
+        if (id != null)
+        	params.put("id", id);
         params.put("desc", sitterDescEt.getText().toString().trim());
         HttpRestClient.post("peiwan/publish", params, new JsonHttpResponseHandler() {
             @Override
@@ -84,7 +88,8 @@ public class OfflineSitterPublishActivity extends Activity implements OnClickLis
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success           	
-                    	
+                    	setResult(RESULT_OK);
+                    	finish();
                     } else if (status == 0) {
                         Toast.makeText(OfflineSitterPublishActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }
