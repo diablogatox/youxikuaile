@@ -39,7 +39,7 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
     	gendernageTv, followActionHintTv, fansCountTv, distanceInfoTv,
     	feedItemTextTv, sitterDescTv, gameItemNameTv;
     private ImageButton backBtn;
-    private View followBtnView, chatBtnView, feedItemLl, gameItemLl;
+    private View followBtnView, chatBtnView, feedItemLl, gameItemLl, rl_edit_gender;
     private boolean isFollowed;
     private HashMap user;
 
@@ -88,11 +88,13 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
         gameItemLl = findViewById(R.id.game_item_ll);
         gameItemIconIv = (ImageView) findViewById(R.id.game_item_icon_iv);
         gameItemNameTv = (TextView) findViewById(R.id.game_item_name_tv);
+        rl_edit_gender = findViewById(R.id.rl_edit_gender);
         
 
         backBtn.setOnClickListener(this);
         followBtnView.setOnClickListener(this);
         chatBtnView.setOnClickListener(this);
+        rl_edit_gender.setOnClickListener(this);
 
         uidTv.setText(uid);
         if (username != null && !username.equals("null")) titleTv.setText(username);
@@ -162,6 +164,14 @@ public class FriendHomeActivity extends Activity implements View.OnClickListener
             	i.putExtra("uid", uid);
             	i.putExtra("users", users);
             	startActivity(i);
+            	break;
+            	
+            case R.id.rl_edit_gender:
+            	
+            	Intent intent2 = new Intent(FriendHomeActivity.this, NewsFeedActivity.class);
+            	intent2.putExtra("uid", uid);
+				startActivity(intent2);
+				
             	break;
         }
     }

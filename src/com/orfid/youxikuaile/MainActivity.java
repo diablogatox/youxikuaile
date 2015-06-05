@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
 		super.onCreate(savedInstanceState);
 
         if (MainApplication.getInstance().getDbHandler().getRawCount() == 0) {
-            Intent intent = new Intent(this, SigninActivity.class);
+            Intent intent = new Intent(this, GuideActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();

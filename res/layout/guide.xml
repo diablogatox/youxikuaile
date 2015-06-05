@@ -1,0 +1,81 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+     <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+     <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/bottom_area"
+        android:paddingBottom="35dp"
+        android:orientation="horizontal"
+        >
+ 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:padding="3dp"
+            android:src="@drawable/point"/>
+ 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:padding="3dp"
+            android:src="@drawable/point"/>
+ 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:padding="3dp"
+            android:src="@drawable/point"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottom_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="26dp"
+        android:orientation="vertical">
+	    <LinearLayout
+	        android:id="@+id/login_area"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_horizontal"
+	        android:layout_below="@id/ll"
+	        android:orientation="horizontal">
+	        <Button
+	            android:id="@+id/qq_login"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginRight="15dp"
+	            android:background="@drawable/btn_signin1_selector" />
+	        
+	         <Button
+	             android:id="@+id/account_login"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:background="@drawable/btn_signin2_selector" />
+	    </LinearLayout>
+	    <ImageView
+	        android:id="@+id/signup_iv"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/login_area"
+	        android:layout_marginTop="20dp"
+	        android:src="@drawable/ret_font_bnt" />
+    </LinearLayout>
+</RelativeLayout>
