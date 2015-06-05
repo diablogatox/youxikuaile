@@ -7,11 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
 
 
 public class GuideActivity extends Activity implements OnClickListener,OnPageChangeListener {
@@ -37,6 +42,9 @@ public class GuideActivity extends Activity implements OnClickListener,OnPageCha
 
 
 	private ImageView signupIv;
+	
+	private Tencent mTencent;
+	private String APP_ID = "1101639686";
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +73,11 @@ public class GuideActivity extends Activity implements OnClickListener,OnPageCha
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(GuideActivity.this, SigninActivity.class);
-	            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-	            startActivity(intent);
-	            finish();
+//				Intent intent = new Intent(GuideActivity.this, SigninActivity.class);
+//	            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//	            startActivity(intent);
+//	            finish();
+				login();
 			}
 			
 		});
@@ -100,8 +109,48 @@ public class GuideActivity extends Activity implements OnClickListener,OnPageCha
 	}
 	
 
+	public void login()
+	{
+		mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
+		if (!mTencent.isSessionValid())
+		{
+			mTencent.login(this, "all", new BaseUiListener());
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		mTencent.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private class BaseUiListener implements IUiListener {
+
+		@Override
+		public void onCancel() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onComplete(Object response) {
+			// TODO Auto-generated method stub
+//			doComplete(response);
+			Log.d("lalala", "-------------"+response.toString());
+		}
+
+		@Override
+		public void onError(UiError arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		}
+	
 	private void initData(){
 
+		mTencent = Tencent.createInstance(APP_ID,
+				GuideActivity.this);
+		
 		LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 														  LinearLayout.LayoutParams.MATCH_PARENT);
        
