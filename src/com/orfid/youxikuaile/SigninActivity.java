@@ -7,11 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +27,10 @@ public class SigninActivity extends Activity {
 
     private EditText username, password;
     private Button loginBtn;
+	private Button qqLogin;
+	
+	private Tencent mTencent;
+	private String APP_ID = "1101639686";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +51,25 @@ public class SigninActivity extends Activity {
 	}
 
     private void init() {
+    	
+    	mTencent = Tencent.createInstance(APP_ID,
+				SigninActivity.this);
+    	
         username = (EditText) findViewById(R.id.et_login_username);
         password = (EditText) findViewById(R.id.et_login_password);
         loginBtn = (Button) findViewById(R.id.btn_signin);
+        
+        qqLogin = (Button) findViewById(R.id.qq_login);
 
+        qqLogin.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				login();
+			}
+			
+		});
+        
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +86,43 @@ public class SigninActivity extends Activity {
         });
     }
 
+    public void login()
+	{
+		mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
+		if (!mTencent.isSessionValid())
+		{
+			mTencent.login(this, "all", new BaseUiListener());
+		}
+	}
+    
+    private class BaseUiListener implements IUiListener {
+
+			@Override
+			public void onCancel() {
+				// TODO Auto-generated method stub
+				
+			}
+	
+			@Override
+			public void onComplete(Object response) {
+				// TODO Auto-generated method stub
+	//			doComplete(response);
+				Log.d("lalala", "-------------"+response.toString());
+			}
+	
+			@Override
+			public void onError(UiError arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		
+		}
+    
+    @Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		mTencent.onActivityResult(requestCode, resultCode, data);
+	}
+    
     private boolean validateInput() {
         boolean isValid = true;
         if (username.getText().toString().trim().equals("")) {

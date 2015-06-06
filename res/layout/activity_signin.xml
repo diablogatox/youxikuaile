@@ -128,5 +128,12 @@
 		        android:onClick="jumpSignup" />
 		</LinearLayout>
 		</LinearLayout>
+		<Button
+	       android:id="@+id/qq_login"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_centerHorizontal="true"
+	       android:layout_alignParentBottom="true"
+	       android:background="@drawable/btn_signin1_selector" />
 	</RelativeLayout>
 </FrameLayout>
