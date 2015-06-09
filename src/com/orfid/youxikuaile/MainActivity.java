@@ -21,6 +21,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -1844,7 +1845,11 @@ public class MainActivity extends Activity implements OnClickListener, AMapLocat
                 	viewHolder.msgTime.setText(Utils.covertTimestampToDate( Long.parseLong(msg.getSendtime()) * 1000, false ));
             	}
             	
-            	viewHolder.msgContent.setText(msg.getText());
+//            	viewHolder.msgContent.setText(msg.getText());
+            	
+            	SpannableStringBuilder sb = Utils.handlerFaceInContent(context, viewHolder.msgContent,
+        				msg.getText());
+        		viewHolder.msgContent.setText(sb);
             	
             } else {
             	UserItem[] users = objBean.getUsers();
