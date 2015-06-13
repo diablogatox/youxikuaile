@@ -33,7 +33,7 @@ public class SlideShowView extends FrameLayout {
     
 
     private int[] imageUrls = new int[]{
-			R.drawable.ad1,
+//			R.drawable.ad1,
 			R.drawable.ad2
 	};
 
@@ -144,11 +144,11 @@ public class SlideShowView extends FrameLayout {
 				public void onClick(View v) {
 					Log.d("position======>", position+"");
 					Log.d("clicked======>", "true");
-					if (position == 0) {
-						context.startActivity(new Intent(context, AdverThreeActivity.class));
-					} else if (position == 1) {
+//					if (position == 0) {
+//						context.startActivity(new Intent(context, AdverThreeActivity.class));
+//					} else if (position == 1) {
 						context.startActivity(new Intent(context, ArrastActivity.class));
-					}
+//					}
 				}
         		
         	});

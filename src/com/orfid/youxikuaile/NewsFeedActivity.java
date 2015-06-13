@@ -436,6 +436,20 @@ public class NewsFeedActivity extends Activity implements View.OnClickListener {
             
             objBean = getItem(position);
             
+            viewHolder.forwardArea.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					long forwardFeedId = getItem(position).getForward().getFeedId();
+					Log.d("forwardFeedId=========>", forwardFeedId+"");
+					//Toast.makeText(context,"forwardFeedId=========>"+ forwardFeedId, Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(NewsFeedActivity.this, NewsFeedDetailActivity.class);
+					intent.putExtra("fetchNeededFeedId", forwardFeedId);
+					startActivity(intent);
+				}
+            	
+            });
+            
             viewHolder.imagesGv.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override

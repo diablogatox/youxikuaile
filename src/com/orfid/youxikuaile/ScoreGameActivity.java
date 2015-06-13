@@ -68,7 +68,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
-
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 
@@ -430,6 +429,11 @@ public class ScoreGameActivity extends Activity {
 		initView();
 		getUserData();
 		addListener();
+		try {
+			doFetchUserAccountAction();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initView() {
@@ -1300,6 +1304,30 @@ public class ScoreGameActivity extends Activity {
 		}
 	}
 	
-	
+	private void doFetchUserAccountAction() throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        HttpRestClient.post("useraccount", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                    	JSONObject data = response.getJSONObject("data");
+//                    	goldNumTv.setText(data.getString("gold"));
+                    	userScore.setText(data.getString("score"));
+                    	
+                    } else if (status == 0) {
+                        Toast.makeText(ScoreGameActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 	
 }

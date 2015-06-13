@@ -200,7 +200,11 @@ public class SignupActivity extends Activity {
                 try {
                     int status = response.getInt("status");
                     if (status == 1) { // success
-                        startActivity(new Intent(SignupActivity.this, SigninActivity.class));
+                    	Intent intent = new Intent(SignupActivity.this, UserInfoActivity.class);
+                    	intent.putExtra("needLogin", true);
+                    	intent.putExtra("username", phoneEt.getText().toString().trim());
+                    	intent.putExtra("password", passwordEt.getText().toString().trim());
+                        startActivity(intent);
                     } else if (status == 0) {
                         Toast.makeText(SignupActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

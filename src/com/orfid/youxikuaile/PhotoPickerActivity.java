@@ -151,8 +151,8 @@ public class PhotoPickerActivity extends Activity implements View.OnClickListene
         } else {
             intent.setData(mImageCaptureUri);
 
-            intent.putExtra("outputX", 100);
-            intent.putExtra("outputY", 100);
+            intent.putExtra("outputX", 80);
+            intent.putExtra("outputY", 80);
             intent.putExtra("aspectX", 1);
             intent.putExtra("aspectY", 1);
             intent.putExtra("scale", true);

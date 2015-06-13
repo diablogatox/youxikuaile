@@ -37,6 +37,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orfid.youxikuaile.pojo.FeedAttachmentImgItem;
+import com.orfid.youxikuaile.pojo.FeedItem;
+import com.orfid.youxikuaile.pojo.UserItem;
 import com.orfid.youxikuaile.widget.MyGridView;
 import com.orfid.youxikuaile.widget.PagerSlidingTabStrip;
 
@@ -68,6 +70,7 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
     
     List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
     private GridViewAdapter gvAdapter;
+	private long fetchNeededFeedId;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,62 +83,72 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 
 	private void obtainData() {
 		Intent intent = getIntent();
-		feedId = intent.getLongExtra("feedId", 0);
-		forwardNum = intent.getIntExtra("forwardNum", 0);
-		commentNum = intent.getIntExtra("commentNum", 0);
-		photo = intent.getStringExtra("photo");
-		name = intent.getStringExtra("name");
-		uid = intent.getStringExtra("uid");
-		isFollowed = intent.getBooleanExtra("isFollowed", false);
-		String time = intent.getStringExtra("time");
-		content = intent.getStringExtra("content");
-		String imgs = intent.getStringExtra("imgs");
-		praiseCount = intent.getIntExtra("praiseNum", 0);
-		hasForward = intent.getBooleanExtra("hasForward", false);
-		forwardHasImg = intent.getBooleanExtra("forwardHasImg", false);
-		ct = intent.getStringExtra("forwardContent");
-		icon = intent.getStringExtra("forwardIcon");
-
-		if (imgs != null) {
-			rlGvWrapper.setVisibility(View.VISIBLE);
-			JSONArray jImgItemsArr = null;
+		fetchNeededFeedId  = intent.getLongExtra("fetchNeededFeedId", 0);
+		if (fetchNeededFeedId <= 0) {
+			feedId = intent.getLongExtra("feedId", 0);
+			forwardNum = intent.getIntExtra("forwardNum", 0);
+			commentNum = intent.getIntExtra("commentNum", 0);
+			photo = intent.getStringExtra("photo");
+			name = intent.getStringExtra("name");
+			uid = intent.getStringExtra("uid");
+			isFollowed = intent.getBooleanExtra("isFollowed", false);
+			String time = intent.getStringExtra("time");
+			content = intent.getStringExtra("content");
+			String imgs = intent.getStringExtra("imgs");
+			praiseCount = intent.getIntExtra("praiseNum", 0);
+			hasForward = intent.getBooleanExtra("hasForward", false);
+			forwardHasImg = intent.getBooleanExtra("forwardHasImg", false);
+			ct = intent.getStringExtra("forwardContent");
+			icon = intent.getStringExtra("forwardIcon");
+	
+			if (imgs != null) {
+				rlGvWrapper.setVisibility(View.VISIBLE);
+				JSONArray jImgItemsArr = null;
+				try {
+					jImgItemsArr = new JSONArray(imgs);
+					for (int i=0; i<jImgItemsArr.length(); i++) {
+		                JSONObject jFile = jImgItemsArr.getJSONObject(i);
+		                Log.d("image url==========>", jFile.getString("url"));
+		                imgItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+		            }
+					initImgAttachment(imagesGv, imgItems);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			if (hasForward == true) {
+				if (forwardHasImg == true) {
+					ImageLoader.getInstance().displayImage(icon, forwardIcon);
+				}
+				SpannableStringBuilder sb = Utils.handlerFaceInContent(this, forwardContent,
+	                    ct);
+				forwardContent.setText(sb);
+				forwardArea.setVisibility(View.VISIBLE);
+			}
+			
+			if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
+			nameTv.setText(name);
+			timeTv.setText(Utils.covertTimestampToDate(Long.parseLong(time) * 1000, false));
+			SpannableStringBuilder sb = Utils.handlerFaceInContent(this, contentTv,
+	                content);
+			contentTv.setText(sb);
+			praiseNumTv.setText(praiseCount+" 赞");
+			
+			List<Fragment> fragments = getFragments();
+	        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
+	        pager.setAdapter(pageAdapter);
+	        pagertab.setViewPager(pager);
+	        pagertab.setScrollOffset(0);
+	        pagertab.setTextColorResource(R.color.grey);
+		} else {
+			feedId = fetchNeededFeedId;
 			try {
-				jImgItemsArr = new JSONArray(imgs);
-				for (int i=0; i<jImgItemsArr.length(); i++) {
-	                JSONObject jFile = jImgItemsArr.getJSONObject(i);
-	                Log.d("image url==========>", jFile.getString("url"));
-	                imgItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
-	            }
-				initImgAttachment(imagesGv, imgItems);
+				doFetchFeedAction(fetchNeededFeedId);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			
 		}
-		if (hasForward == true) {
-			if (forwardHasImg == true) {
-				ImageLoader.getInstance().displayImage(icon, forwardIcon);
-			}
-			SpannableStringBuilder sb = Utils.handlerFaceInContent(this, forwardContent,
-                    ct);
-			forwardContent.setText(sb);
-			forwardArea.setVisibility(View.VISIBLE);
-		}
-		
-		if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
-		nameTv.setText(name);
-		timeTv.setText(Utils.covertTimestampToDate(Long.parseLong(time) * 1000, false));
-		SpannableStringBuilder sb = Utils.handlerFaceInContent(this, contentTv,
-                content);
-		contentTv.setText(sb);
-		praiseNumTv.setText(praiseCount+" 赞");
-		
-		List<Fragment> fragments = getFragments();
-        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
-        pager.setAdapter(pageAdapter);
-        pagertab.setViewPager(pager);
-        pagertab.setScrollOffset(0);
-        pagertab.setTextColorResource(R.color.grey);
 
 	}
 
@@ -396,6 +409,151 @@ public class NewsFeedDetailActivity extends FragmentActivity implements OnClickL
 //                    	praiseCount += 1;
 //                    	praiseNumTv.setText(praiseCount+" 赞");
                     	Toast.makeText(NewsFeedDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    } else if (status == 0) {
+                        Toast.makeText(NewsFeedDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+    }
+	
+	
+	private void doFetchFeedAction(long id) throws JSONException {
+        final DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+        HashMap user = dbHandler.getUserDetails();
+        RequestParams params = new RequestParams();
+        params.put("token", user.get("token").toString());
+        params.put("id", id);
+        HttpRestClient.post("feed/view", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+//                    	Toast.makeText(NewsFeedDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    	 long feedId = 0;
+                         int commentCount = 0, forwardCount = 0, praiseCount = 0, type = 0;
+                         boolean isPraised = false;
+                         String contentText = null, publishTime = null;
+                         UserItem user = null;
+                         FeedItem reference = null;
+                         List<FeedAttachmentImgItem> imgItems = new ArrayList<FeedAttachmentImgItem>();
+                         List<FeedAttachmentImgItem> imgItems2 = new ArrayList<FeedAttachmentImgItem>();
+                         
+                    	JSONObject jFeedItem = response.getJSONObject("data");
+                    	 feedId = Long.parseLong(jFeedItem.getString("feedid"));
+                    	 content = jFeedItem.getString("text");
+                         commentNum = Integer.parseInt(jFeedItem.getString("commentcount"));
+                         forwardNum = Integer.parseInt(jFeedItem.getString("forwardcount"));
+             			
+                         praiseCount = Integer.parseInt(jFeedItem.getString("praisecount"));
+                         publishTime = jFeedItem.getString("publishtime");
+                         type = Integer.parseInt(jFeedItem.getString("type"));
+                         isPraised = jFeedItem.getBoolean("is_praised");
+//                         if (!jFeedItem.isNull("files") && !jFeedItem.getString("files").equals("[]")) {
+//                             JSONArray jImgItemsArr = jFeedItem.getJSONArray("files");
+//                             for (int i=0; i<jImgItemsArr.length(); i++) {
+//                                 JSONObject jFile = jImgItemsArr.getJSONObject(i);
+//                                 Log.d("image url==========>", jFile.getString("url"));
+//                                 imgItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+//                             }
+//                             initImgAttachment(imagesGv, imgItems);
+//                         }
+                         JSONObject jUserObj = jFeedItem.getJSONObject("user");
+                         String photo = null;
+//                         if (!jUserObj.isNull("photo")) photo = jUserObj.getString("photo");
+//                         user = new UserItem(jUserObj.getString("uid"), jUserObj.has("birthday")?jUserObj.getString("birthday"):""
+//                                 , jUserObj.has("sex")?jUserObj.getString("sex"):"", jUserObj.getString("username"), photo
+//                                 , jUserObj.has("signature")?jUserObj.getString("signature"):"", jUserObj.has("isFollow")?jUserObj.getBoolean("isFollow"):false, null, null);
+                         
+//                         if (!jFeedItem.isNull("reference") && !jFeedItem.getString("reference").equals("[]")) {
+//                         	JSONObject ref = jFeedItem.getJSONArray("reference").getJSONObject(0);
+//                         	JSONObject u = ref.getJSONObject("user");
+//                         	if (!ref.isNull("files") && !ref.getString("files").equals("[]")) {
+//                                 JSONArray jImgItemsArr = ref.getJSONArray("files");
+//                                 for (int i=0; i<jImgItemsArr.length(); i++) {
+//                                     JSONObject jFile = jImgItemsArr.getJSONObject(i);
+//                                     Log.d("image url==========>", jFile.getString("url"));
+//                                     imgItems2.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+//                                 }
+//                             }
+//                         	reference = new FeedItem(
+//                         			Long.parseLong(ref.getString("feedid")),
+//                         			new UserItem(u.getString("uid"), u.getString("username"), u.getString("photo"), u.getString("signature"), u.getString("type")),
+//                         			ref.getString("text"),
+//                         			0, 
+//                         			0,
+//                         			0,
+//                         			ref.getString("publishtime"),
+//                         			Integer.parseInt(ref.getString("type")),
+//                         			imgItems2
+//                         			);
+//                         }
+                         
+                         if (!jFeedItem.isNull("files") && !jFeedItem.getString("files").equals("[]")) {
+              				rlGvWrapper.setVisibility(View.VISIBLE);
+                             JSONArray jImgItemsArr = jFeedItem.getJSONArray("files");
+                             for (int i=0; i<jImgItemsArr.length(); i++) {
+                                 JSONObject jFile = jImgItemsArr.getJSONObject(i);
+                                 Log.d("image url==========>", jFile.getString("url"));
+                                 imgItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+                             }
+                             initImgAttachment(imagesGv, imgItems);
+                         }
+                         
+//                         if (imgs != null) {
+//             				rlGvWrapper.setVisibility(View.VISIBLE);
+//             				JSONArray jImgItemsArr = null;
+//             				try {
+//             					jImgItemsArr = new JSONArray(imgs);
+//             					for (int i=0; i<jImgItemsArr.length(); i++) {
+//             		                JSONObject jFile = jImgItemsArr.getJSONObject(i);
+//             		                Log.d("image url==========>", jFile.getString("url"));
+//             		                imgItems.add(new FeedAttachmentImgItem(jFile.getString("url"), jFile.getString("id")));
+//             		            }
+//             					initImgAttachment(imagesGv, imgItems);
+//             				} catch (JSONException e) {
+//             					e.printStackTrace();
+//             				}
+//             				
+//             			}
+//             			if (hasForward == true) {
+//             				if (forwardHasImg == true) {
+//             					ImageLoader.getInstance().displayImage(icon, forwardIcon);
+//             				}
+//             				SpannableStringBuilder sb = Utils.handlerFaceInContent(NewsFeedDetailActivity.this, forwardContent,
+//             	                    ct);
+//             				forwardContent.setText(sb);
+//             				forwardArea.setVisibility(View.VISIBLE);
+//             			}
+             			
+                        name = jUserObj.getString("username");
+             			uid =jUserObj.getString("uid");
+             			isFollowed = jUserObj.has("isFollow")?jUserObj.getBoolean("isFollow"):false;
+             			
+                         SpannableStringBuilder sb = Utils.handlerFaceInContent(NewsFeedDetailActivity.this, contentTv,
+                        		 content);
+             			contentTv.setText(sb);
+             			
+             			if (photo != null && !photo.equals("null")) ImageLoader.getInstance().displayImage(photo, photoIv);
+             			nameTv.setText( jUserObj.getString("username"));
+             			timeTv.setText(Utils.covertTimestampToDate(Long.parseLong(publishTime) * 1000, false));
+//             			SpannableStringBuilder sb = Utils.handlerFaceInContent(NewsFeedDetailActivity.this, contentTv,
+//             	                content);
+//             			contentTv.setText(sb);
+             			praiseNumTv.setText(praiseCount+" 赞");
+             			
+             			List<Fragment> fragments = getFragments();
+             	        pageAdapter = new MyPageAdapter(getSupportFragmentManager(), fragments);
+             	        pager.setAdapter(pageAdapter);
+             	        pagertab.setViewPager(pager);
+             	        pagertab.setScrollOffset(0);
+             	        pagertab.setTextColorResource(R.color.grey);
+             	        
                     } else if (status == 0) {
                         Toast.makeText(NewsFeedDetailActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
                     }

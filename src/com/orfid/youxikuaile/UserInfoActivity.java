@@ -37,6 +37,8 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
     private long timestamp;
     private String province, city, school;
     private InputStream photoInputStream;
+    
+    private boolean needLogin = false;
 
     private static final int PHOTO_PICKER = 0;
     private static final int DATE_PICKER = 1;
@@ -51,15 +53,30 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
 
         setContentView(R.layout.activity_user_info);
         init();
-        try {
-            doFetchUserInfoAction();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        
+        if (needLogin) {
+        	try {
+				doSigninAction(
+						getIntent().getStringExtra("username"),
+						getIntent().getStringExtra("password")
+				);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+        } else {
+	        try {
+	            doFetchUserInfoAction();
+	        } catch (JSONException e) {
+	            e.printStackTrace();
+	        }
         }
     }
 
     private void init() {
 
+    	needLogin = getIntent().getBooleanExtra("needLogin", false);
+    	
+    	
         backBtn = (ImageButton) findViewById(R.id.btn_back);
         saveBtn = (Button) findViewById(R.id.btn_save);
         userPickture = (ImageView) findViewById(R.id.user_picture);
@@ -90,7 +107,14 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:
-                finish();
+            	if (needLogin) {
+            		 Intent intent = new Intent(this, MainActivity.class);
+                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                     startActivity(intent);
+                     finish();
+            	} else {
+            		finish();
+            	}
                 break;
             case R.id.rl_edit_avatar:
                 Intent i1 = new Intent(this, PhotoPickerActivity.class);
@@ -278,4 +302,65 @@ public class UserInfoActivity extends Activity implements View.OnClickListener {
             	break;
         }
     }
+    
+    private void doSigninAction(final String username, final String password) throws JSONException {
+        RequestParams params = new RequestParams();
+        params.put("username", username);
+        params.put("password", password);
+        final ProgressDialog dialog = new ProgressDialog(this);
+        HttpRestClient.post("user/login", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("response=======>", response.toString());
+                try {
+                    int status = response.getInt("status");
+                    if (status == 1) { // success
+                        DatabaseHandler dbHandler = MainApplication.getInstance().getDbHandler();
+                        JSONObject data = response.getJSONObject("data");
+                        String name, uid, pwd, token, photo, phone;
+                        name = data.getString("username");
+                        pwd = password.trim();
+                        uid = data.getString("uid");
+                        token = response.getString("token");
+                        photo = data.getString("photo");
+                        phone = username;
+                        dbHandler.addUser(name, uid, pwd, token, photo, phone, null, null);
+                        Log.d("db_rec_count======>", MainApplication.getInstance().getDbHandler().getRawCount() + "");
+
+//                        Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        startActivity(intent);
+//                        finish();
+                        
+                        try {
+            	            doFetchUserInfoAction();
+            	        } catch (JSONException e) {
+            	            e.printStackTrace();
+            	        }
+
+                    } else if (status == 0) {
+                        Toast.makeText(UserInfoActivity.this, response.getString("text"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStart() {
+                if (dialog.isShowing() == false) {
+                    dialog.setTitle("请稍等...");
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+    
 }

@@ -44,7 +44,7 @@
 				android:textSize="22sp"
 				android:hint="编辑个人昵称"
 				android:singleLine="true"
-				android:maxLength="15"
+				android:maxLength="6"
 				android:textColorHint="#55000000"
 				android:paddingLeft="15dp"
 				android:paddingTop="8dp"
